@@ -1,0 +1,116 @@
+/*contents layout*/
+
+#main{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 770px;
+	background: #FFFFFF;
+}
+
+#side{
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+	width: 0px;
+	background: #00FFFF;
+	float:right;
+}
+
+#results{
+	margin: 0px 0px 0px 0px;
+	padding: 10px;
+	border-top: 1px solid white;
+	width: 750px;
+	height: 20px;
+	background: #4169E1;
+	font-size: 80%;
+	text-align: center;
+}
+
+#toolbar{
+	margin: 0px 0px 0px 0px;
+	padding: 10px;
+	border-top: 1px solid white;
+	width: 750px;
+	height: 20px;
+	background: #4695ED;
+	font-size: 80%;
+	text-align: center;
+}
+
+#samari{
+	margin: 0px 0px 0px 0px;
+	padding: 10px;
+	clear: both;
+}
+
+#no_label{
+	margin: 10px 0px 0px 0px;
+	padding: 10px;
+	width: 50px;
+	height: 25px;
+	background: #F0F8FF;			/*alice blue*/
+	float: left;
+}
+
+#toi_label{
+	margin: 10px 0px 0px 10px;
+	padding: 10px;
+	width: 300px;
+	height: 25px;
+	background: #F0F8FF;			/*alice blue*/
+	float: left;
+}
+
+#kotae_label{
+	margin: 10px 0px 0px 10px;
+	padding: 10px;
+	width: 200px;
+	height: 25px;
+	background: #F0F8FF;			/*alice blue*/
+	float: left;
+}
+
+.no{
+	margin: 10px 0px 0px 0px;
+	padding: 10px;
+	width: 50px;
+	height: 25px;
+	background: #F8F8FF;			/*ghost white*/
+	float: left;
+	clear: both;
+
+}
+
+.toi{
+	margin: 10px 0px 0px 10px;
+	padding: 10px;
+	width: 300px;
+	height: 25px;
+	background: #F8F8FF;			/*ghost white*/
+	float: left;
+
+}
+
+.kotae{
+	margin: 10px 0px 0px 10px;
+	padding: 10px;
+	width: 200px;
+	height: 25px;
+	background: #F8F8FF;			/*ghost white*/
+	float: left;
+
+}
+
+.button{
+	margin: 10px 0px 0px 10px;
+	float: left;
+
+}
+
+#bottom_button{
+	margin: 10px 0px 0px 0px;
+	clear: both;
+
+
+}

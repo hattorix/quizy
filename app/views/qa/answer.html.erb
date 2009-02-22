@@ -1,0 +1,53 @@
+<%= stylesheet_link_tag("contents_register") %>
+<div id="screen_title">解答</div>
+
+<div id="main">
+  <div class="result"><%= @result_text %></div>
+  <% if @is_collect == "1" %>
+    <div id="description_box">
+      <div class="subtitle">解説</div>
+      <% desc = @description.description_text %>
+      <% if desc == ""  %>
+        <% desc = "解説はありません" %>
+      <% end %>
+      <div class="question"><%= desc %></div>
+
+      <div class="spacer_narrow">&nbsp;</div>
+
+      <div class="subtitle">問題</div>
+      <div class="question"><%= @question.question_text %></div>
+
+      <div class="spacer_narrow">&nbsp;</div>
+
+      <% if @question.question_type == 1 %>
+        <% answer = Selection.find(:first,:conditions => ["question_id = ? and is_collect = 1",
+                                                      @question.id]).selection_text %>
+      <% elsif @question.question_type == 2 %>
+        <% selections = Selection.find(:all,:conditions => ["question_id = ? and is_collect = 1",
+                                                      @question.id]) %>
+        <% answers= Array.new %>
+        <% selections.each do |selection| %>
+            <% answers << selection.selection_text %>
+        <% end %>
+        <% answer = answers.join(',') %>
+      <% elsif @question.question_type == 3 %>
+        <% answer = @question.y_or_n == true ? "○" : "×" %>
+      <% else %>
+        <% answer = Answer.find(:first,:conditions => ["question_id = ?",
+                                                    @question.id]).answer_text %>
+      <% end %>
+
+      <div class="subtitle">正解</div>
+      <div class="question"><%= answer %></div>
+
+    </div>
+  <% end %>
+
+  <div class="spacer_narrow">&nbsp;</div>
+
+  <div id="navi">
+    <%= link_to '問題に戻る', :back %> | 
+    <%= link_to 'マイページへ', :controller => 'mypage' %> | 
+    <%= link_to('ランダムQuizy', "/quiz/#{@random}")%>
+  </div>
+</div>

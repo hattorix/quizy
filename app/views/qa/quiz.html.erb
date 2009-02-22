@@ -1,0 +1,124 @@
+<%= stylesheet_link_tag("contents_register") %>
+<%= javascript_include_tag "prototype" %>
+
+<div id="toolbar_box">
+<% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id} do -%>
+  マイブック
+  <%= select_tag 'add_book_to',
+      options_from_collection_for_select(@books,
+      :id, :name), :style => 'width: 180px;' %>
+  <%= submit_tag '登録',
+                   :class => 'button'%>
+  <div id="add_book_message"></div>
+  <% if @question.user_id == current_user.id %>
+  <div class="question_edit_and_delete">
+      <%= image_tag('/images/page_edit.png', :style => 'vertical-align: middle;') %>
+      <%= link_to 'この問題を編集', :action => 'edit', :id => @question.id %>
+      <%= image_tag('/images/page_delete.png', :style => 'vertical-align: middle;') %>
+      <%= link_to 'この問題を削除', {:action => 'destroy', :id => @question.id}, :confirm => '本当に削除してよろしいですか?' %>
+  </div>
+  <% end -%>
+<% end -%>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="main_quiz">
+<% remote_form_for :question, :update => 'container', :url => {:action => 'answer'} do |f| -%>
+
+<div id="question_box_quiz">
+<div id="question_text_box">
+  <div class="subtitle">問題</div>
+  <%= hidden_field_tag "question_id", @question.id %>
+  <div class="field"><%= @question.question_text %></div>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="response_box" <%= "style='height:250px;'" if @question.question_type == 3 %>>
+  <div class="subtitle">回答</div>
+  <%= hidden_field_tag "question_type", @question.question_type %>
+  <% if @question.is_random == true %>
+    <% selections = @selections.sort_by{rand} %>
+  <% else %>
+    <% selections = @selections %>
+  <% end %>
+  <% if @question.question_type == 1 %>
+    <div id="selection_box">
+    <% selections.each do |s| %>
+    <div class="field">
+        <input type="radio" id="answer" name="answer"
+               value="<%= s.id %>" /> <%= s.selection_text %>
+    </div>
+    <% end %>
+    </div>
+  <% elsif @question.question_type == 2 %>
+    <div id="selection_box">
+    <% selections.each do |s| %>
+    <div class="field">
+      <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
+             value="<%= s.id %>" /> <%= s.selection_text %>
+    </div>
+    <% end %>
+    </div>
+  <% elsif @question.question_type == 3 %>
+    <div id="selection_box">
+      <div class="marufield">
+        <%= link_to_remote(image_tag("maru.jpg", :style => 'border: none;',
+                                            :onmouseover=>"this.src='../images/maru_on.jpg'",
+                                            :onmouseout=>"this.src='../images/maru.jpg'"),
+                          :url=>{:action => 'answer',
+                                 :question_id => @question.id,
+                                 :question_type => @question.question_type,
+                                 :answer => 1},
+                          :update => 'container') %>
+      </div>
+      <div class="marufield">
+        <%= link_to_remote(image_tag("batu.jpg", :style => 'border: none;',
+                                            :onmouseover=>"this.src='../images/batu_on.jpg'",
+                                            :onmouseout=>"this.src='../images/batu.jpg'"),
+                          :url=>{:action => 'answer',
+                                 :question_id => @question.id,
+                                 :question_type => @question.question_type,
+                                 :answer => 0},
+                          :update => 'container') %>
+      </div>
+    </div>
+  <% else %>
+    <div id="answer_box">
+      <input name="answer" type="text" size="30" />
+    </div>
+  <% end %>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="submit_box" <%= "style='display:none;'" if @question.question_type == 3 %>>
+  <%= submit_tag("回答する", :class => 'button') %>
+</div>
+
+<div id="report">
+-<%= link_to '不適切な問題を通報する', :action => 'report', :id => @question.id %>-
+</div>
+
+</div>
+<% end -%>
+
+<div id="question_information_box_quiz">
+  <a href="#" onclick="Effect.toggle('a', 'blind'); return false;"><div class="subtitle">分類</div></a>
+  <div id="a">
+  <div class="subsubtitle">カテゴリ</div>
+  <div class="field"><%= @question.category.name %></div>
+  <div class="subsubtitle">タグ</div>
+  <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
+  <%# あとでちゃんと書きましょう %>
+  <div class="subsubtitle">情報</div>
+  <div class="field">
+    みんなの正答率 <%= @right_answer_rate %>
+    <div style="float:right;"><span style="color: blue; font-weight: bold;">出</span>: <%= @question_count %></div>
+    <div style="clear:both;float:right;"><span style="color: green; font-weight: bold;">○</span>: <%= @correct_count %></div>
+    <div style="clear:both;float:right;"><span style="color: red; font-weight: bold;">×</span>: <%= @wrong_count %></div>
+  </div>
+  </div>
+</div>
+</div>

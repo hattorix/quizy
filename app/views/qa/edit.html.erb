@@ -1,0 +1,187 @@
+<%= stylesheet_link_tag("contents_register") %>
+<script language="javascript">
+  function toggleControl() {
+    var a = document.getElementById('answer_box');
+    var b = document.getElementById('selection_box');
+    var c = document.getElementById('question_type');
+    var d = document.getElementById('radio');
+    var e = document.getElementById('check');
+    var f = document.getElementById('y_or_n');
+    var g = document.getElementById('randum');
+    if (c.value == 4) {
+      a.style.display = "block";
+      b.style.display = "none";
+      g.style.display = "none";
+    } else {
+      if (c.value == 1) {
+        b.style.display = "block";
+        a.style.display = "none";
+        d.style.display = "inline";
+        e.style.display = "none";
+        f.style.display = "none";
+        g.style.display = "block";
+      } else if (c.value == 2) {
+        b.style.display = "block";
+        a.style.display = "none";
+        e.style.display = "inline";
+        d.style.display = "none";
+        f.style.display = "none";
+        g.style.display = "block";
+      } else {
+        b.style.display = "block";
+        a.style.display = "none";
+        f.style.display = "inline";
+        e.style.display = "none";
+        d.style.display = "none";
+        g.style.display = "none";
+      }
+    }
+  }
+  function top() {
+    var x1 = x2 = x3 = 0;
+    var y1 = y2 = y3 = 0;
+    if (document.documentElement) {
+        x1 = document.documentElement.scrollLeft || 0;
+        y1 = document.documentElement.scrollTop || 0;
+    }
+    if (document.body) {
+        x2 = document.body.scrollLeft || 0;
+        y2 = document.body.scrollTop || 0;
+    }
+    x3 = window.scrollX || 0;
+    y3 = window.scrollY || 0;
+    var x = Math.max(x1, Math.max(x2, x3));
+    var y = Math.max(y1, Math.max(y2, y3));
+    window.scrollTo(Math.floor(x / 2), Math.floor(y / 2));
+    if (x > 0 || y > 0) {
+        window.setTimeout("top()", 25);
+    }
+  }
+  function mypage() {
+    location.href="../../";
+  }
+</script>
+
+<div id="screen_title">問題の編集</div>
+  <div id="message"></div>
+<div id="main">
+
+<% remote_form_for :question, :url => {:action => 'update'} do |f| -%>
+
+<div id="question_information_box">
+<div class="subtitle">分類</div>
+  <%# category field %>
+  <div class="subsubtitle">公開可否</div>
+  <div class="field">
+    <input id="is_public" name="is_public" value=1 type="radio" <%= "checked" if @question.is_public == 1 %> />：公開
+    <input id="is_public" name="is_public" value=2 type="radio" <%= "checked" if @question.is_public == 2 %> />：非公開
+  </div>
+  <div class="subsubtitle">カテゴリ</div>
+  <div class="field">
+    <%= select_tag "category",
+       options_from_collection_for_select(Category.find(:all), :id, :name, @question.category_id),
+       :style => 'width: 150px;'
+    %>
+  </div>
+
+  <%# tag field%>
+  <div class="subsubtitle">タグ(「自分で登録」タグが勝手につきます)</div>
+  <div class="field">
+    <%= text_field_tag "tag", @question.tag_list,
+        :style => 'width: 100%;' %>
+  </div>
+</div>  
+
+<div class="spacer_narrow">&nbsp;</div>
+  
+<div id="question_box">
+  <div class="subtitle">問題</div>
+  <div class="subsubtitle">問題文</div>
+  <div class="field">
+    <%= hidden_field_tag "question_id", @question.id %>
+    <%= text_area_tag "question_ta", @question.question_text.gsub("<br />", "\n"),
+                        :style => 'width: 100%; height: 10em;' %>
+  </div>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="response_box">
+  <div class="subtitle">解答</div>
+  <div class="subsubtitle">回答方法</div>
+  <div class="field" style="float:left">
+    <%= select_tag "question_type",
+        options_from_collection_for_select(QuestionType.find(:all),
+        "id", "name", @question.question_type),
+        :onchange => "toggleControl();" %>
+  </div>
+
+  <div id="randum">
+    <%= check_box_tag "is_random" %>：選択肢をランダム表示する
+  </div>
+
+  <div id="selection_box" style="display:<%= @question.question_type == 4 ? 'none;' : 'block;' %>clear:both;">
+    <div class="subsubtitle">選択肢(正解にチェックを入れてください)</div>
+    <ul>
+      <div id="radio" style="display:<%= @question.question_type != 1 ? 'none;' : 'block' %>">
+        <% @selections.each do |selection| %>
+          <li class="selection">
+            <input id="is_collect" name="is_collect" value="<%= selection.id %>" type="radio" <%= "checked" if selection.is_collect == 1 %> />
+              <%= text_field_tag "selection[#{selection.id}]", selection.selection_text, {:size => 50} %><br />
+          </li>
+        <% end %>
+      </div>
+      <div id="check" style="display:<%= @question.question_type != 2 ? 'none;' : 'block' %>">
+        <% @selections.each do |selection| %>
+          <li class="selection">
+            <input id="is_collect2" name="is_collect2[<%= selection.id %>]" type="checkbox" <%= "checked" if selection.is_collect == 1 %> />
+              <%= text_field_tag "selection2[#{selection.id}]", selection.selection_text, {:size => 50} %><br />
+          </li>
+        <% end %>
+      </div>
+      <div id="y_or_n" style="display:<%= @question.question_type != 3 ? 'none;' : 'block' %>">
+        <li class="selection">
+          <input id="is_collect3" name="is_collect3" value=1 type="radio" <%= "checked" if @question.y_or_n == true %> />
+            ○<br />
+        </li>
+        <li class="selection">
+          <input id="is_collect3" name="is_collect3" value=0 type="radio" <%= "checked" if @question.y_or_n == false %> />
+            ×<br />
+        </li>
+      </div>
+    </ul>
+  </div>
+  
+  <div id="answer_box" style="display:<%= @question.question_type != 4 ? 'none;' : 'block;' %>clear:both;">
+    <div class="subsubtitle">解答</div>
+    <div class="field">
+      <% if @question.question_type == 4 %>
+      <%= text_area_tag "answer_ta", @answer.answer_text.gsub("<br />", "\n"),
+                        :style => 'width: 100%; height: 5em;' %>
+      <% else %>
+      <%= text_area_tag "answer_ta", "",:style => 'width: 100%; height: 5em;' %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="description_box">
+  <div class="subtitle">解説</div>
+  <div class="subsubtitle">解説文</div>
+  <div class="field">
+    <%= text_area_tag "description_ta", @description.description_text.gsub("<br />", "\n"),
+                        :style => 'width: 100%; height: 10em;' %>
+  </div>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="submit_box">
+  <input class="button" type="submit" value="更新する"/>
+</div>
+
+<% end -%>
+
+</div>

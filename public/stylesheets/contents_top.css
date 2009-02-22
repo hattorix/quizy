@@ -1,0 +1,107 @@
+/*contents layout*/
+
+#main{
+  margin: 0px 0px 0px 10px;
+  padding: 0px;
+  width: 60%;
+  background: #FFFFFF;
+  text-align: left;
+  float: left;
+}
+
+#side{
+  margin: 0px 10px 0px 10px;
+  padding: 0px;
+  width: 30%;
+  background: #00FFFF;
+  float:right;
+}
+
+#this_site_title{
+  padding: 5px;
+  color: #FFFFFF;
+  background-image: url('/images/gradation.png');
+  height: 20px;
+}
+
+#this_site{
+  padding: 10px;
+  border: 1px solid silver;
+  background: #FFFFFF;
+  height: 100px;
+}
+
+#this_site ul li{
+  list-style: none;
+  text-align: left;
+}
+
+
+#update_title{
+  margin-top: 10px;
+  padding: 5px;
+  color: #FFFFFF;
+  background-image: url('/images/gradation.png');
+  height: 20px;
+}
+
+#update{
+    margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid silver;
+  background: #FFFFFF;
+  height: 100px;
+  overflow: scroll;
+}
+
+#update ul li{
+  list-style: none;
+  text-align: left;
+}
+
+#favorite_title{
+  margin-top: 10px;
+  padding: 5px;
+  color: #FFFFFF;
+  background-image: url('/images/gradation.png');
+  height: 20px;
+}
+
+#favorite{
+    margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid silver;
+  background: #FFFFFF;
+  height: 100px;
+  overflow: scroll;
+
+}
+
+#favorite ul li{
+  list-style: none;
+  text-align: left;
+}
+
+/* login */
+#login_box {
+  padding: 10px;
+  border: 1px solid silver;
+  background  : #FFFFFF;
+  height: 150px;
+}
+
+#login_box input {
+    font-family: tahoma;
+    font-size: 10pt;
+}
+
+.field {
+    text-align: left;
+    font-size: 10pt;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.login_button {
+    align: right;
+}

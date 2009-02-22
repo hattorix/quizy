@@ -1,0 +1,137 @@
+/*contents layout*/
+
+#main{
+  margin: 0px 15px 0px 15px;
+  padding: 0px;
+  width: 570px;
+  background: #FFFFFF;
+  float:left;
+}
+
+#side{
+  margin: 0px 10px 10px 20px;
+
+  width: 230px;
+  height: 870px;
+  background: #FFFFFF;
+  float:right;
+}
+
+#search #tag_cloud {
+  margin: 10px;
+}
+
+#toolbar_box {
+  background-image: url('/images/gradation.png');
+  margin: 0px 0px 30px 0px;
+  padding: 10px;
+  border-top: 1px solid white;
+  width: 100%;
+  height: 50px;
+}
+
+#toolbar a:link{
+  color: #FFFFFF;
+}
+
+#toolbar a:visited{
+  color: #FFFFFF;
+}
+
+#category #mybook #latest {
+  margin: 0;
+  width: 600px;
+  height: auto;
+  float: right;
+  text-align: left;
+  border: 1px solid silver;
+}
+
+#category{
+  background: #FFFFFF;
+  line-height: 2em;
+}
+.category {
+  background-color: pink;
+  margin: 5px;
+  padding: 3px;
+}
+
+#mybook{
+  background: #FFFFFF;
+  clear: both;
+}
+
+#mytest{
+  background: #FFFFFF;
+  clear: both;
+}
+
+#latest{
+  clear: both;
+}
+
+.mybook_menu {
+  float: right;
+}
+
+.subtitle{
+  font-size: 12pt;
+  font-weight: bold;
+  padding: 5px;
+  color: #FFFFFF;
+  background-image: url('/images/gradation.png');
+  height: 40px;
+  vertical-align: middle;
+}
+
+.subcontent{
+  padding: 10px;
+  background: #FFFFFF;
+  height: 133px;
+}
+
+.test_subcontent{
+  padding: 10px;
+  background: #FFFFFF;
+  height: 83px;
+}
+
+.s_content li{
+  list-style: none;
+
+}
+
+#book_button{
+  margin-top: 10px;
+  clear: both;
+  float: right;
+}
+
+li {
+  margin-left: 10px;
+  list-style-type: none;
+}
+
+.question_text, .book_text {
+  font-size: 10pt;
+  margin: 3px;
+}
+
+.add_book {
+  text-align: right;
+  font-weight: normal;
+}
+
+.question_add_and_search {
+  text-align: right;
+  font-weight: normal;
+}
+
+
+/* とりあえず */
+.tag-x-small { font-size:  80%; }
+.tag-small   { font-size:  90%; }
+.tag-medium  { font-size: 100%; }
+.tag-large   { font-size: 120%; }
+.tag-x-large { font-size: 150%; }

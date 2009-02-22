@@ -1,0 +1,59 @@
+computer:
+  id: 1
+  name: "コンピュータ"
+  user_id: 0
+
+internet:
+  id: 2
+  name: "インターネット"
+  user_id: 0
+
+game:
+  id: 3
+  name: "ゲーム"
+  user_id: 0
+
+hobby:
+  id: 4
+  name: "趣味・スポーツ"
+  user_id: 0
+
+book:
+  id: 5
+  name: "書籍・音楽・映画"
+  user_id: 0
+
+travel:
+  id: 6
+  name: "旅行・地域情報"
+  user_id: 0
+
+medical:
+  id: 7
+  name: "医療・健康"
+  user_id: 0
+
+life:
+  id: 8
+  name: "生活"
+  user_id: 0
+
+beauty:
+  id: 9
+  name: "美容・ファッション"
+  user_id: 0
+
+art:
+  id: 10
+  name: "芸術・文化・歴史"
+  user_id: 0
+
+money:
+  id: 11
+  name: "経済・金融・保険"
+  user_id: 0
+
+joke:
+  id: 12
+  name: "ネタ・ジョーク"
+  user_id: 0

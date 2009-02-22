@@ -1,0 +1,101 @@
+<script language="javascript">
+  timer.stop();
+  document.getElementById('areaTimer').style.display = "none";
+</script>
+<div id="main">
+  <% remote_form_for :question, :update => 'container', :url => {:action => 'start', :id => @exam.id } do |f| -%>
+  <div id="page_title">テスト結果</div>
+  <div class="spacer_narrow">&nbsp;</div>
+  <table cellpadding="5" cellspacing="0" border="1">
+    <tr>
+      <th nowrap>No.</th><th nowrap>問題</th><th nowrap>あなたの解答</th><th nowrap>正解</th><th>&nbsp;</th>
+    </tr>
+    <% @question_exams = QuestionExam.find(:all, :conditions => ["exam_id = ? and enabled = ?",@exam.id,1], :order => "seq") %>
+    <% @question_exams.each do |question_exam| %>
+      <% question = Question.find(question_exam.question_id) %>
+      <tr>
+        <td><%= question_exam.seq+1 %></td>
+        <td>
+          <%= question.question_text %>
+        </td>
+        <% if examtemp = @examtemps.find {|i| i.question_id == question.id} %>
+          <% your_answer = examtemp.answer %>
+          <% if question.question_type == 1 %>
+            <% if your_answer.to_i != 0 %>
+              <% your_answer = Selection.find(your_answer.to_i).selection_text %>
+            <% end %>
+          <% elsif question.question_type == 2 %>
+            <% answers = Array.new %>
+            <% your_answer.split(",").each do |i| %>
+              <% a = Selection.find(i.to_i).selection_text %>
+              <% answers << a %>
+            <% end %>
+            <% your_answer = answers.join(",") %>
+          <% elsif question.question_type == 3 %>
+            <% your_answer = your_answer == "1" ? "○" : "×" %>
+          <% end %>
+        <% else %>
+          <% your_answer = "" %>
+        <% end %>
+        <td>『<%= your_answer %>』</td>
+        <% if question.question_type == 1 %>
+          <% t_answer = Selection.find(:first,:conditions => ["question_id = ? and is_collect = 1",
+                                                      question.id]).selection_text %>
+        <% elsif question.question_type == 2 %>
+          <% selections = Selection.find(:all,:conditions => ["question_id = ? and is_collect = 1",
+                                                      question.id]) %>
+          <% t_answers= Array.new %>
+          <% selections.each do |selection| %>
+            <% t_answers << selection.selection_text %>
+          <% end %>
+          <% t_answer = t_answers.join(',') %>
+        <% elsif question.question_type == 3 %>
+          <% t_answer = Question.find(question.id).y_or_n %>
+          <% t_answer = t_answer == true ? "○" : "×" %>
+        <% else %>
+          <% t_answer = Answer.find(:first,:conditions => ["question_id = ?",
+                                                      question.id]).answer_text %>
+        <% end %>
+        <td>『<%= t_answer %>』</td>
+        <td>
+          <% if examtemp = @examtemps.find {|i| i.question_id == question.id} %>
+            <% if examtemp.t_or_f == true %>
+              <div class="red">○</div>
+            <% else %>
+              <div class="blue">×</div>
+            <% end %>
+          <% else %>
+            <div class="blue">×</div>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+
+  <div class="spacer_narrow">&nbsp;</div>
+
+  <div id="result">
+    <% q_count = @question_exams.size %>
+    <% t_count = @count %>
+    <div>
+      <span class="red"><%= q_count %></span>問中、<span class="red"><%= t_count %></span>問正解
+    </div>
+    <div><span id="percentage"><%= @point %>％</span>/100％<div>
+    <% if @t_or_f == 1 %>
+      <div id="pass"><%= @result_text %></div>
+    <% else %>
+      <div id="fail"><%= @result_text %></div>
+    <% end %>
+  </div>
+
+  <div class="spacer_narrow">&nbsp;</div>
+
+  <div id="submit_box">
+    <span onClick="start()"><%= submit_tag("もう一度チャレンジ",:class => 'button') %></span>
+    <%= button_to_function("テスト終了",
+                        "window.close();") %>
+  </div>
+
+  <div class="spacer_narrow">&nbsp;</div>
+<% end -%>
+</div>

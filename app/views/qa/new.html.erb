@@ -1,0 +1,169 @@
+<%= stylesheet_link_tag("contents_register") %>
+<%# TODO: edit.html.erbにもあるよ。DRY! DRY! %>
+<script language="javascript">
+  function toggleControl() {
+    var a = document.getElementById('answer_box');
+    var b = document.getElementById('selection_box');
+    var c = document.getElementById('question_type');
+    var d = document.getElementById('radio');
+    var e = document.getElementById('check');
+    var f = document.getElementById('y_or_n');
+    var g = document.getElementById('randum');
+    if (c.value == 4) {
+      a.style.display = "block";
+      b.style.display = "none";
+      g.style.display = "none";
+    } else {
+      if (c.value == 1) {
+        b.style.display = "block";
+        a.style.display = "none";
+        d.style.display = "inline";
+        e.style.display = "none";
+        f.style.display = "none";
+        g.style.display = "block";
+      } else if (c.value == 2) {
+        b.style.display = "block";
+        a.style.display = "none";
+        e.style.display = "inline";
+        d.style.display = "none";
+        f.style.display = "none";
+        g.style.display = "block";
+      } else {
+        b.style.display = "block";
+        a.style.display = "none";
+        f.style.display = "inline";
+        e.style.display = "none";
+        d.style.display = "none";
+        g.style.display = "none";
+      }
+    }
+  }
+  function mypage() {
+    location.href="../../";
+  }
+  function reload() {
+    location.reload()
+  }
+</script>
+<div id="screen_title">問題の登録</div>
+  <div id="message"></div>
+<div id="main">
+<% remote_form_for :question, :url => {:action => 'create'} do |f| -%>
+<div id="question_information_box">
+  <div class="subtitle">分類</div>
+
+  <div class="subsubtitle">公開可否</div>
+  <div class="description">公開するかしないかを選択してください。</div>
+  <div class="field">
+    <%= radio_button_tag("is_public", 1, :checked => true) %>：公開
+    <%= radio_button_tag("is_public", 2) %>：非公開
+  </div>
+  <div class="subsubtitle">カテゴリ</div>
+  <div class="description">一番近いカテゴリを選択してください。</div>
+  <div class="field">
+    <%= select_tag('category',
+        options_from_collection_for_select(@categories, :id, :name),
+        :style => 'width: 100%;') %>
+  </div>
+
+  <div class="subsubtitle">タグ</div>
+  <div class="description">カンマで区切ると複数登録できます。</div>
+  <div class="field">
+    <%= text_field_tag("tag",
+                         "",
+                         :style => 'width: 100%;') %>
+  </div>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="question_box">
+  <div class="subtitle">問題</div>
+  <div class="subsubtitle">問題文</div>
+  <div class="description">問題文を500文字以内で入力してください。<br />
+  入力にはQuizy記法が使用できます。HTMLのタグは使用できません。</div>
+  <div class="field">
+    <%= text_area_tag "question_ta", "", :style => 'width: 100%; height: 10em;' %>
+  </div>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="response_box">
+  <div class="subtitle">解答</div>
+  <div class="subsubtitle">回答方法</div>
+  <div class="description">回答方法を選択してください。<br />
+  「単一選択」「複数選択」「○×選択」「ユーザ入力」が選べます。<br />
+  また、入力にはQuizy記法が使用できます。HTMLのタグは使用できません。</div>
+  <div class="field" style="float:left">
+  <%= select_tag "question_type",
+        options_from_collection_for_select(QuestionType.find(:all),
+        "id", "name"),
+        :onchange => "toggleControl();" %>
+  </div>
+  <div id="randum">
+    <%= check_box_tag "is_random" %>：選択肢をランダム表示する
+  </div>
+
+  <div id="selection_box" style="clear:both;">
+    <div class="subsubtitle">選択肢(正解にチェックを入れてください)</div>
+    <ul>
+      <div id="radio" style="display:block">
+        <ul>
+          <% 10.times do |i| %>
+            <li><div class="selection_box"><input id="is_collect[<%= i %>]" name="is_collect" value="[<%= i %>]" type="radio" />
+              <%= text_field_tag "selection[#{i}]", "", :style => 'width: 90%;' %><br /></div></li>
+          <% end %>
+        </ul>
+      </div>
+      <div id="check" style="display:none">
+        <ul>
+          <% 10.times do |i| %>
+            <li><div class="selection_box"><input id="is_collect2[<%= i %>]" name="is_collect2[<%= i %>]" type="checkbox" />
+              <%= text_field_tag "selection2[#{i}]", "", :style => 'width: 90%;' %><br /></div></li>
+          <% end %>
+        </ul>
+      </div>
+      <div id="y_or_n" style="display:none">
+        <ul>
+          <li><div class="selection_box"><input id="is_collect3[0]" name="is_collect3" value=1 type="radio" checked />
+            ○<br /></div></li>
+          <li><div class="selection_box"><input id="is_collect3[1]" name="is_collect3" value=0 type="radio" />
+            ×<br /></div></li>
+        </ul>
+      </div>
+    </ul>
+  </div>
+
+  
+  <div id="answer_box" style="display:none;clear:both;">
+    <div class="subsubtitle">解答</div>
+    <div class="field">
+      <%= text_area_tag "answer_ta", "",:style => 'width: 100%; height: 5em;' %>
+    </div>
+  </div>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="description_box">
+  <div class="subtitle">解説</div>
+  <div class="subsubtitle">解説文</div>
+  <div class="description">解答画面で表示される解説文を入力してください。<br />
+  また、入力にはQuizy記法が使用できます。HTMLのタグは使用できません。</div>
+  <div class="field">
+    <%= text_area_tag "description_ta", "", :style => 'width: 100%; height: 10em;'%>
+  </div>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="submit_box">
+  <input class="button" name="submit" type="submit" value="登録">
+  <input class="button" type="reset" value="修正" />
+  <input class="button" name="submit" type="submit" value="登録後続けて登録する"/>
+</div>
+
+<% end -%>
+
+</div>

@@ -1,0 +1,122 @@
+<script language="javascript">
+  function stop(){
+    timer.stop();
+  }
+</script>
+<div id="main">
+  <% remote_form_for :question, :update => 'main', :url => {:action => 'next', :id => @exam.id ,:question_id => @question.id, :i => @i} do |f| -%>
+
+    <div id="review_check">
+      <% if examtemp = ExamTemp.find(:first, :conditions => ["exam_id = ? and question_id = ? and user_id = ?",
+                                                 @exam.id, @question.id, current_user.id]) %>
+        <% status = examtemp.status %>
+      <% end %>
+        <input id="review" name="review" type="checkbox" <%= "checked" if status == "review" %> />
+      要見直し
+    </div>
+
+    <div id="question_information_box">
+      <div class="subtitle">分類</div>
+      <div class="subsubtitle">カテゴリ</div>
+      <div class="field"><%= @question.category.name %></div>
+      <div class="subsubtitle">タグ</div>
+      <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
+      <%# あとでちゃんと書きましょう %>
+    </div>
+
+    <div class="spacer_narrow">&nbsp;</div>
+
+    <div id="question_box">
+      <div class="subtitle">問題</div>
+      <%= hidden_field_tag "question_id", @question.id %>
+      <div class="field"><%= @question.question_text %></div>
+    </div>
+
+    <div class="spacer_narrow">&nbsp;</div>
+
+    <div id="response_box" <%= "style='height:250px;'" if @question.question_type == 3 %>>
+      <div class="subtitle">回答</div>
+      <%= hidden_field_tag "question_type", @question.question_type %>
+      <% if @question.question_type == 1 %>
+        <div id="selection_box">
+          <% @selections.sort_by{rand}.each do |s| %>
+            <div class="field">
+              <input type="radio" id="answer" name="answer"
+                     value="<%= s.id %>" /> <%= s.selection_text %>
+            </div>
+          <% end %>
+        </div>
+      <% elsif @question.question_type == 2 %>
+        <div id="selection_box">
+          <% @selections.sort_by{rand}.each do |s| %>
+            <div class="field">
+              <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
+                     value="<%= s.id %>" /> <%= s.selection_text %>
+            </div>
+          <% end %>
+        </div>
+      <% elsif @question.question_type == 3 %>
+        <div id="selection_box">
+          <div class="marufield">
+            <input type="radio" id="answer" name="answer"
+                   value=1 /> <%= image_tag("maru.jpg", :style => 'border: none;', :title => '○')%>
+          </div>
+          <div class="batufield">
+            <input type="radio" id="answer" name="answer"
+                   value=0 /> <%= image_tag("batu.jpg", :style => 'border: none;', :title => '×')%>
+          </div>
+        </div>
+      <% else %>
+        <div id="answer_box">
+          <input name="answer" type="text" size="30" />
+        </div>
+      <% end %>
+    </div>
+
+
+    <div class="spacer_narrow">&nbsp;</div>
+
+    <div id="submit_box">
+      <% if @i-1 >= 0  %>
+        <%= submit_to_remote("前の問題へ",
+                          "前の問題へ",
+                          :url=>{:action => 'back',
+                                 :i => @i,
+                                 :id => @exam.id,},
+                          :update => 'main') %>
+      <% end %>
+      <% if @question_exams[@i+1] == nil %>
+        <%= submit_to_remote("解答一覧へ",
+                          "解答一覧へ",
+                          :url=>{:action => 'check',
+                                 :i => @i,
+                                 :id => @exam.id},
+                          :update => 'main') %>
+      <% else %>
+        <%= submit_tag("次の問題へ", :class => 'button') %>
+      <% end %>
+    </div>
+
+    <div id="end_box">
+      <div id="escape">
+        <%= submit_to_remote("テストを中断する",
+                          "テストを中断する",
+                          :url=>{:action => 'finish',
+                                 :id => @exam.id,
+                                 :escape => 'ture'},
+                          :update => 'main',
+                          :onClick=>"stop()" ) %>
+      </div>
+      <% if @question_exams[@i+1] != nil %>
+        <div id="check">
+          <%= submit_to_remote("解答一覧へ",
+                            "解答一覧へ",
+                            :url=>{:action => 'check',
+                                   :i => @i,
+                                   :id => @exam.id},
+                            :update => 'main') %>
+        </div>
+      <% end %>
+    </div>
+  <% end -%>
+</div>

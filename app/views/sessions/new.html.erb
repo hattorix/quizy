@@ -1,0 +1,47 @@
+<%= stylesheet_link_tag "style_import_top" %>
+<div id="main">
+  <div id="this_site_title">このサイトについて</div>
+  <div id="this_site">
+    <ul>
+      <li><%= link_to 'いますぐ会員登録する！', signup_path %></li>
+    </ul>
+  </div>
+  <div id="update_title">更新情報</div>
+  <div id="update">
+    <ul>
+      <li style="font-size: 11pt;">[2008/07/15] 人気ランキングを表示してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/10] 問題毎正答率を表示してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/06] 全体的にそれっぽくしてみました。</li>
+      <li style="font-size: 11pt;">[2008/07/05] カテゴリ検索機能を追加してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/04] タグ検索機能を追加してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/03] ブック機能を追加してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/02] デザインをなんかそれっぽくしてみました。</li>
+      <li style="font-size: 11pt;">[2008/06/30] たたき台を作ってみました。</li>
+    </ul>
+  </div>
+  <div id="favorite_title">出題数ランキング</div>
+  <div id="favorite">
+    <ul style="list-style-type: decimal;">
+    <%# もちろんコントローラに書こうね %>
+    <% Question.find(:all, :order => 'question_count desc', :limit => '10').each do |question| %>
+      <li style="font-size: 11pt;">
+        <%= link_to(truncate(erase_tag(question.question_text), 35), "/quiz/#{question.id}") %>
+        <span style="color: silver; font-size: 8pt;">
+          <%= question.question_count %>回出題
+        </span>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+</div>
+
+<div id="side">
+  <% form_tag session_path do -%>
+  <div id="login_box">
+    <div class="field">ユーザ<br /><%= text_field_tag 'login', "", :size => "10" %></div>
+    <div class="field">パスワード<br /><%= password_field_tag 'password', "", :size => "10" %></div>
+    <div class="field"><%= check_box_tag 'Remember_me' %> ログイン情報を2週間保存する</div>
+    <div class="login_button"><%= submit_tag "ログイン" %></div>
+  </div>
+  <% end -%>
+</div>

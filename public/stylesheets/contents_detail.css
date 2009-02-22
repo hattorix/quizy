@@ -1,0 +1,94 @@
+/*contents layout*/
+
+#main{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 770px;
+	background: #FFFFFF;
+	text-align: left;
+}
+
+#side{
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+	width: 0px;
+	background: #00FFFF;
+	float:right;
+}
+
+#results{
+	margin: 0px 0px 0px 0px;
+	padding: 10px;
+	border-top: 1px solid white;
+	width: 750px;
+	height: 20px;
+	background: #4169E1;
+	font-size: 80%;
+	text-align: center;
+}
+
+#toolbar{
+	margin: 0px 0px 0px 0px;
+	padding: 10px;
+	border-top: 1px solid white;
+	width: 750px;
+	height: 20px;
+	background: #4695ED;
+	font-size: 80%;
+	text-align: center;
+}
+
+#qa_header{
+	margin: 0px 0px 0px 0px;
+	padding: 10px;
+	border-top: 1px solid white;
+	width: 750px;
+	height: 20px;
+	background: #87CEFA;
+	font-size: 80%;
+	text-align: center;
+}
+
+#toi{
+	padding: 10px;
+	border: 1px solid silver;
+	background: #FFFFFF;
+	height: 100px;
+}
+
+#kotae{
+	margin-top: 10px;
+	padding: 10px;
+	border: 1px solid silver;
+	background: #FFFFFF;
+	height: 100px;
+}
+
+#kaitou{
+	margin-top: 10px;
+	padding: 10px;
+	border: 1px solid silver;
+	background: #FFFFFF;
+	height: 100px;
+}
+
+#kaisetu{
+	margin-top: 10px;
+	padding: 10px;
+	border: 1px solid silver;
+	background: #FFFFFF;
+	height: 100px;
+}
+
+#sankou{
+	margin-top: 10px;
+	padding: 10px;
+	border: 1px solid silver;
+	background: #FFFFFF;
+	height: 50px;
+}
+
+#button{
+	margin: 10px 0px 0px 0px;
+}

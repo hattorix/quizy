@@ -1,0 +1,56 @@
+<%= stylesheet_link_tag "style_exam_detail" %>
+<script language="javascript">
+  function mypage() {
+    location.href="../../";
+  }
+</script>
+<div id="screen_title">テストの編集</div>
+<div id="message"></div>
+<div id="main">
+  <% remote_form_for(@exam) do |f| %>
+    <div id="form">
+      <%= f.error_messages %>
+      <div class="field">
+        <%= f.label "テスト名" %><br />
+        <%= f.text_field :name %>
+      </div>
+      <div class="field">
+        <%= f.label "制限時間" %><br />
+        <%= f.text_field :time_limit %>秒
+      </div>
+      <div class="field">
+        <%= f.label "合格ライン" %><br />
+        <%= f.text_field :border_line %>%
+      </div>
+      <div class="field">
+        <%= f.label "公開可否" %><br />
+        <%= f.radio_button(:is_public, 1) %>：公開
+        <%= f.radio_button(:is_public, 2) %>：非公開
+      </div>
+      <div class="field">
+        <%= f.label "注意事項" %><br />
+        <%= f.text_area :notes, :style => 'height: 10em;' %>
+      </div>
+    </div>
+    <div id="this_exam_questions">
+      <h2 class="subtitle">問題を選択してください</h2>
+      <div class="extext">ドラッグ＆ドロップで順番を変えられます</div>
+      <ul id="sortable_question_list">
+      <% @question_exams = QuestionExam.find(:all, :conditions => ["exam_id = ? ",@exam.id], :order => "seq") %>
+      <% @question_exams.each do |question_exam| %>
+      <% question = Question.find(question_exam.question_id) %>
+        <li id="question_text_<%= question.id %>">
+              <% @enabled = question_exam.enabled %>
+          <input id="is_collect[<%= question.id %>]" name="is_collect[<%= question.id %>]" type="checkbox" <%= "checked" if @enabled == true %> />
+          <%= image_tag('/images/quiz.png', :style => 'border: none') %>
+          <%= truncate(erase_tag(question.question_text), 40) %>
+        </li>
+      <% end %>
+      </ul>
+    </div>
+    <%= sortable_element 'question_list' ,:url => {:action => 'sort_questions',:id => @exam.id}%>
+    <div id="submit_box">
+      <%= f.submit "更新する"  %>
+    </div>
+  <% end %>
+</div>

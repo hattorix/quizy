@@ -1,0 +1,89 @@
+/*contents layout*/
+
+#main{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 570px;
+	background: #FFFFFF;
+	text-align: left;
+
+}
+
+#side{
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+	width: 0px;
+	background: #00FFFF;
+	float:right;
+}
+
+#userid_label{
+	margin: 0px 0px 0px 0px;
+	padding: 10px;
+	width: 200px;
+	height: 25px;
+	background: #F0F8FF;			/*alice blue*/
+	float: left;
+}
+
+#userid_form{
+	margin: 0px 0px 0px 10px;
+	padding: 10px;
+	width: 320px;
+	height: 25px;
+	background: #F8F8FF;			/*ghost white*/
+	float: right;
+
+}
+
+#password_label{
+	margin: 10px 0px 0px 0px;
+	padding: 10px;
+	width: 200px;
+	height: 25px;
+	background: #F0F8FF;			/*alice blue*/
+	float: left;
+
+}
+
+#password_form{
+	margin: 10px 0px 0px 10px;
+	padding: 10px;
+	width: 320px;
+	height: 25px;
+	background: #F8F8FF;			/*ghost white*/
+	float: right;
+
+}
+
+#mail_label{
+	margin: 10px 0px 0px 0px;
+	padding: 10px;
+	width: 200px;
+	height: 25px;
+	background: #F0F8FF;			/*alice blue*/
+	float: left;
+
+}
+
+#mail_form{
+	margin: 10px 0px 0px 10px;
+	padding: 10px;
+	width: 320px;
+	height: 25px;
+	background: #F8F8FF;			/*ghost white*/
+	float: right;
+
+}
+
+#agreement{
+	margin: 10px 0px 0px 0px;
+	height: 205px;
+	clear: both;
+}
+
+#button{
+	margin: 10px 0px 0px 0px;
+	text-align: center;
+}

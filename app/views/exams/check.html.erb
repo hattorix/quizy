@@ -1,0 +1,84 @@
+<div id="main">
+  <% remote_form_for :question, :update => 'main', :url => {:action => 'finish', :id => @exam.id } do |f| -%>
+  <div id="page_title">解答状況一覧</div>
+  <div class="spacer_narrow">&nbsp;</div>
+  <table cellpadding="5" cellspacing="0" border="1">
+    <tr>
+      <th nowrap>No.</th><th nowrap>問題</th><th nowrap>あなたの解答</th>
+      <% review_count = ExamTemp.count(:conditions => ["exam_id = ? and user_id = ? and status = 'review'",
+                                    @exam.id,current_user.id])%>
+      <% if review_count > 0 %>
+        <th><%=  link_to_remote("絞込み",
+                            :url=>{:action => 'check',
+                                   :i => @i,
+                                   :id => @exam.id},
+                            :update => 'main') %></th>
+      <% end %>
+    </tr>
+    <% @question_exams = QuestionExam.find(:all, :conditions => ["exam_id = ? and enabled = 1 ",@exam.id], :order => "seq") %>
+    <% i = 0 %>
+    <% @question_exams.each do |question_exam| %>
+      <% question = Question.find(question_exam.question_id) %>
+<!--      < if @narrowing == true %>
+        < if temp = ExamTemp.find(:first,:conditions => ["exam_id = ? and question_id = ? and user_id = ?",
+                                                    @exam.id,question.id,current_user.id]) %>
+          < next if temp.status != 'review' %>
+        < else %>
+          < next %>
+        < end %>
+      < end %>-->
+      <tr>
+        <td><%= i += 1 %></td>
+        <td>
+          <%= link_to_remote(question.question_text,
+                         :url=>{:action => 'back',
+                                :i => i,
+                                :id => @exam.id,},
+                         :update => 'main') %>
+        </td>
+        <% if examtemp = ExamTemp.find(:first,:conditions => ["exam_id = ? and question_id = ? and user_id = ?",
+                                                        @exam.id,question.id,current_user.id]) %>
+          <% answer = examtemp.answer %>
+          <% if question.question_type == 1 %>
+            <% if answer.to_i != 0 %>
+              <% answer = Selection.find(answer.to_i).selection_text %>
+            <% end %>
+          <% elsif question.question_type == 2 %>
+            <% answers = Array.new %>
+            <% answer.split(",").each do |j| %>
+              <% a = Selection.find(j.to_i).selection_text %>
+              <% answers << a %>
+            <% end %>
+            <% answer = answers.join(",") %>
+          <% elsif question.question_type == 3 %>
+            <% answer = answer == "1" ? "○" : "×" %>
+          <% end %>
+          <% status = examtemp.status %>
+        <% else %>
+          <% answer = "" %>
+          <% status = "" %>
+        <% end %>
+        <td>『<%= answer %>』</td>
+        <% if review_count > 0 %>
+          <td nowrap>
+            <% if status == "review" %>
+              <div class="red-italic">要見直し！</div>
+            <% else %>
+              <div class="spacer_narrow">&nbsp;</div>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+
+  <div class="spacer_narrow">&nbsp;</div>
+
+  <div id="submit_box">
+    <%= submit_tag("テスト終了", :class => 'button') %>
+  </div>
+  <div class="spacer_narrow">&nbsp;</div>
+  <% end -%>
+</div>
+
+

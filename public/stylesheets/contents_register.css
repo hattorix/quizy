@@ -1,0 +1,223 @@
+/*contents layout*/
+
+#main_quiz{
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0px;
+  width: 800px;
+  background: #FFFFFF;
+  clear:both;
+}
+
+#main{
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0px;
+  width: 600px;
+  background: #FFFFFF;
+  clear:both;
+}
+
+#toolbar_box {
+  background-image: url('/images/gradation.png');
+  padding: 10px;
+  height: 50px;
+}
+
+#message {
+  margin-left: auto;
+  margin-right: auto;
+  padding:11pt;
+  width: 560px;
+  font-size:11pt;
+  font-weight: bold;
+}
+
+#message li {
+  list-style: disc;
+}
+
+#add_book_message {
+  font-size:10pt;
+  font-weight: bold;
+  float:left;
+  height:auto;
+}
+
+#question_information_box_quiz {
+  width:25%;
+  padding: 10px;
+  border: 1px solid silver;
+  float:right;
+}
+
+#question_information_box {
+  padding: 10px;
+  border: 1px solid silver;
+}
+
+#question_box_quiz {
+  width:70%;
+  float:left;
+}
+
+#question_box {
+  padding: 10px;
+  border: 1px solid silver;
+}
+
+#question_text_box {
+  padding: 10px;
+  border: 1px solid silver;
+}
+
+#response_box {
+  padding: 10px;
+  border: 1px solid silver;
+}
+
+#description_box {
+  padding: 10px;
+  border: 1px solid silver;
+}
+
+#submit_box {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid silver;
+}
+
+#navi {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid silver;
+}
+
+.error {
+    font-size: 11pt;
+    color: red;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-bottom: 10px;
+    padding: 3px;
+}
+
+.fieldWithErrors * {
+  background: pink;
+}
+
+.subtitle {
+    font-size: 18pt;
+    font-family: Arial,Helvetica,sans-serif;
+    font-weight: bold;
+    text-align: left;
+    border-bottom: solid, 1px, silver;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+.subsubtitle {
+  font-size: 14pt;
+  font-family: Arial,Helvetica,sans-serif;
+  margin-bottom: 5px;
+}
+
+input {
+  font-family: tahoma;
+  font-size: 12pt;
+  text-align: left;
+  vertical-align: middle;
+}
+
+select {
+  font-family: tahoma;
+  font-size: 12pt;
+  height: 1.5em;
+  text-align: left;
+}
+
+.button {
+  font-family: tahoma;
+  font-size: 12pt;
+  padding: 3px;
+  text-align: center;
+}
+
+.field {
+  text-align: left;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 10px;
+}
+
+.marufield {
+  text-align: left;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 10px;
+  float:left;
+}
+
+.batufield {
+  text-align: left;
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-bottom: 10px;
+  float:right;
+}
+
+
+li {
+  list-style: none;
+}
+
+.question_edit_and_delete {
+  text-align: right;
+}
+
+.result {
+  font-size: 28pt;
+  color: red;
+  text-align: center;
+  margin: 20px;
+}
+
+.tag {
+  background-color: silver;
+  line-height:25px;
+  margin: 5px;
+  padding: 3px;
+}
+
+.description {
+  background-color: pink;
+  font-size: 11pt;
+  text-align: left;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 10px;
+  padding: 3px;
+}
+
+.code {
+  font-size: 10pt;
+  border: 1px dotted black;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.prompt {
+    background-color: black;
+    color: white;
+    padding: 5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#report {
+  font-size:8pt;
+  text-align: center;
+  margin:10px;
+  clear:both;
+}

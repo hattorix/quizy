@@ -1,0 +1,30 @@
+<h1>Listing books</h1>
+
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Questions count</th>
+    <th>Time limit</th>
+    <th>Border line</th>
+    <th>Is public</th>
+    <th>User</th>
+  </tr>
+
+<% for book in @books %>
+  <tr>
+    <td><%=h book.name %></td>
+    <td><%=h book.questions_count %></td>
+    <td><%=h book.time_limit %></td>
+    <td><%=h book.border_line %></td>
+    <td><%=h book.is_public %></td>
+    <td><%=h book.user_id %></td>
+    <td><%= link_to 'Show', book %></td>
+    <td><%= link_to 'Edit', edit_book_path(book) %></td>
+    <td><%= link_to 'Destroy', book, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New book', new_book_path %>

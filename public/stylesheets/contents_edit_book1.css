@@ -1,0 +1,23 @@
+/*contents layout*/
+
+#main{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 570px;
+	background: #FFFFFF;
+	text-align: center;
+
+}
+
+#side{
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+	width: 0px;
+	background: #00FFFF;
+	float:right;
+}
+
+li{
+	list-style: none;
+}

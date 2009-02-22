@@ -1,0 +1,30 @@
+development:
+      host: localhost
+      adapter: mysql
+      database: quizy_development
+      port: 3306
+      username: root
+      password: 
+      charset: utf8
+
+# Warning: The database defined as 'test' will be erased and
+# re-generated from your development database when you run 'rake'.
+# Do not set this db to the same as development or production.
+test:
+      host: localhost
+      adapter: mysql
+      database: quizy_test
+      port: 3306
+      username: root
+      password: root
+      charset: utf8
+
+production:
+      host: localhost
+      adapter: mysql
+      database: quizy_production
+      port: 3306
+      username: root
+      password: root
+      charset: utf8
+

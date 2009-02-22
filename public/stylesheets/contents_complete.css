@@ -1,0 +1,44 @@
+/*contents layout*/
+
+#main{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 570px;
+	background: #FFFFFF;
+}
+
+#side{
+	margin-top: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 170px;
+	background: #FFFFFF;
+}
+
+#main p{
+	margin-left: auto;
+	margin-right: auto;
+	width: 300px;
+	height: 100px;
+	text-align: left;
+}
+
+#login{
+	padding: 10px;
+	border: 1px solid silver;
+	background: #FFFFFF;
+	height: 100px;
+}
+
+#login ul li{
+	list-style: none;
+	text-align: left;
+}
+
+#button{
+	clear: both;
+	margin-top: 150px;
+
+}

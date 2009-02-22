@@ -1,0 +1,31 @@
+<%= stylesheet_link_tag 'contents_search'  %>
+<div id="screen_title">検索結果</div>
+<div id="main">
+  <div id="result_box">
+    <div id="result_header"><%=  result_count = (@results == nil) ? 0 : @results.size %> 件の検索結果</div>
+    <% if result_count != 0 %>
+      <div id="result_table">
+      <ul>
+        <% @results.each do |result| %>
+          <li>
+              <%= link_to(truncate(result.question_text, 30),
+                        "/quiz/#{result.id}") %></li>
+            <div class="add_book">
+              <div class="add_book_form">
+              <% remote_form_for :question,:url=>{:action => 'add_book', :id => result.id} do -%>
+                マイブック
+                <% books = Book.find(:all, :conditions => ["user_id = ?", current_user.id])%>
+                <%= select_tag 'add_book_to',
+                             options_from_collection_for_select(books,
+                                                            :id, :name),
+                          :style => 'width: 80px;' %>
+                <%= submit_tag '登録',
+                            :class => 'button'%>
+              <% end -%></div>
+              <span id="add_book_message<%=result.id%>"></span></div>
+        <% end %>
+      </ul>
+    <% end %>
+    </div>
+  </div>
+</div>

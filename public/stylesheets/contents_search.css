@@ -1,0 +1,90 @@
+/*contents layout*/
+
+#main{
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0px;
+  width: 100%;
+  background: #FFFFFF;
+  clear:both;
+}
+
+#search_box {
+  padding: 10px;
+  border-top: 1px solid silver;
+  border-bottom: 1px solid silver;
+  margin-bottom: 30px;
+}
+
+#submit_box {
+  text-align: center;
+  padding: 10px;
+}
+
+.field {
+  text-align: left;
+
+}
+
+ul {
+  margin-left: 30px;
+}
+
+#result_table ul li {
+  margin: 5px; 
+  list-style: none;
+  list-style-image: url(/images/quiz.png);
+  list-style-position: outside;
+  float:left;
+  clear:both;
+}
+
+.subtitle {
+    font-size: 18pt;
+    font-family: Arial,Helvetica,sans-serif;
+    font-weight: bold;
+    text-align: left;
+    border-bottom: solid, 1px, silver;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+}
+
+.subsubtitle {
+  font-size: 14pt;
+  font-family: Arial,Helvetica,sans-serif;
+  margin-bottom: 5px;
+}
+
+#result_header {
+  font-size: 11pt;
+  text-align: right;
+  width: 100%;
+  border-top: 1px solid silver;
+  padding-top: 5px;
+  clear: both;
+}
+
+#result_table {
+  width: 100%;
+}
+
+.question_text {
+  float:left;
+  clear:both;
+}
+
+.add_book {
+  margin: 5px;
+  float:right;
+}
+
+.add_book_form {
+  float: left;
+}
+
+.add_book span {
+  width:100px;
+  float: left;
+  font-size:10pt;
+  font-weight: bold;
+}

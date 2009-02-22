@@ -1,0 +1,62 @@
+      <%= stylesheet_link_tag("contents_register") %>
+      <div id="main">
+      <% form_for :regist, :url => {:action => 'regist'} do |f| -%>
+
+        <div class="qa_box">
+        <div class="subtitle">分類</div>
+          <%# category field %>
+          <div class="label">カテゴリ</div>
+          <div class="field">
+            <%= select_tag "category",
+               options_from_collection_for_select(Category.find(:all), :id, :category_name)
+            %>
+          </div>
+
+          <%# tag field%>
+          <div class="label">タグ</div>
+          <div class="field">
+            <%= text_field_tag "tag", "", {:size => 20} %>
+            ※ 「自分で登録」タグは自動でつきます。
+          </div>
+        </div>
+
+        <div class="qa_box">
+          <div class="subtitle">問題</div>
+          <div class="label">問題文</div>
+          <div class="field">
+            <%= text_area_tag "question_ta", "", :size => "40x5" %>
+          </div>
+        </div>
+        
+        <div class="subtitle">解答</div>
+        <div class="qa_box">
+          <div class="label">回答方法</div>
+            <div class="field">
+              <select name="question_type">
+                <option value="1">単選択</option>
+                <option value="2">複数選択</option>
+                <option value="3">ユーザ入力</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field"><div class="field">選択肢</div>
+            <input type="checkbox" /><input type="text" /><br />
+            <input type="checkbox" /><input type="text" /><br />
+            <input type="checkbox" /><input type="text" /><br />
+            <input type="checkbox" /><input type="text" /><br />
+          </div>
+
+          <div class="field">解答(入力の場合)</div>
+          <%= text_area_tag "answer_ta", "", :size => "40x3" %>
+        </div>
+
+        <div class="subtitle">解説</div>
+        <div class="qa_box">
+          <%= text_area_tag "comment_ta", "", :size => "40x5" %>
+        </div>
+
+        <input type="submit" value="登録"/>
+        <input type="reset" value="修正" />
+      </div>
+    <% end -%>

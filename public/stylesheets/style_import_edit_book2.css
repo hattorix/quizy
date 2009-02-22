@@ -1,0 +1,4 @@
+/*stylesheet import*/
+
+@import "basic.css";					/*基本デザイン用*/
+@import "contents_edit_book2.css";		/*各ページ用*/

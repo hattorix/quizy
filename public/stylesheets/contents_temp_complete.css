@@ -1,0 +1,31 @@
+/*contents layout*/
+
+#main{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px;
+	width: 570px;
+	background: #FFFFFF;
+}
+
+#side{
+	margin: 0px 0px 0px 0px;
+	padding: 0px;
+	width: 0px;
+	background: #00FFFF;
+	float:right;
+}
+
+#message{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 10px;
+	width: 300px;
+	height: 340px;
+	text-align: left;
+}
+
+#button{
+	margin: 10px 0px 0px 0px;
+	clear: both;
+}

@@ -1,0 +1,18 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+single:
+  id: 1
+  name: "単一選択"
+
+multi:
+  id: 2
+  name: "複数選択"
+
+boolean:
+  id: 3
+  name: "○×選択"
+
+input:
+  id: 4
+  name: "ユーザ入力"
+

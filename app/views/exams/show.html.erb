@@ -1,0 +1,48 @@
+<div id="main">
+  <%= stylesheet_link_tag 'basic' %>
+  <%= stylesheet_link_tag 'style_exam_detail'  %>
+  <SCRIPT LANGUAGE="JavaScript">
+function OpenNew(page) {
+    ret = this.open(page, "CtrlWindow"
+             ,"toolbar=0, menubar=0, location=0, scrollbars=1, resize=0, width=960, height=900");
+}
+</SCRIPT>
+  <h1 class="this_exam_title">
+    『<%=h @exam.name %>』
+    <% if @exam.user_id == current_user.id %>
+      <%= link_to(image_tag('/images/book_edit.png',
+                         :style => 'border: none;',
+                         :title => 'このテストを編集する'),
+                edit_exam_path(@exam))%>
+    <% end %>
+  </h1>
+
+  <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
+  <% form_tag({:controller=>'exams',:action=>'start',:id => @exam.id},:target=>["_blank"]) do %>
+    <div id="this_exam_information">
+      <h2 class="subtitle">テスト情報</h2>
+      <table cellpadding="5" cellspacing="0" border="1">
+        <tr><td>問題数</td><td class="number"><%=h count = QuestionExam.count(:conditions => ["exam_id = ? and enabled = 1",
+                                                                             @exam.id]) %> 問</td></tr>
+        <tr><td>制限時間</td><td class="number"><%=h @exam.time_limit %> 秒</td></tr>
+        <tr><td>ボーダライン</td><td class="number"><%=h @exam.border_line %> %</td></tr>
+        <tr><td>テストの公開</td><td class="string"><%=h @exam.is_public == 1 ? "公開" : "非公開" %></td></tr>
+      </table>
+    </div>
+    <div id="this_exam_notes">
+      <h2 class="subtitle">注意事項</h2>
+      <div id="notes"><%= hbr @exam.notes %></div>
+    </div>
+    <% if count == 0%>
+      <% disabledflg = true %>
+    <% else %>
+      <% disabledflg = false %>
+    <% end %>
+    <div id="exam_start">
+      <%= button_to_function('テスト開始',
+                          "OpenNew('start/#{@exam.id}')",
+                          {:style=>"font-size:12px; width:108px; height:25px;"},
+                           :disabled => disabledflg)%>
+    </div>
+  <% end %>
+</div>
