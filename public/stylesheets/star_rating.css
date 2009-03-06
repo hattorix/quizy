@@ -1,0 +1,56 @@
+@charset "utf-8";
+
+.rating{
+    width:80px;
+    height:16px;
+    padding:0;
+    list-style:none;
+    position:relative;
+    background: url(/images/star-matrix.gif) no-repeat 0 0;
+}
+
+ul.rating li {
+    cursor: pointer;
+    /*ie5 mac doesn't like it if the list is floated but ie6 does\*/
+    float:left;
+    /* end hide*/
+    text-indent:-999em;/* hide text*/
+}
+
+ul.rating li a {
+    position:absolute;
+    left:0;
+    top:0;
+    width:16px;
+    height:16px;
+    text-decoration:none;
+    z-index: 200;
+}
+
+ul.rating li.star1 a {left:0}
+ul.rating li.star2 a {left:16px;}
+ul.rating li.star3 a {left:32px;}
+ul.rating li.star4 a {left:48px;}
+ul.rating li.star5 a {left:64px;}
+
+.nostar {background-position:0 0}
+.onestar {background-position:0 -16px}
+.twostar {background-position:0 -32px}
+.threestar {background-position:0 -48px}
+.fourstar {background-position:0 -64px}
+.fivestar {background-position:0 -80px}
+
+ul.rating li a:hover {
+    z-index:2;
+    width:80px;
+    height:16px;
+    overflow:hidden;
+    left:0;
+    background: url(/images/star-matrix.gif) no-repeat 0 0
+}
+
+ul.rating li.star1 a:hover {background-position:0 -96px;}
+ul.rating li.star2 a:hover {background-position:0 -112px;}
+ul.rating li.star3 a:hover {background-position:0 -128px}
+ul.rating li.star4 a:hover {background-position:0 -144px}
+ul.rating li.star5 a:hover {background-position:0 -160px}

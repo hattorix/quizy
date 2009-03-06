@@ -116,7 +116,7 @@ class QaController < ApplicationController
     @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
     @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
     if logged_in?
-      @books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart = 0", current_user.id])
+      @books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1", current_user.id])
       @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?", @question.id,current_user.id])
     end
 
@@ -349,7 +349,8 @@ class QaController < ApplicationController
     @question.selections.delete_all()
 
     QuestionExam.delete_all(["question_id = ?", params[:id].to_i])
-    QuestionBook.delete_all(["question_id = ?", params[:id].to_i])    
+    QuestionBook.delete_all(["question_id = ?", params[:id].to_i])
+    Bookmark.delete_all(["question_id = ?", params[:id].to_i])
 
     @question.destroy
     @title = ' - マイページ'
@@ -357,28 +358,40 @@ class QaController < ApplicationController
   end
   
   def add_book
-    book = Book.find(params[:add_book_to])
-    question = Question.find(params[:id])
-    if book.questions.include?(question)
-      flash[:notice] = "登録済みです。"
+    if params[:add_book_to]
+      book = Book.find(params[:add_book_to])
+      question = Question.find(params[:id])
+      if book.questions.include?(question)
+        flash[:notice] = "登録済みです。"
+        render :update do |page|
+          page.replace_html("add_book_message", :partial=>"message",:locals => {:flug => false})
+          page.visual_effect :Opacity,
+                             "add_book_message",
+                             :from => 1,
+                             :to => 0,
+                             :duration => 3
+        end
+      else
+        book.questions << question
+        flash[:notice] = "登録しました！"
+        render :update do |page|
+          page.replace_html("add_book_message", :partial=>"message",:locals => {:flug => true})
+          page.visual_effect :Opacity,
+                             "add_book_message",
+                             :from => 1,
+                             :to => 0,
+                             :duration => 3
+        end
+      end
+    else
+      flash[:notice] = "ブックが存在しません。"
       render :update do |page|
         page.replace_html("add_book_message", :partial=>"message",:locals => {:flug => false})
         page.visual_effect :Opacity,
-                           "add_book_message",
-                           :from => 1,
-                           :to => 0,
-                           :duration => 3
-      end
-    else
-      book.questions << question
-      flash[:notice] = "登録しました！"
-      render :update do |page|
-        page.replace_html("add_book_message", :partial=>"message",:locals => {:flug => true})
-        page.visual_effect :Opacity,
-                           "add_book_message",
-                           :from => 1,
-                           :to => 0,
-                           :duration => 3
+                            "add_book_message",
+                            :from => 1,
+                            :to => 0,
+                            :duration => 3
       end
     end
   end
@@ -419,10 +432,11 @@ class QaController < ApplicationController
     @avg = @sum/evals.size
     render :update do |page|
       page.replace_html("evaluation_box", :partial=>"evals",:object => {:sum => @sum, :avg => @avg})
-      page[:sum_and_avg].visual_effect :highlight,
-                                :startcolor => "#ffd900",
-                                :endcolor => "#ffffff",
-                                :duration => 1.5
+      page.visual_effect :highlight,
+                             "sum_and_avg",
+                             :startcolor => "#ffd900",
+                             :endcolor => "#ffffff",
+                             :duration => 1.5
 
     end
   end

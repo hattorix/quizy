@@ -6,7 +6,7 @@
       <div class="add_book_form">
         <% remote_form_for :question,:url=>{:action => 'add_book',:id => 'all',:results => @results} do -%>
           全てマイブック
-          <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題'", current_user.id])%>
+          <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1", current_user.id])%>
           <%= select_tag 'add_book_to',
                         options_from_collection_for_select(books,
                                                       :id, :name),
@@ -34,7 +34,7 @@
                 <div class="add_book_form">
                 <% remote_form_for :question,:url=>{:action => 'add_book', :id => result.id} do -%>
                   マイブック
-                  <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題'", current_user.id])%>
+                  <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1", current_user.id])%>
                   <%= select_tag 'add_book_to',
                                options_from_collection_for_select(books,
                                                               :id, :name),

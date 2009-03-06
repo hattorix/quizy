@@ -91,6 +91,13 @@ h1.this_book_title {
   float: left;
 }
 
+#delete_book_questions {
+  width:100%;
+  padding-left:15px;
+  float: left;
+  clear:both;
+}
+
 h2.subtitle {
   font-size: 16pt;
 }
@@ -136,28 +143,41 @@ li.question_text {
 
 }
 
+* html body .search_field {
+  float:left;
+  text-align: left;
+  width:60px;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 10px;
+  display: inline;
+}
+
 .search_field {
   float:left;
   text-align: left;
   width:150px;
-  margin-left: 15px;
-  margin-right: 15px;
-  _width:60px;
-  _margin-left: 0px;
-  _margin-right: 0px;
+  margin-left: 5px;
+  margin-right: 5px;
   margin-bottom: 10px;
-  _display: inline;
+}
+
+* html body .search_button {
+  float:left;
+  text-align: left;
+  margin-left: 0px;
+  margin-right: 0px;
+  margin-bottom: 10px;
+  display: inline;
+
 }
 
 .search_button {
   float:left;
   text-align: left;
-  margin-left: 15px;
-  margin-right: 15px;
-  _margin-left: 0px;
-  _margin-right: 0px;
+  margin-left: 5px;
+  margin-right: 5px;
   margin-bottom: 10px;
-  _display: inline;
 
 }
 
@@ -170,18 +190,23 @@ li.question_text {
 
 #text {
   float:left;
+  _float:right;
+}
+
+*:first-child+html #text {
+  float:right;
 }
 
 #suggest {
     background-color: #FFFFFF;
     border: 1px solid #CCCCFF;
     font-size: 90%;
-    width: 150px;
+    width: 130px;
 }
 
 #suggest div {
     display: block;
-    width: 150px;
+    width: 130px;
     overflow: hidden;
     white-space: nowrap;
 

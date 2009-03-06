@@ -145,6 +145,21 @@
                       :onclick => 'del_conditions("tags");return false;') %>
         </div>
       </div>
+    <% else %>
+      <% if @book.questions.size >= 1 %>
+        <div id="delete_book_questions">
+          <h2 class="subtitle">チェックを外した問題を削除します</h2>
+          <ul class="question_list">
+            <% @book.questions.each do |question| %>
+              <li class="question_text">
+                <input id="is_collect[<%= question.id %>]" name="is_collect[<%= question.id %>]" type="checkbox" checked />
+                <%= image_tag('/images/quiz.png', :style => 'border: none') %>
+                <%= truncate(erase_tag(question.question_text), 40)%>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
     <% end %>
     <div id="submit_box">
       <%= f.submit "更新する" %>

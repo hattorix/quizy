@@ -231,6 +231,14 @@ li {
     margin-bottom: 10px;
 }
 
+.evals_disable {
+  font-style:oblique;
+  color:dimgray;
+  font-size:10pt;
+  position:absolute;
+  top:0px;
+}
+
 #report {
   font-size:8pt;
   text-align: center;

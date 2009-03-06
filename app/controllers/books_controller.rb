@@ -53,6 +53,10 @@ class BooksController < ApplicationController
         @tags = Array.new
       elsif @questions = questions_t
         @categories = Array.new
+      else
+        @questions = Array.new
+        @tags = Array.new
+        @categories = Array.new
       end
 
     end
@@ -127,12 +131,24 @@ class BooksController < ApplicationController
     @book = Book.find(params[:id])
     if @book.name != "自分で登録した問題"
       if @book.update_attributes(params[:book]) && @book.name != "自分で登録した問題"
-        tags = @book.tags.split(",")
-        tags.delete("")
-        @book.update_attribute(:tags ,tags.join(","))
-        categories = @book.categories.split(",")
-        categories.delete("")
-        @book.update_attribute(:categories ,categories.join(","))
+        if @book.is_smart == true
+          tags = @book.tags.split(",")
+          tags.delete("")
+          @book.update_attribute(:tags ,tags.join(","))
+          categories = @book.categories.split(",")
+          categories.delete("")
+          @book.update_attribute(:categories ,categories.join(","))
+        else
+          @book.questions.each do |question|
+            if params[:is_collect]
+              unless params[:is_collect][question.id.to_s] == "on"
+                @book.questions.delete(question)
+              end
+            else
+              @book.questions.delete_all
+            end
+          end
+        end
         render :update do |page|
           page.redirect_to :controller => "mypage"
         end
