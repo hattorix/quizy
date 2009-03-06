@@ -73,6 +73,13 @@ h1.this_book_title {
   float: left;
 }
 
+.tag {
+  background-color: silver;
+  line-height:25px;
+  margin: 5px;
+  padding: 3px;
+}
+
 #outline {
   width: 276px;
   margin: 10px 10px 10px 0px;
@@ -108,9 +115,52 @@ li.question_text {
 #outline_field {
   float:left;
 }
+
+#smart_field {
+}
+
+#search_field {
+  float:left;
+  text-align: left;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 10px;
+
+}
+
+#tags_field {
+  float:left;
+  text-align: left;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 10px;
+
+}
+
 .field {
   text-align: left;
   margin-left: 15px;
   margin-right: 15px;
   margin-bottom: 10px;
+}
+
+#suggest {
+    position: absolute;
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCFF;
+    font-size: 90%;
+    width: 200px;
+}
+#suggest div {
+    display: block;
+    width: 200px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+#suggest div.select{ /* キー上下で選択した場合のスタイル */
+    color: #FFFFFF;
+    background-color: #3366FF;
+}
+#suggest div.over{ /* マウスオーバ時のスタイル */
+    background-color: #99CCFF;
 }

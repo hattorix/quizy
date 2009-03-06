@@ -26,8 +26,17 @@
   <div id="this_book_information">
     <h2 class="subtitle">ブック情報</h2>
     <table cellpadding="5" cellspacing="0" border="1">
-      <tr><td>問題数</td><td class="number"><%=h @book.questions.size %> 問</td></tr>
+      <tr><td>問題数</td><td class="number">
+      <% if @book.is_smart == true %>
+        <%=h @questions.size %>
+      <% else %>
+        <%=h @book.questions.size %>
+      <% end %>
+      問</td></tr>
       <tr><td>ブックの公開</td><td class="string"><%=h @book.is_public == 1 ? "公開" : "非公開" %></td></tr>
+      <% if @book.is_smart == true %>
+        <tr><td>参照タグ</td><td class="string"><%= @tags.map{|t| '<span class="tag">' + t + '</span>'} %></td></tr>
+      <% end %>
     </table>
     <h2 class="subtitle">概要</h2>
     <div id="outline"><%= hbr @book.outline %></div>
@@ -37,25 +46,34 @@
   <div id="this_book_questions">
     <h2 class="subtitle">このブックの問題一覧</h2>
     <ul class="question_list">
-      <% @book.questions.each do |question| %>
-        <li class="question_text">
-          <%= image_tag('/images/quiz.png', :style => 'border: none') %>
-          <%= link_to(truncate(erase_tag(question.question_text), 40),
-                   "/quiz/#{question.id}") %>
-          <% if logged_in? %>
-            <% if @book.user_id == current_user.id && @book.name != "自分で登録した問題"%>
-              <%= link_to(image_tag('/images/page_delete.png',
-                                :style => 'border: none;',
-                                :title => 'このブックから削除する'),
-                      {:controller => 'books',
-                       :action => 'rip',
-                       :id => @book.id,
-                       :question_id => question.id},
-                       :confirm => '本当に削除してよろしいですか?'
-                      ) %>
+      <% if @book.is_smart == true %>
+        <% @questions.each do |question| %>
+          <li class="question_text">
+            <%= image_tag('/images/quiz.png', :style => 'border: none') %>
+            <%= link_to(truncate(erase_tag(question.question_text), 40),
+                     "/quiz/#{question.id}") %>
+        <% end %>
+      <% else %>
+        <% @book.questions.each do |question| %>
+          <li class="question_text">
+            <%= image_tag('/images/quiz.png', :style => 'border: none') %>
+            <%= link_to(truncate(erase_tag(question.question_text), 40),
+                     "/quiz/#{question.id}") %>
+            <% if logged_in? %>
+              <% if @book.user_id == current_user.id && @book.name != "自分で登録した問題"%>
+                <%= link_to(image_tag('/images/page_delete.png',
+                                  :style => 'border: none;',
+                                  :title => 'このブックから削除する'),
+                        {:controller => 'books',
+                         :action => 'rip',
+                         :id => @book.id,
+                         :question_id => question.id},
+                         :confirm => '本当に削除してよろしいですか?'
+                        ) %>
+              <% end %>
             <% end %>
-          <% end %>
-        </li>
+          </li>
+        <% end %>
       <% end %>
     </ul>
   </div>
@@ -65,7 +83,7 @@
   <div id="submit_box">
     <% form_tag(:action => 'training_start', :id => @book.id) do -%>
       この問題集から<%= text_field_tag "select_count", "",:style => 'width: 20pt;' %>問抽出し、
-      <%= submit_tag "トレーニング" %>
+      <%= submit_tag "トレーニング", :popup => ['Popup Show', 'width=200, height=150'] %>
     <% end %>
   </div>
 </div>

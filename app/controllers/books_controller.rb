@@ -7,7 +7,6 @@ class BooksController < ApplicationController
     else
       "application"
     end
-#    %w(start back check finish).include?(action_name) ? "examination" : "application"
   end
   
   
@@ -26,16 +25,31 @@ class BooksController < ApplicationController
   # GET /books/1.xml
   def show
     @book = Book.find(params[:id])
+    if @book.is_smart == true
+      @questions = Array.new
+      @tags = @book.tags.split(",")
+      @tags.each do |tag|
+        @questions << Question.find_tagged_with(tag)
+      end
+      @questions.flatten!.uniq!
+    end
   end
 
   # GET /books/new
   # GET /books/new.xml
   def new
     @book = Book.new
+    @tags = Question.tag_counts
+
   end
 
   def edit
     @book = Book.find(params[:id])
+    @tags = Question.tag_counts
+    if @book.is_smart == true
+      @books_tags = @book.tags.split(",")
+    end
+
   end
 
   def create
@@ -44,6 +58,9 @@ class BooksController < ApplicationController
 
     if @book.name != "自分で登録した問題"
       if @book.save
+        tags = @book.tags.split(",")
+        tags.delete("")
+        @book.update_attribute(:tags ,tags.join(","))
         my_book = MyBook.new
         my_book.book_id = @book.id
         my_book.user_id = current_user.id
@@ -81,6 +98,9 @@ class BooksController < ApplicationController
     @book = Book.find(params[:id])
     if @book.name != "自分で登録した問題"
       if @book.update_attributes(params[:book]) && @book.name != "自分で登録した問題"
+        tags = @book.tags.split(",")
+        tags.delete("")
+        @book.update_attribute(:tags ,tags.join(","))
         render :update do |page|
           page << 'mypage()'
         end
@@ -109,32 +129,64 @@ class BooksController < ApplicationController
   end
 
   def training_start
+    # 数値が未入力の場合
     if params[:select_count] == ""
       redirect_to :action => 'show',:id => params[:id]
     else
       @id = params[:id]
+      @book = Book.find(params[:id])
       @books_questions = QuestionBook.find(:all, :conditions => ["book_id = ?",params[:id]])
-      if @books_questions.size == 0
-        redirect_to :action => 'show',:id => params[:id]
+      # スマートブックではない場合
+      if @book.is_smart != true
+        # ブックに問題が登録されていない場合
+        if @books_questions.size == 0
+          redirect_to :action => 'show',:id => params[:id]
+        else
+          @questions = Array.new
+          params[:select_count].to_i.times do |i|
+            @questions << Question.find(@books_questions[rand(@books_questions.size)].question_id)
+          end
+          i = 0
+          @question = @questions[@i]
+          @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
+          @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
+          @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
+
+          # statstics information
+          right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
+          @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
+          @question_count = @question.question_count
+          @correct_count = @question.correct_count
+          @wrong_count = @question.wrong_count
+
+          render :action => 'training'
+
+        end
       else
-      @questions = Array.new
-      params[:select_count].to_i.times do |i|
-        @questions << Question.find(@books_questions[rand(@books_questions.size)].question_id)
-      end
-      @i = 0
-      @question = @questions[@i]
-      @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
-      @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
-      @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
+        @questions = Array.new
+        @tags_questions = Array.new
+        @tags = @book.tags.split(",")
+        @tags.sort_by{rand}.each do |tag|
+          @tags_questions << Question.find_tagged_with(tag)
+        end
+        @tags_questions.flatten!.uniq!
+        params[:select_count].to_i.times do |i|
+          @questions << @tags_questions[rand(@tags_questions.size)]
+        end
+        @i = 0
+        @question = @questions[@i]
+        @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
+        @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
+        @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
 
-      # statstics information
-      right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
-      @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
-      @question_count = @question.question_count
-      @correct_count = @question.correct_count
-      @wrong_count = @question.wrong_count
+        # statstics information
+        right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
+        @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
+        @question_count = @question.question_count
+        @correct_count = @question.correct_count
+        @wrong_count = @question.wrong_count
 
-      render :action => 'training'
+        render :action => 'training'
       end
     end
   end
@@ -273,6 +325,13 @@ class BooksController < ApplicationController
      end
     else
       raise("must not happend")
+    end
+    if logged_in?
+      hist = History.new
+      hist.question_id = @question.id
+      hist.user_id = current_user.id
+      hist.correct_or_wrong = @is_collect.to_i
+      hist.save
     end
   end
 

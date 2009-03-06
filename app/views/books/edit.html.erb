@@ -1,33 +1,103 @@
 <%= stylesheet_link_tag "style_book_detail" %>
+<script type="text/javascript" src="/javascripts/suggest.js"></script>
 <script language="javascript">
   function mypage() {
     location.href="../../";
   }
+
+  function add_tags(){
+  addText = document.getElementById("text").value;
+  addValue = document.getElementById("text").value;
+  if (addText != "") {
+  options = document.getElementById("select_tags").options.text
+<!--  if(options.indexOf(addText) == -1){-->
+    document.getElementById("select_tags").options[document.getElementById("select_tags").options.length] = new Option(addText, addValue);
+    tags = document.getElementById("tags").value;
+    document.getElementById("tags").value = tags.concat(",".concat(addText));
+<!--  }-->
+  }}
+
+  function del_tags(){
+  if (document.getElementById("select_tags").selectedIndex != -1) {
+  idx = document.getElementById("select_tags").selectedIndex;
+  val = document.getElementById("select_tags").options[idx].value;
+  document.getElementById("tags").value = document.getElementById("tags").value.replace(val, "")
+  document.getElementById("select_tags").options[idx] = null;
+  }
+  }
+
+  function startSuggest() {
+  var tag_list = [
+    <% @tags.each do |tag| -%>
+      "<%= tag.name %>",
+    <% end -%>
+   ""
+  ];
+  new Suggest.LocalMulti(
+        "text",    // 入力のエレメントID
+        "suggest", // 補完候補を表示するエリアのID
+        tag_list,      // 補完候補の検索対象となる配列
+        {dispMax: 10, interval: 100}); // オプション
+}
+    window.addEventListener ?
+    window.addEventListener('load', startSuggest, false) :
+    window.attachEvent('onload', startSuggest);
 </script>
 <div id="screen_title">ブックの編集</div>
 <div id="message"></div>
 <div id="main">
-<% remote_form_for(@book) do |f| %>
-  <%= f.error_messages %>
-  <div id="name_public_field">
-    <div class="field">
-      <%= f.label "ブック名" %><br />
-      <%= f.text_field :name %>
+  <% remote_form_for(@book) do |f| %>
+    <%= f.error_messages %>
+    <div id="name_public_field">
+      <div class="field">
+        <%= f.label "ブック名" %><br />
+        <%= f.text_field :name %>
+      </div>
+      <div class="field">
+        <%= f.label "公開可否" %><br />
+        <%= f.radio_button(:is_public, 1) %>：公開
+        <%= f.radio_button(:is_public, 2) %>：非公開
+      </div>
     </div>
-    <div class="field">
-      <%= f.label "公開可否" %><br />
-      <%= f.radio_button(:is_public, 1) %>：公開
-      <%= f.radio_button(:is_public, 2) %>：非公開
+    <div id="outline_field">
+      <div class="field">
+        <%= f.label "概要" %><br />
+        <%= f.text_area :outline , :style => 'height: 10em;'%>
+      </div>
     </div>
-  </div>
-  <div id="outline_field">
-    <div class="field">
-      <%= f.label "概要" %><br />
-      <%= f.text_area :outline , :style => 'height: 10em;'%>
+    <% if @book.is_smart == true %>
+      <div class="field" style="clear:both;">&nbsp;</div>
+      <div id="smart_field">
+        <div id="search_field">
+          <%= f.label "タグ名" %><br />
+          <input id="text" type="text" size="30" />
+          <div id="suggest"></div> 
+        </div>
+        <div id="search_field">
+          <div>&nbsp;</div>
+          <%= button_to("追加",
+                      "追加",
+                      :onclick => "add_tags();return false;") %>
+        </div>
+        <div id="tags_field">
+          <div>&nbsp;</div>
+          <%= f.hidden_field :tags, :id => "tags" %>
+          <select id="select_tags" size="8" style="width:150px;">
+          <% @books_tags.each do |tag| %>
+            <%= "<option value='#{tag}'>#{tag}</option>" %>
+          <% end %>
+          </select>
+        </div>
+        <div id="search_field">
+          <div>&nbsp;</div>
+          <%= button_to("削除",
+                      "削除",
+                      :onclick => "del_tags();return false;") %>
+        </div>
+      </div>
+    <% end %>
+    <div id="submit_box">
+      <%= f.submit "更新する" %>
     </div>
-  </div>
-  <div id="submit_box">
-    <%= f.submit "更新する" %>
-  </div>
-<% end %>
+  <% end %>
 </div>

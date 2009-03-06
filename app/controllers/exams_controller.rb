@@ -34,6 +34,16 @@ class ExamsController < ApplicationController
   def new
     @exam = Exam.new
     @book = Book.find(params[:id])
+    if @book.is_smart == true
+      @questions = Array.new
+      @tags = @book.tags.split(",")
+      @tags.each do |tag|
+        @questions << Question.find_tagged_with(tag)
+      end
+      @questions.flatten!.uniq!
+    else
+      @questions = @book.questions
+    end
   end
 
   def edit
@@ -198,7 +208,7 @@ class ExamsController < ApplicationController
                  :answer => params[:answer],
                  :review => params["review"])
     end
-    
+
     @count = ExamTemp.count(:conditions => ["exam_id = ? and user_id = ? and t_or_f = ?",
                                                      params[:id], current_user.id, 1])
     @exam = Exam.find(params[:id])
@@ -209,6 +219,16 @@ class ExamsController < ApplicationController
     
     @examtemps = ExamTemp.find(:all,:conditions => ["exam_id = ? and user_id = ?",
                                                       params[:id],current_user.id])
+
+    if logged_in?
+      @examtemps.each do |examtemp|
+        hist = History.new
+        hist.question_id = examtemp.question_id
+        hist.user_id = current_user.id
+        hist.correct_or_wrong = examtemp.t_or_f
+        hist.save
+      end
+    end
 
     ExamTemp.delete_all(["exam_id = ? and user_id = ?",
                                 params[:id],current_user.id])

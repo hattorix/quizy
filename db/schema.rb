@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090226025133) do
+ActiveRecord::Schema.define(:version => 20090227024029) do
 
   create_table "answers", :force => true do |t|
     t.text     "answer_text"
@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(:version => 20090226025133) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "outline"
+    t.boolean  "is_smart"
+    t.text     "tags"
   end
 
   create_table "categories", :force => true do |t|

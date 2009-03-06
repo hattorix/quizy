@@ -1,12 +1,52 @@
 <%= stylesheet_link_tag "style_book_detail" %>
+<script type="text/javascript" src="/javascripts/suggest.js"></script>
 <script language="javascript">
   function mypage() {
     location.href="../../";
   }
+
+  function add_tags(){
+  addText = document.getElementById("text").value;
+  addValue = document.getElementById("text").value;
+  if (addText != "") {
+  options = document.getElementById("select_tags").options.text
+<!--  if(options.indexOf(addText) == -1){-->
+    document.getElementById("select_tags").options[document.getElementById("select_tags").options.length] = new Option(addText, addValue);
+    tags = document.getElementById("tags").value;
+    document.getElementById("tags").value = tags.concat(addText.concat(","));
+<!--  }-->
+  }}
+
+  function del_tags(){
+  if (document.getElementById("select_tags").selectedIndex != -1) {
+  idx = document.getElementById("select_tags").selectedIndex;
+  val = document.getElementById("select_tags").options[idx].value;
+  document.getElementById("tags").value = document.getElementById("tags").value.replace(val, "")
+  document.getElementById("select_tags").options[idx] = null;
+  }
+  }
+
+  function startSuggest() {
+  var tag_list = [
+    <% @tags.each do |tag| -%>
+      "<%= tag.name %>",
+    <% end -%>
+   ""
+  ];
+  new Suggest.LocalMulti(
+        "text",    // 入力のエレメントID
+        "suggest", // 補完候補を表示するエリアのID
+        tag_list,      // 補完候補の検索対象となる配列
+        {dispMax: 10, interval: 100}); // オプション
+}
+    window.addEventListener ?
+    window.addEventListener('load', startSuggest, false) :
+    window.attachEvent('onload', startSuggest);
 </script>
-<div id="screen_title"><a href="#" onclick="Effect.toggle('main', 'slide',{ duration: 0.5 }); return false;">ブックの新規作成</a></div>
+</script>
+<div id="screen_title">ブックの新規作成</div>
 <div id="message"></div>
-<div id="main" style="display:none;">
+<div id="main">
   <% remote_form_for(@book) do |f| %>
     <%= f.error_messages %>
     <div id="name_public_field">
@@ -24,6 +64,35 @@
       <div class="field">
         <%= f.label "概要" %><br />
         <%= f.text_area :outline, :style => 'height: 10em;' %>
+      </div>
+    </div>
+
+    <div class="field" style="clear:both;">
+      <%= f.check_box(:is_smart, :onchange =>"Effect.toggle('smart_field', 'slide',{ duration: 0.5 });" ) %>スマートブックにする
+    </div>
+    <div id="smart_field" style="display:none;">
+      <div id="search_field">
+        <%= f.label "タグ名" %><br />
+        <input id="text" type="text" size="30" />
+        <div id="suggest"></div> 
+      </div>
+      <div id="search_field">
+        <div>&nbsp;</div>
+        <%= button_to("追加",
+                    "追加",
+                    :onclick => "add_tags();return false;") %>
+      </div>
+      <div id="tags_field">
+        <div>&nbsp;</div>
+        <%= f.hidden_field :tags, :id => "tags" %>
+        <select id="select_tags" size="8" style="width:150px;">
+        </select>
+      </div>
+      <div id="search_field">
+        <div>&nbsp;</div>
+        <%= button_to("削除",
+                    "削除",
+                    :onclick => "del_tags();return false;") %>
       </div>
     </div>
     
