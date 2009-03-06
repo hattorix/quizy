@@ -11,14 +11,15 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :questions
   map.resources :users
   map.resource :session
+  map.resources :top
+
 
   # Named Root設定
   # (Controller上から、login_path, new_session_pathのように参照できる)
   map.signup '/signup', :controller => 'users', :action => 'new'
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  map.index '/', :controller => 'mypage', :action => 'index'
-
+  map.index '/', :controller => 'top', :action => 'index'
 
   # The priority is based upon order of creation: first created -> highest priority.
 

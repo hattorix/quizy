@@ -39,7 +39,7 @@
     }
   }
   function mypage() {
-    location.href="../../";
+    location.href="../../mypage";
   }
   function reload() {
     location.reload()
@@ -48,7 +48,7 @@
 <div id="screen_title">問題の登録</div>
   <div id="message"></div>
 <div id="main">
-<% remote_form_for :question, :url => {:action => 'create'} do |f| -%>
+<% form_for :question, :url => {:action => 'create'} do |f| -%>
 <div id="question_information_box">
   <div class="subtitle">分類</div>
 
@@ -159,9 +159,8 @@
 <div class="spacer_narrow">&nbsp;</div>
 
 <div id="submit_box">
-  <input class="button" name="submit" type="submit" value="登録">
-  <input class="button" type="reset" value="修正" />
-  <input class="button" name="submit" type="submit" value="登録後続けて登録する"/>
+  <%= submit_to_remote "登録", "登録", :url => {:action => 'create', :name => 'submit1'} %>
+  <%= submit_to_remote "登録後続けて登録する", "登録後続けて登録する", :url => {:action => 'create', :name => 'submit2'} %>
 </div>
 
 <% end -%>

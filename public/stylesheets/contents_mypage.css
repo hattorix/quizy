@@ -3,18 +3,9 @@
 #main{
   margin: 0px 15px 0px 15px;
   padding: 0px;
-  width: 570px;
+  width: 870px;
   background: #FFFFFF;
   float:left;
-}
-
-#side{
-  margin: 0px 10px 10px 20px;
-
-  width: 230px;
-  height: 870px;
-  background: #FFFFFF;
-  float:right;
 }
 
 #search #tag_cloud {
@@ -38,38 +29,49 @@
   color: #FFFFFF;
 }
 
-#category #mybook #latest {
-  margin: 0;
-  width: 600px;
-  height: auto;
-  float: right;
+#mybook{
+  margin-left:15px;
+  width: 410px;
+  height: 300px;
+  float: left;
   text-align: left;
+  background: #FFFFFF;
   border: 1px solid silver;
 }
 
-#category{
-  background: #FFFFFF;
-  line-height: 2em;
-}
-.category {
-  background-color: pink;
-  margin: 5px;
-  padding: 3px;
-}
-
-#mybook{
-  background: #FFFFFF;
-  clear: both;
-}
-
 #mytest{
+  margin-left:20px;
+  width: 410px;
+  height: 300px;
+  float: left;
+  text-align: left;
   background: #FFFFFF;
-  clear: both;
+  border: 1px solid silver;
 }
 
 #latest{
-  clear: both;
+  margin-top:15px;
+  margin-left:15px;
+  width: 410px;
+  height: 260px;
+  float: left;
+  text-align: left;
+  background: #FFFFFF;
+  border: 1px solid silver;
+  clear:both;
 }
+
+#recent{
+  margin-top:15px;
+  margin-left:20px;
+  width: 400px;
+  height: 260px;
+  float: left;
+  text-align: left;
+  background: #FFFFFF;
+  border: 1px solid silver;
+}
+
 
 .mybook_menu {
   float: right;
@@ -85,16 +87,16 @@
   vertical-align: middle;
 }
 
+.your_content {
+  margin-left:10pt;
+  color: crimson;
+  font-size: 8pt;
+}
+
 .subcontent{
   padding: 10px;
   background: #FFFFFF;
   height: 133px;
-}
-
-.test_subcontent{
-  padding: 10px;
-  background: #FFFFFF;
-  height: 83px;
 }
 
 .s_content li{
@@ -108,7 +110,7 @@
   float: right;
 }
 
-li {
+.subcontent ul li {
   margin-left: 10px;
   list-style-type: none;
 }
@@ -127,11 +129,3 @@ li {
   text-align: right;
   font-weight: normal;
 }
-
-
-/* とりあえず */
-.tag-x-small { font-size:  80%; }
-.tag-small   { font-size:  90%; }
-.tag-medium  { font-size: 100%; }
-.tag-large   { font-size: 120%; }
-.tag-x-large { font-size: 150%; }

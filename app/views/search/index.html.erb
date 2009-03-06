@@ -7,22 +7,30 @@
       <div id="result_table">
       <ul>
         <% @results.each do |result| %>
-          <li>
+          <% if @flg == 1 %>
+            <li>
+              <%= link_to(truncate(result.name, 30),
+                       :action => 'tag',:id => result.name) %></li>
+          <% else %>
+            <li>
               <%= link_to(truncate(result.question_text, 30),
-                        "/quiz/#{result.id}") %></li>
-            <div class="add_book">
-              <div class="add_book_form">
-              <% remote_form_for :question,:url=>{:action => 'add_book', :id => result.id} do -%>
-                マイブック
-                <% books = Book.find(:all, :conditions => ["user_id = ?", current_user.id])%>
-                <%= select_tag 'add_book_to',
-                             options_from_collection_for_select(books,
-                                                            :id, :name),
-                          :style => 'width: 80px;' %>
-                <%= submit_tag '登録',
-                            :class => 'button'%>
-              <% end -%></div>
-              <span id="add_book_message<%=result.id%>"></span></div>
+                       "/quiz/#{result.id}") %></li>
+            <% if logged_in? %>
+              <div class="add_book">
+                <div class="add_book_form">
+                <% remote_form_for :question,:url=>{:action => 'add_book', :id => result.id} do -%>
+                  マイブック
+                  <% books = Book.find(:all, :conditions => ["user_id = ?", current_user.id])%>
+                  <%= select_tag 'add_book_to',
+                               options_from_collection_for_select(books,
+                                                              :id, :name),
+                            :style => 'width: 80px;' %>
+                  <%= submit_tag '登録',
+                              :class => 'button'%>
+                <% end -%></div>
+                <span id="add_book_message<%=result.id%>"></span></div>
+            <% end %>
+          <% end %>
         <% end %>
       </ul>
     <% end %>

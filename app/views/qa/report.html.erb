@@ -1,0 +1,25 @@
+<%= stylesheet_link_tag("contents_register") %>
+<%# TODO: edit.html.erbにもあるよ。DRY! DRY! %>
+
+<div id="screen_title">不適切な問題を通報する</div>
+  <div id="message"></div>
+<div id="main">
+<% remote_form_for :question, :url => {:action => 'report_send',:id => @id} do |f| -%>
+
+<div id="description_box">
+  <div class="subtitle">通報内容</div>
+  <div class="subsubtitle">不適切な点をご記入ください。</div>
+  <div class="field">
+    <%= text_area_tag "report_text", "", :style => 'width: 100%; height: 10em;'%>
+  </div>
+</div>
+
+<div class="spacer_narrow">&nbsp;</div>
+
+<div id="submit_box">
+  <%= submit_tag "通報" %>
+</div>
+
+<% end -%>
+
+</div>

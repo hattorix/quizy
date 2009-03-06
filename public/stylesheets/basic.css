@@ -25,8 +25,7 @@ a {
 
 
 #header {
-  margin-bottom: 10px;
-        padding: 10px 0 30px 0;
+  padding: 10px 0 0px 0;
   color: #000000;
   background: #FFFFFF;      /*blue*/
   height: 100px;
@@ -58,7 +57,11 @@ a {
 
 #header_menu a:visited{
   color: #000000;
+}
 
+#wellcome {
+  margin-right:10pt;
+  vertical-align:bottom;
 }
 
 #search {

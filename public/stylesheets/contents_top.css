@@ -1,20 +1,38 @@
 /*contents layout*/
 
+#search_box {
+  width:600px;
+  padding: 10px;
+  border: 2px solid silver;
+  margin-left:auto;
+  margin-right:auto;
+  margin-bottom:10px;
+}
+
+#searchform input{
+  width:350px;
+  vertical-align:middle;
+}
+
 #main{
   margin: 0px 0px 0px 10px;
   padding: 0px;
-  width: 60%;
+  width: 70%;
   background: #FFFFFF;
   text-align: left;
   float: left;
 }
 
 #side{
-  margin: 0px 10px 0px 10px;
-  padding: 0px;
-  width: 30%;
-  background: #00FFFF;
+  margin: 0px 10px 10px 20px;
+  width: 25%;
+  height: 400px;
+  background: #FFFFFF;
   float:right;
+}
+
+#search #tag_cloud {
+  margin: 10px;
 }
 
 #this_site_title{
@@ -25,6 +43,7 @@
 }
 
 #this_site{
+  margin-bottom:10px;
   padding: 10px;
   border: 1px solid silver;
   background: #FFFFFF;
@@ -36,6 +55,27 @@
   text-align: left;
 }
 
+#category_title{
+  padding: 5px;
+  color: #FFFFFF;
+  background-image: url('/images/gradation.png');
+  height: 20px;
+}
+
+#category_list {
+  padding: 10px;
+  height: auto;
+  text-align: left;
+  border: 1px solid silver;
+  background: #FFFFFF;
+  line-height: 2em;
+}
+
+.category {
+  background-color: pink;
+  margin: 5px;
+  padding: 3px;
+}
 
 #update_title{
   margin-top: 10px;
@@ -46,7 +86,7 @@
 }
 
 #update{
-    margin-bottom: 10px;
+  margin-bottom: 20px;
   padding: 10px;
   border: 1px solid silver;
   background: #FFFFFF;
@@ -68,7 +108,7 @@
 }
 
 #favorite{
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   padding: 10px;
   border: 1px solid silver;
   background: #FFFFFF;
@@ -82,7 +122,30 @@
   text-align: left;
 }
 
+.subtitle{
+  font-size: 12pt;
+  font-weight: bold;
+  padding: 5px;
+  color: #FFFFFF;
+  background-image: url('/images/gradation.png');
+  height: 40px;
+  vertical-align: middle;
+}
+
+/* とりあえず */
+.tag-x-small { font-size:  80%; }
+.tag-small   { font-size:  90%; }
+.tag-medium  { font-size: 100%; }
+.tag-large   { font-size: 120%; }
+.tag-x-large { font-size: 150%; }
+
 /* login */
+#login {
+  width:400px;
+  margin-right:auto;
+  margin-left:auto;
+}
+
 #login_box {
   padding: 10px;
   border: 1px solid silver;
@@ -92,7 +155,7 @@
 
 #login_box input {
     font-family: tahoma;
-    font-size: 10pt;
+    font-size: 12pt;
 }
 
 .field {
@@ -103,5 +166,5 @@
 }
 
 .login_button {
-    align: right;
+  align: right;
 }

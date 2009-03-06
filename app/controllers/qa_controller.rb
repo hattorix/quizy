@@ -1,5 +1,4 @@
 class QaController < ApplicationController
-  before_filter :login_required
 
   def new
     # プルダウンの初期化
@@ -82,9 +81,9 @@ class QaController < ApplicationController
 
     # コミット 
     if @q.save
-      # book = Book.find(:first,:conditions => ["name = '自分で登録した問題' and user_id =? ", current_user.id])
-      # book.questions << @q
-      if params['commit'] == '登録'
+       book = Book.find(:first,:conditions => ["name = '自分で登録した問題' and user_id =? ", current_user.id])
+       book.questions << @q
+      if params[:name] == 'submit1'
         render :update do |page|
           page << 'mypage()'
         end
@@ -93,7 +92,7 @@ class QaController < ApplicationController
           page << 'reload()'
           page.visual_effect :ScrollTo,
                              'container',
-                             :duration => 1
+                             :duration => 0
         end
       end
     else
@@ -116,7 +115,9 @@ class QaController < ApplicationController
     @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
     @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
     @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
-    @books = Book.find(:all, :conditions => ["user_id = ? or is_public = 1", current_user.id])
+    if logged_in?
+      @books = Book.find(:all, :conditions => ["user_id = ? or is_public = 1", current_user.id])
+    end
 
     # statstics information
     right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
@@ -342,4 +343,11 @@ class QaController < ApplicationController
     end
   end
   
+  def report
+    @id = params[:id].to_i
+  end
+  
+  def report_send
+     Report.deliver_send()
+  end
 end

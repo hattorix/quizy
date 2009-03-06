@@ -6,27 +6,9 @@
 
 <div id="main">
 
-<!-- カテゴリ一覧 -->
-<div id="category">
-  <div class="subtitle">カテゴリ一覧</div>
-  <div class="subcontent">
-    <div id="category_list">
-      <% @categories.each do |category| %>
-      <span class="category"><%=link_to(category.name,
-                        :controller => 'search',
-                        :action => 'category',
-:id => category.id) %></span>
-      <% end %>
-    </div>
-  </div>
-</div>
-
-<div class="spacer_narrow" style="clear: both;">&nbsp;</div>
-
-<!-- マイブック -->
 <div id="mybook">
   <div class="subtitle">
-    マイブック
+    マイブック<span class="your_content">（★･･･あなたのブック）</span>
     <div class="add_book">
       <%= image_tag('/images/book_add.png', :style => 'vertical-align: middle;') %>
       <%= link_to('ブックの新規作成', :controller => 'books', :action => 'new') %>
@@ -34,12 +16,25 @@
   </div>
   <div class="subcontent">
     <ul>
+      <li class="book_text">
+        <% if book = Book.find(:first, :conditions => ['user_id = ? and name = "自分で登録した問題"', current_user.id]) %>
+        <%= image_tag('/images/book.png',
+                        :style => 'vertical-align: middle;') %>
+        <span style="font-weight: bold;"><%= link_to(book.name, book) %></span>
+        <span style="color: red;">★</span>
+        <span style="color: silver; font-size: 8pt;">
+          <%= book.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
+        </span>
+        <% end %>
+      </li>
       <% for book in @books %>
       <li class="book_text">
         <%= image_tag('/images/book.png',
                         :style => 'vertical-align: middle;') %>
-                        
         <span <%= "style='font-weight: bold;'" if book.name == "自分で登録した問題" %>><%= link_to(book.name, book) %></span>
+        <% if book.user_id == current_user.id %>
+          <span style="color: red;">★</span>
+        <% end %>
         <span style="color: silver; font-size: 8pt;">
         <%= book.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
         <% if book.user_id == current_user.id && book.name != "自分で登録した問題"%>
@@ -61,12 +56,11 @@
   </div>
 </div>
 
-<!-- マイテスト -->
 <div id="mytest">
   <div class="subtitle">
-    マイテスト<%= @seq %>
+    マイテスト<span class="your_content">（★･･･あなたのテスト）</span>
   </div>
-  <div class="test_subcontent">
+  <div class="subcontent">
     <ul>
       <% for exam in @exams %>
       <li class="book_text">
@@ -74,6 +68,9 @@
                         :style => 'vertical-align: middle;') %>
                         
         <%= link_to(exam.name, exam) %>
+        <% if exam.user_id == current_user.id %>
+          <span style="color: red;">★</span>
+        <% end %>
         <span style="color: silver; font-size: 8pt;">
         <%= exam.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
         <% if exam.user_id == current_user.id %>
@@ -95,9 +92,6 @@
   </div>
 </div>
 
-<div class="spacer_narrow" style="clear: both;">&nbsp;</div>
-
-<!-- 最近登録した問題 -->
 <div id="latest">
   <div class="subtitle">
     最近登録した問題
@@ -119,18 +113,19 @@
   </div>
 </div>
 
-</div>
-
-<!-- サイドバー -->
-<div id="side">
-  <div id="tag_cloud">
-    <div class="subtitle">タグクラウド</div>
-    <div class="subcontent">
-    <% @tags = Question.tag_counts %>
-      <% tag_cloud(@tags, ['tag-x-small', 'tag-small', 'tag-medium', 'tag-large', 'tag-x-large']) do |tag, css_class| %>
-      <%= link_to(tag.name, { :controller => :search, :action => :tag, :id => tag.name }, :class => css_class) %>
-    <% end %>
+<div id="recent">
+  <div class="subtitle">
+    最近解答した問題
+  </div>
+  <div class="subcontent">
+    <div id="book_list">
+      <ul>
+      </ul>
     </div>
   </div>
+</div>
+
+<div class="spacer_narrow" style="clear: both;">&nbsp;</div>
+
 </div>
 

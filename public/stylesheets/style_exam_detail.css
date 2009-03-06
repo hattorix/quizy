@@ -101,7 +101,7 @@ ul#sortable_question_list {
   margin-bottom: 10px;
 }
 
-li {
+.question_list li {
   list-style-type: none;
   font-size: 12pt;
   text-align: left;

@@ -12,8 +12,13 @@
     <div id="header">
       <div id="header_menu">
         <ul>
-          <li><%= link_to("マイページ", {:controller => "mypage"})%>&nbsp;|&nbsp;</li>
-          <li><a href="">設定</a>&nbsp;|&nbsp;</li>
+          <% if logged_in? %>
+            <li><div id="wellcome">ようこそ、<%= current_user.login %>さん</div></li>
+            <li><%= link_to("マイページ", {:controller => 'mypage'})%>&nbsp;|&nbsp;</li>
+            <li><a href="">設定</a>&nbsp;|&nbsp;</li>
+          <% else %>
+            <li><%= link_to("会員登録", signup_path)%>&nbsp;|&nbsp;</li>
+          <% end %>
           <li><a href="">ヘルプ</a>&nbsp;|&nbsp;</li>
           <li>
             <% if logged_in? %>
@@ -26,8 +31,9 @@
       </div>
       <div id="logo">
         <%= link_to(image_tag("logo.png", :style => 'border: none;', :title => 'Quizy'),
-                     :controller => 'mypage') %>
+                     index_path) %>
       </div>
+      <% if !%w(sessions top users).include?(controller.controller_name) %>
       <div id="search">
         <% form_tag(:controller => 'search', :action => 'text') do -%>
         <div id="searchform"><%= text_field_tag("id") %>
@@ -40,6 +46,7 @@
         </div>
         <% end -%>
       </div>
+      <% end %>
     </div>
 
     <div id="contents">

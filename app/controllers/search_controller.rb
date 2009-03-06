@@ -15,51 +15,31 @@ class SearchController < ApplicationController
     if keywords.size > 0
       @results_hash = Hash.new
       @results = Array.new
-      if params[:search_for].to_i == 0
-        i = 0
-        keywords.each do |keyword|
+      @flg = params[:search_for].to_i
+      i = 0
+      keywords.each do |keyword|
+        if @flg == 0
           @results_hash[i] = Question.find(:all, :conditions => ['question_text like ?', "%#{keyword}%"])
-          i += 1
-        end
-        @results = @results_hash[0]
-        if keywords.size >= 2
-          if params[:searchtype] == "and"
-            (@results_hash.size-1).times do |i|
-              @results = (@results & @results_hash[i+1]) 
-            end
-            @results.uniq!
-          else
-            (@results_hash.size-1).times do |i|
-              @results = @results.concat(@results_hash[i+1])
-            end
-            @results.uniq!
-          end
-        end
-        render :action => :index
-      else
-        tags = Array.new
-        keywords.each do |keyword|
-          tags << Tag.find(:all, :conditions => ['name like ?',"%#{keyword}%"])
-        end
-        tags.each do |tag|
-          @results << Question.find_tagged_with(tag)
-        end
-        if keywords.size >= 2
-          if params[:searchtype] == "and"
-            resultsouts = @results.flatten.uniq
-            @results.flatten!
-            resultsouts.each do |resultsout|
-              i = @results.index(resultsout)
-              @results.delete_at(i)
-            end
-          else
-            @results.flatten!.uniq!
-          end
         else
-          @results.flatten!.uniq!
+          @results_hash[i] = Tag.find(:all, :conditions => ['name like ?', "%#{keyword}%"])
         end
-        render :action => :index
+        i += 1
       end
+      @results = @results_hash[0]
+      if keywords.size >= 2
+        if params[:searchtype] == "and"
+          (@results_hash.size-1).times do |i|
+            @results = (@results & @results_hash[i+1]) 
+          end
+          @results.uniq!
+        else
+          (@results_hash.size-1).times do |i|
+            @results = @results.concat(@results_hash[i+1])
+          end
+          @results.uniq!
+        end
+      end
+      render :action => :index
     else
       redirect_to :controller => :mypage
     end

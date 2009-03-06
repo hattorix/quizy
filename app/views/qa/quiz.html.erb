@@ -2,23 +2,25 @@
 <%= javascript_include_tag "prototype" %>
 
 <div id="toolbar_box">
-<% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id} do -%>
-  マイブック
-  <%= select_tag 'add_book_to',
-      options_from_collection_for_select(@books,
-      :id, :name), :style => 'width: 180px;' %>
-  <%= submit_tag '登録',
-                   :class => 'button'%>
-  <div id="add_book_message"></div>
-  <% if @question.user_id == current_user.id %>
-  <div class="question_edit_and_delete">
-      <%= image_tag('/images/page_edit.png', :style => 'vertical-align: middle;') %>
-      <%= link_to 'この問題を編集', :action => 'edit', :id => @question.id %>
-      <%= image_tag('/images/page_delete.png', :style => 'vertical-align: middle;') %>
-      <%= link_to 'この問題を削除', {:action => 'destroy', :id => @question.id}, :confirm => '本当に削除してよろしいですか?' %>
-  </div>
+<% if logged_in? %>
+  <% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id} do -%>
+    マイブック
+    <%= select_tag 'add_book_to',
+        options_from_collection_for_select(@books,
+        :id, :name), :style => 'width: 180px;' %>
+    <%= submit_tag '登録',
+                     :class => 'button'%>
+    <div id="add_book_message"></div>
+    <% if @question.user_id == current_user.id %>
+      <div class="question_edit_and_delete">
+          <%= image_tag('/images/page_edit.png', :style => 'vertical-align: middle;') %>
+          <%= link_to 'この問題を編集', :action => 'edit', :id => @question.id %>
+          <%= image_tag('/images/page_delete.png', :style => 'vertical-align: middle;') %>
+          <%= link_to 'この問題を削除', {:action => 'destroy', :id => @question.id}, :confirm => '本当に削除してよろしいですか?' %>
+      </div>
+    <% end -%>
   <% end -%>
-<% end -%>
+<% end %>
 </div>
 
 <div class="spacer_narrow">&nbsp;</div>
