@@ -18,13 +18,13 @@
     <ul>
       <li class="book_text">
         <% if book = Book.find(:first, :conditions => ['user_id = ? and name = "自分で登録した問題"', current_user.id]) %>
-        <%= image_tag('/images/book.png',
-                        :style => 'vertical-align: middle;') %>
-        <span style="font-weight: bold;"><%= link_to(book.name, book) %></span>
-        <span style="color: red;">★</span>
-        <span style="color: silver; font-size: 8pt;">
-          <%= book.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
-        </span>
+          <%= image_tag('/images/book.png',
+                     :style => 'vertical-align: middle;') %>
+          <span style="font-weight: bold;"><%= link_to(book.name, book) %></span>
+          <span class="red">★</span>
+          <span style="color: silver; font-size: 8pt;">
+            <%= book.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
+          </span>
         <% end %>
       </li>
       <% for mybook in @mybooks %>
@@ -34,7 +34,7 @@
                         :style => 'vertical-align: middle;') %>
         <span <%= "style='font-weight: bold;'" if book.name == "自分で登録した問題" %>><%= link_to(book.name, book) %></span>
         <% if book.user_id == current_user.id %>
-          <span style="color: red;">★</span>
+          <span class="red">★</span>
         <% end %>
         <span style="color: silver; font-size: 8pt;">
         <%= book.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
@@ -73,7 +73,7 @@
                         
         <%= link_to(exam.name, exam) %>
         <% if exam.user_id == current_user.id %>
-          <span style="color: red;">★</span>
+          <span class="red">★</span>
         <% end %>
         <span style="color: silver; font-size: 8pt;">
         <%= exam.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
@@ -105,7 +105,7 @@
     </div>
   </div>
   <div class="subcontent">
-    <div id="book_list">
+    <div id="question_list">
       <ul>
         <% @questions.each do |q| %>
           <li class="question_text"><%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
@@ -124,6 +124,20 @@
   <div class="subcontent">
     <div id="book_list">
       <ul>
+        <% @histories.each do |h| %>
+          <li class="question_text">
+            <% if h.correct_or_wrong == true %>
+              <span class="red">○</span>
+            <% else %>
+              <span class="blue">×</span>
+            <% end %>
+            <% q = Question.find(h.question_id) %>
+            <a href="/quiz/<%=q.id%>"><%=truncate(erase_tag(q.question_text), 45)%></a>
+                    <span style="color: silver; font-size: 8pt;">
+          <%= h.created_at.strftime("回答日 %Y/%m/%d %H:%M:%S") %>
+        </span>
+          </li>
+        <% end %>
       </ul>
     </div>
   </div>

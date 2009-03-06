@@ -224,8 +224,13 @@ class ExamsController < ApplicationController
   end
 
   def sort_questions
-    session[:seq] = params[:question_list]
-
+    params[:sortable_question_list].each_with_index do |id, i|
+      question_exams = QuestionExam.find(:all,:conditions => ["question_id = ? and exam_id = ?",
+                                                                id,params[:id]])
+      question_exams.each do |question_exam|
+        question_exam.update_attribute('seq', i)
+      end
+    end
   end
 
   # PUT /exams/1
@@ -233,16 +238,6 @@ class ExamsController < ApplicationController
   def update
     @exam = Exam.find(params[:id])
     @seq = params.inspect
-    
-    if session[:seq]
-      session[:seq].each_with_index do |id, i|
-        question_exams = QuestionExam.find(:all,:conditions => ["question_id = ? and exam_id = ?",
-                                                                id,params[:id]])
-        question_exams.each do |question_exam|
-          question_exam.update_attribute('seq', i)
-        end
-      end
-    end
 
     @exam.questions.each do |question|
       if params["is_collect"]

@@ -1,5 +1,21 @@
 <%= stylesheet_link_tag 'contents_search'  %>
 <div id="screen_title">検索結果</div>
+<% if @flg == 0 %>
+  <div class="add_book">
+    <div class="add_book_form">
+      <% remote_form_for :question,:url=>{:action => 'add_book',:id => 'all',:results => @results} do -%>
+        全てマイブック
+        <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題'", current_user.id])%>
+        <%= select_tag 'add_book_to',
+                      options_from_collection_for_select(books,
+                                                    :id, :name),
+                      :style => 'width: 80px;' %>
+        <%= submit_tag '登録',
+                     :class => 'button'%>
+      <% end -%></div>
+    <span id="add_book_message_all"></span>
+  </div>
+<% end %>
 <div id="main">
   <div id="result_box">
     <div id="result_header"><%=  result_count = (@results == nil) ? 0 : @results.size %> 件の検索結果</div>
@@ -24,10 +40,11 @@
                   <%= submit_tag '登録',
                               :class => 'button'%>
                 <% end -%></div>
-                <span id="add_book_message<%=result.id%>"></span></div>
+                <span id="add_book_message<%=result.id%>"></span>
+              </div>
             <% end %>
           <div class="book_and_test">
-            <%= link_to "この問題を含むブックを検索する", :action => 'search_book', :id => result.id %> - 
+            <%= link_to "この問題を含む#{1+1}ブックを検索する", :action => 'search_book', :id => result.id %> - 
             <%= link_to "この問題を含むテストを検索する", :action => 'search_exam', :id => result.id %>
           </div>
           <% elsif @flg == 1 %>

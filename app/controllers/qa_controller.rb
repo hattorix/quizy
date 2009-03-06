@@ -221,6 +221,14 @@ class QaController < ApplicationController
     else
       raise("must not happend")
     end
+    if logged_in?
+      hist = History.new
+      hist.question_id = @question.id
+      hist.user_id = current_user.id
+      hist.correct_or_wrong = @is_collect.to_i
+      hist.save
+    end
+
     evals = Evaluation.find(:all,:conditions => ["question_id = ?",@question.id])
     @sum = 0
     @avg = 0
@@ -262,11 +270,12 @@ class QaController < ApplicationController
 
     if params[:question_type] == "1"
       selections.each do |selection|
-        s = selection.new
+        s = Selection.new
         s[:selection_text] = params["selection"][selection.id.to_s]
         s[:is_collect] = params["is_collect"] == [selection.id] ? 1 : 0
-        selection.update_attributes(s)
+        selection.attributes = s
       end
+      quiz[:selections] = new_selections
 
     elsif params[:question_type] == "2"
       selections.each do |s|
@@ -312,7 +321,7 @@ class QaController < ApplicationController
         page[:msg].visual_effect :highlight,
                                   :startcolor => "#ffd900",
                                   :endcolor => "#ffffff",
-                                  :duration => 10.5
+                                  :duration => 1.5
       end
     end
   end
@@ -391,7 +400,7 @@ class QaController < ApplicationController
     end
     @avg = @sum/evals.size
     render :update do |page|
-      page.replace_html("evaluation", :partial=>"evals",:object => {:sum => @sum, :avg => @avg})
+      page.replace_html("evaluation_box", :partial=>"evals",:object => {:sum => @sum, :avg => @avg})
       page[:sum_and_avg].visual_effect :highlight,
                                 :startcolor => "#ffd900",
                                 :endcolor => "#ffffff",

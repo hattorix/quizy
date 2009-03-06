@@ -2,11 +2,13 @@ class SearchController < ApplicationController
   def category
     @results = Question.find(:all, :conditions => ['category_id = ? and is_public = 1', params[:id]])
 #    render :partial => 'results', :collection => results
+    @flg = 0
     render :action => :index
   end
 
   def tag
     @results = Question.find_tagged_with(params[:id])
+    @flg = 0
     render :action => :index
   end
 
@@ -50,28 +52,62 @@ class SearchController < ApplicationController
   end
   
   def add_book
-    book = Book.find(params[:add_book_to])
-    question = Question.find(params[:id])
-    if book.questions.include?(question)
-      flash[:notice] = "登録済みです。"
-      render :update do |page|
-        page.replace_html("add_book_message#{params[:id]}", :partial=>"message",:locals => {:flug => false})
-        page.visual_effect :Opacity,
-                           "add_book_message#{params[:id]}",
-                           :from => 1,
-                           :to => 0,
-                           :duration => 3
+    if params[:id] == "all"
+      book = Book.find(params[:add_book_to])
+      question_ids = params[:results]
+      i = 0
+      question_ids.each do |question_id|
+        question = Question.find(question_id.to_i)
+        unless book.questions.include?(question)
+          book.questions << question
+          i += 1
+        end
+      end
+      if i == 0
+        flash[:notice] = "全て登録済みです。"
+        render :update do |page|
+          page.replace_html("add_book_message_all", :partial=>"message",:locals => {:flug => false})
+          page.visual_effect :Opacity,
+                             "add_book_message_all",
+                             :from => 1,
+                             :to => 0,
+                             :duration => 3
+        end
+      else
+        flash[:notice] = "#{i}件登録しました！"
+        render :update do |page|
+          page.replace_html("add_book_message_all", :partial=>"message",:locals => {:flug => true})
+          page.visual_effect :Opacity,
+                             "add_book_message_all",
+                             :from => 1,
+                             :to => 0,
+                             :duration => 3
+        end
       end
     else
-      book.questions << question
-      flash[:notice] = "登録しました！"
-      render :update do |page|
-        page.replace_html("add_book_message#{params[:id]}", :partial=>"message",:locals => {:flug => true})
-        page.visual_effect :Opacity,
-                           "add_book_message#{params[:id]}",
-                           :from => 1,
-                           :to => 0,
-                           :duration => 3
+      book = Book.find(params[:add_book_to])
+      question = Question.find(params[:id])
+      if book.questions.include?(question)
+        flash[:notice] = "登録済みです。"
+        render :update do |page|
+          page.replace_html("add_book_message#{params[:id]}", :partial=>"message",:locals => {:flug => false})
+          page.visual_effect :Opacity,
+                             "add_book_message#{params[:id]}",
+                             :from => 1,
+                             :to => 0,
+                             :duration => 3
+        end
+      else
+        book.questions << question
+        flash[:notice] = "登録しました！"
+        render :update do |page|
+          page.replace_html("add_book_message#{params[:id]}", :partial=>"message",:locals => {:flug => true})
+          page.visual_effect :Opacity,
+                             "add_book_message#{params[:id]}",
+                             :from => 1,
+                             :to => 0,
+                             :duration => 3
+        end
       end
     end
   end

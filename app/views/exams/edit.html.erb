@@ -48,7 +48,7 @@
       <% end %>
       </ul>
     </div>
-    <%= sortable_element 'question_list' ,:url => {:action => 'sort_questions',:id => @exam.id}%>
+    <%= sortable_element 'sortable_question_list' ,:url => {:action => 'sort_questions',:id => @exam.id}%>
     <div id="submit_box">
       <%= f.submit "更新する"  %>
     </div>

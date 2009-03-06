@@ -17,5 +17,8 @@ class MypageController < ApplicationController
     # 最近登録した問題
     @questions = Question.find(:all, :limit => 10, :order => "created_at desc",
                                :conditions => ['user_id = ?', current_user.id])
+    # 最近解答した問題
+    @histories = History.find(:all, :limit => 10, :order => "created_at desc",
+                               :conditions => ['user_id = ?', current_user.id])
   end
 end

@@ -87,6 +87,11 @@
   border: 1px solid silver;
 }
 
+#evaluation_box {
+  padding: 10px;
+  border: 1px solid silver;
+}
+
 #navi {
   text-align: center;
   padding: 10px;
@@ -243,5 +248,9 @@ li {
   padding: 10px;
   border: 1px solid silver;
   clear:both;
+  text-align: center;
+}
 
+#escape {
+  float:right;
 }

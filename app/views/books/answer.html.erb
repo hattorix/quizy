@@ -42,7 +42,7 @@
       <div class="spacer_narrow">&nbsp;</div>
 
   <div id="navi">
-    <%= link_to '問題に戻る', :back %>
+    <%= link_to_remote '問題に戻る', :update => 'question', :url => {:action => 'back', :questions =>@questions, :i => @i+1,:id => @id} %>
   </div>
       <div class="spacer_narrow">&nbsp;</div>
 </div>

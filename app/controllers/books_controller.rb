@@ -3,7 +3,7 @@ class BooksController < ApplicationController
     layout :select_layout
 
   def select_layout
-    if %w(answer next).include?(action_name)
+    if %w(answer next back).include?(action_name)
     else
       "application"
     end
@@ -109,10 +109,14 @@ class BooksController < ApplicationController
   end
 
   def training_start
-    if params[:select_count] == "" 
+    if params[:select_count] == ""
       redirect_to :action => 'show',:id => params[:id]
     else
+      @id = params[:id]
       @books_questions = QuestionBook.find(:all, :conditions => ["book_id = ?",params[:id]])
+      if @books_questions.size == 0
+        redirect_to :action => 'show',:id => params[:id]
+      else
       @questions = Array.new
       params[:select_count].to_i.times do |i|
         @questions << Question.find(@books_questions[rand(@books_questions.size)].question_id)
@@ -131,10 +135,12 @@ class BooksController < ApplicationController
       @wrong_count = @question.wrong_count
 
       render :action => 'training'
+      end
     end
   end
 
   def next
+    @id = params[:id]
     @i = params[:i].to_i+1
     @questions = params[:questions]
     @question = Question.find(@questions[@i].to_i)
@@ -152,7 +158,29 @@ class BooksController < ApplicationController
     render :action => 'training'
   end
 
+  def back
+    @id = params[:id]
+    @i = params[:i].to_i-1
+    @questions = params[:questions]
+    @question = Question.find(@questions[@i].to_i)
+    @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
+    @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
+    @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
+
+    # statstics information
+    right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
+    @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
+    @question_count = @question.question_count
+    @correct_count = @question.correct_count
+    @wrong_count = @question.wrong_count
+
+    render :action => 'training'
+  end
+  
   def answer
+    @id = params[:id]
+    @questions = params[:questions]
+    @i = params[:i].to_i
     question_id = params[:question_id]
     @question = Question.find(question_id)
     # for stastics

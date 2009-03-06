@@ -42,11 +42,15 @@
       <div class="question"><%= answer %></div>
 
     </div>
+
+    <div class="spacer_narrow">&nbsp;</div>
+
+    <div id="evaluation_box">
+      <%= render(:partial => 'evals') %>
+    </div>
+
   <% end %>
 
-  <div id="evaluation">
-    <%= render(:partial => 'evals') %>
-  </div>
   <div class="spacer_narrow">&nbsp;</div>
 
   <div id="navi">

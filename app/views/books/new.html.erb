@@ -4,9 +4,9 @@
     location.href="../../";
   }
 </script>
-<div id="screen_title">ブックの新規作成</div>
+<div id="screen_title"><a href="#" onclick="Effect.toggle('main', 'slide',{ duration: 0.5 }); return false;">ブックの新規作成</a></div>
 <div id="message"></div>
-<div id="main">
+<div id="main" style="display:none;">
   <% remote_form_for(@book) do |f| %>
     <%= f.error_messages %>
     <div id="name_public_field">
@@ -26,6 +26,7 @@
         <%= f.text_area :outline, :style => 'height: 10em;' %>
       </div>
     </div>
+    
     <div id="submit_box">
       <%= f.submit "作成する" %>
     </div>

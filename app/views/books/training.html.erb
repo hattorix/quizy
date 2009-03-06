@@ -1,121 +1,134 @@
 <%= stylesheet_link_tag("contents_register") %>
 <%= javascript_include_tag "prototype" %>
 <div id="question">
-<div id="toolbar_box">
-</div>
+  <div id="toolbar_box">
+  </div>
 
-<div class="spacer_narrow">&nbsp;</div>
-    <% remote_form_for :question, :update => 'quiz', :url => {:action => 'answer'} do |f| -%>
-<div id="quiz">
+  <div class="spacer_narrow">&nbsp;</div>
 
-  <div id="main_quiz">
+  <% remote_form_for :question, :update => 'quiz', :url => {:action => 'answer', :questions =>@questions, :i => @i, :id => @id} do |f| -%>
+    <div id="quiz">
+      <div id="main_quiz">
+        <div id="question_box_quiz">
+          <div id="question_text_box">
+            <div class="subtitle">問題</div>
+            <%= hidden_field_tag "question_id", @question.id %>
+            <div class="field"><%= @question.question_text %></div>
+          </div>
 
-      <div id="question_box_quiz">
-        <div id="question_text_box">
-          <div class="subtitle">問題</div>
-          <%= hidden_field_tag "question_id", @question.id %>
-          <div class="field"><%= @question.question_text %></div>
+          <div class="spacer_narrow">&nbsp;</div>
+
+          <div id="response_box" <%= "style='height:250px;'" if @question.question_type == 3 %>>
+            <div class="subtitle">回答</div>
+            <%= hidden_field_tag "question_type", @question.question_type %>
+            <% if @question.is_random == true %>
+              <% selections = @selections.sort_by{rand} %>
+            <% else %>
+              <% selections = @selections %>
+            <% end %>
+            <% if @question.question_type == 1 %>
+              <div id="selection_box">
+                <% selections.each do |s| %>
+                  <div class="field">
+                    <input type="radio" id="answer" name="answer"
+                           value="<%= s.id %>" /> <%= s.selection_text %>
+                  </div>
+                <% end %>
+              </div>
+            <% elsif @question.question_type == 2 %>
+              <div id="selection_box">
+                <% selections.each do |s| %>
+                  <div class="field">
+                    <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
+                           value="<%= s.id %>" /> <%= s.selection_text %>
+                  </div>
+                <% end %>
+              </div>
+            <% elsif @question.question_type == 3 %>
+              <div id="selection_box">
+                <div class="marufield">
+                  <%= link_to_remote(image_tag("maru.jpg", :style => 'border: none;',
+                                                     :onmouseover=>"this.src='../../images/maru_on.jpg'",
+                                                     :onmouseout=>"this.src='../../images/maru.jpg'"),
+                                 :url=>{:action => 'answer',
+                                        :question_id => @question.id,
+                                        :question_type => @question.question_type,
+                                        :questions => @questions,
+                                        :i => @i,
+                                        :id => @id,
+                                        :answer => 1},
+                                 :update => 'quiz') %>
+                </div>
+                <div class="batufield">
+                  <%= link_to_remote(image_tag("batu.jpg", :style => 'border: none;',
+                                                     :onmouseover=>"this.src='../../images/batu_on.jpg'",
+                                                     :onmouseout=>"this.src='../../images/batu.jpg'"),
+                                 :url=>{:action => 'answer',
+                                        :question_id => @question.id,
+                                        :question_type => @question.question_type,
+                                        :questions => @questions,
+                                        :i => @i,
+                                        :id => @id,
+                                        :answer => 0},
+                                 :update => 'quiz') %>
+                </div>
+              </div>
+            <% else %>
+              <div id="answer_box">
+                <input name="answer" type="text" size="30" />
+              </div>
+            <% end %>
+          </div>
+
+          <div class="spacer_narrow">&nbsp;</div>
+
+          <div id="submit_box" <%= "style='display:none;'" if @question.question_type == 3 %>>
+            <%= submit_tag("回答する", :class => 'button') %>
+          </div>
+
+          <div class="spacer_narrow">&nbsp;</div>
+
         </div>
 
-        <div class="spacer_narrow">&nbsp;</div>
-
-        <div id="response_box" <%= "style='height:250px;'" if @question.question_type == 3 %>>
-          <div class="subtitle">回答</div>
-          <%= hidden_field_tag "question_type", @question.question_type %>
-          <% if @question.is_random == true %>
-            <% selections = @selections.sort_by{rand} %>
-          <% else %>
-            <% selections = @selections %>
-          <% end %>
-          <% if @question.question_type == 1 %>
-            <div id="selection_box">
-              <% selections.each do |s| %>
-                <div class="field">
-                  <input type="radio" id="answer" name="answer"
-                         value="<%= s.id %>" /> <%= s.selection_text %>
-                </div>
-              <% end %>
-            </div>
-          <% elsif @question.question_type == 2 %>
-            <div id="selection_box">
-              <% selections.each do |s| %>
-                <div class="field">
-                  <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-                         value="<%= s.id %>" /> <%= s.selection_text %>
-                </div>
-              <% end %>
-            </div>
-          <% elsif @question.question_type == 3 %>
-            <div id="selection_box">
-              <div class="marufield">
-                <%= link_to_remote(image_tag("maru.jpg", :style => 'border: none;',
-                                                   :onmouseover=>"this.src='../../images/maru_on.jpg'",
-                                                   :onmouseout=>"this.src='../../images/maru.jpg'"),
-                               :url=>{:action => 'answer',
-                                      :question_id => @question.id,
-                                      :question_type => @question.question_type,
-                                      :answer => 1},
-                               :update => 'quiz') %>
-              </div>
-              <div class="batufield">
-                <%= link_to_remote(image_tag("batu.jpg", :style => 'border: none;',
-                                                   :onmouseover=>"this.src='../../images/batu_on.jpg'",
-                                                   :onmouseout=>"this.src='../../images/batu.jpg'"),
-                               :url=>{:action => 'answer',
-                                      :question_id => @question.id,
-                                      :question_type => @question.question_type,
-                                      :answer => 0},
-                               :update => 'quiz') %>
-              </div>
-            </div>
-          <% else %>
-            <div id="answer_box">
-              <input name="answer" type="text" size="30" />
-            </div>
-          <% end %>
-        </div>
-
-        <div class="spacer_narrow">&nbsp;</div>
-
-        <div id="submit_box" <%= "style='display:none;'" if @question.question_type == 3 %>>
-          <%= submit_tag("回答する", :class => 'button') %>
+        <div id="question_information_box_quiz">
+          <div class="subtitle">分類</div>
+          <div class="subsubtitle">カテゴリ</div>
+          <div class="field"><%= @question.category.name %></div>
+          <div class="subsubtitle">タグ</div>
+          <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
+          <%# あとでちゃんと書きましょう %>
+          <div class="book_and_test">
+          </div>
         </div>
 
         <div class="spacer_narrow">&nbsp;</div>
 
       </div>
-
-    <div id="question_information_box_quiz">
-      <div class="subtitle">分類</div>
-      <div class="subsubtitle">カテゴリ</div>
-      <div class="field"><%= @question.category.name %></div>
-      <div class="subsubtitle">タグ</div>
-      <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
-      <%# あとでちゃんと書きましょう %>
-
-      <div class="book_and_test">
-      </div>
     </div>
-    <div class="spacer_narrow">&nbsp;</div>
-
-  </div>
-</div>
-<div id="command_box">
-  <div id="escape">
-    <%= submit_to_remote("次の問題へ",
-                      "次の問題へ",
-                      :url=>{:action => 'next',
-                             :questions => @questions,
-                             :i => @i},
-                      :update => 'question') %>
-  </div>
-    <div id="check">
-      <%= submit_to_remote("解答一覧へ",
-                        "解答一覧へ",
-                        :url=>{:action => 'check',
-                               :i => @i},
-                        :update => 'main') %>
-    </div>
+    <div id="command_box">
+      <% if @i != 0 %>
+          <%= submit_to_remote("前の問題へ",
+                            "前の問題へ",
+                           :url=>{:action => 'back',
+                                  :questions => @questions,
+                                  :i => @i,
+                                  :id => @id},
+                           :update => 'contents') %>
+      <% end %>
+      <% if @questions.size > @i+1 %>
+          <%= submit_to_remote("次の問題へ",
+                            "次の問題へ",
+                           :url=>{:action => 'next',
+                                  :questions => @questions,
+                                  :i => @i,
+                                  :id => @id},
+                           :update => 'contents') %>
+      <% end %>
     <% end -%>
 
+      <div id="escape">
+        <% book = Book.find(@id) %>
+        <%= button_to "トレーニングを終了する","/books/show/#{@id}" %>
+      </div>
+    </div>
 </div>
