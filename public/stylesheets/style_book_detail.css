@@ -142,8 +142,11 @@ li.question_text {
   width:150px;
   margin-left: 15px;
   margin-right: 15px;
+  _width:60px;
+  _margin-left: 0px;
+  _margin-right: 0px;
   margin-bottom: 10px;
-
+  _display: inline;
 }
 
 .search_button {
@@ -151,7 +154,10 @@ li.question_text {
   text-align: left;
   margin-left: 15px;
   margin-right: 15px;
+  _margin-left: 0px;
+  _margin-right: 0px;
   margin-bottom: 10px;
+  _display: inline;
 
 }
 

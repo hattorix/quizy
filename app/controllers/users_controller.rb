@@ -38,6 +38,25 @@ class UsersController < ApplicationController
   end
 
   def update
+    @user = current_user
+    if @user.password != params[:password]
+      flash[:notice] = "パスワードが違います。"
+            render :action => 'edit'
+    else
+    @user.save
+    if @user.errors.empty?
+      self.current_user = @user
+      book = Book.new
+      book.name = "自分で登録した問題"
+      book.is_public = 2
+      book.user_id = @user.id
+      book.save
+      redirect_back_or_default('/')
+      flash[:notice] = "Thanks for signing up!"
+    else
+      render :action => 'new'
+    end
+    end
   end
 
 end

@@ -117,6 +117,7 @@ class QaController < ApplicationController
     @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
     if logged_in?
       @books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart = 0", current_user.id])
+      @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?", @question.id,current_user.id])
     end
 
     # statstics information
@@ -381,23 +382,27 @@ class QaController < ApplicationController
       end
     end
   end
-=begin
-  def evalchange_on
-    render :update do |page|
-      params[:id].to_i.times do |i|
-        page.replace_html("eval".concat(i.to_s),"<img src='../images/hosi_on.gif'>")
-      end
+  
+  def on_bookmark
+    @question = Question.find(params[:id])
+    unless Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",params[:id],current_user.id])
+      bookmark = Bookmark.new
+      bookmark.question_id = params[:id]
+      bookmark.user_id = current_user.id
+      bookmark.save
     end
+    @is_bookmark = true
+    render :partial => 'bookmark'
   end
 
-  def evalchange_off
-    render :update do |page|
-      10.times do |i|
-        page.replace_html("eval".concat(i.to_s),"<img src='../images/hosi_off.gif'>")
-      end
+  def off_bookmark
+    @question = Question.find(params[:id])
+    if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",params[:id],current_user.id])
+      bookmark.destroy
     end
+    @is_bookmark = false
+    render :partial => 'bookmark'
   end
-=end
 
   def evaluation_in
     @question = Question.find(params[:question_id].to_i)

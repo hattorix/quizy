@@ -37,11 +37,14 @@
   list-style: disc;
 }
 
+#add_book {
+  float:left;
+}
+
 #add_book_message {
   font-size:10pt;
   font-weight: bold;
   float:left;
-  height:auto;
 }
 
 #question_information_box_quiz {
@@ -185,6 +188,7 @@ li {
 
 .question_edit_and_delete {
   text-align: right;
+  margin-bottom:10px;
 }
 
 .result {

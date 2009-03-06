@@ -45,10 +45,10 @@
                 <span id="add_book_message<%=result.id%>"></span>
               </div>
             <% end %>
-          <div class="book_and_test">
-            <%= link_to "この問題を含むブックを検索する", :action => 'search_book', :id => result.id %> - 
-            <%= link_to "この問題を含むテストを検索する", :action => 'search_exam', :id => result.id %>
-          </div>
+            <div class="book_and_test">
+              <%= link_to "この問題を含むブックを検索する", :action => 'search_book', :id => result.id %> - 
+              <%= link_to "この問題を含むテストを検索する", :action => 'search_exam', :id => result.id %>
+            </div>
           <% elsif @flg == 1 %>
             <li>
               <%= link_to(truncate(result.name, 30),

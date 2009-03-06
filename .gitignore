@@ -3,3 +3,4 @@ app/views/top/
 log/
 nbproject/
 test/fixtures/report/
+vendor/plugins/open_flash_chart/

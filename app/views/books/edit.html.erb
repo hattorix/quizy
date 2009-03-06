@@ -96,7 +96,7 @@
         </div>
         <div class="search_button">
           <div>&nbsp;</div>
-          <%= button_to("追加",
+          <%= button_to_function("追加",
                       "追加",
                       :onclick => 'add_conditions("categories");return false;') %>
         </div>
@@ -111,7 +111,7 @@
         </div>
         <div class="search_button">
           <div>&nbsp;</div>
-          <%= button_to("削除",
+          <%= button_to_function("削除",
                       "削除",
                       :onclick => 'del_conditions("categories");return false;') %>
         </div>
@@ -125,7 +125,7 @@
         </div>
         <div class="search_button">
           <div>&nbsp;</div>
-          <%= button_to("追加",
+          <%= button_to_function("追加",
                       "追加",
                       :onclick => 'add_conditions("tags");return false;') %>
         </div>
@@ -140,7 +140,7 @@
         </div>
         <div class="search_button">
           <div>&nbsp;</div>
-          <%= button_to("削除",
+          <%= button_to_function("削除",
                       "削除",
                       :onclick => 'del_conditions("tags");return false;') %>
         </div>

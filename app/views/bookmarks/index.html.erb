@@ -1,0 +1,45 @@
+
+<%= stylesheet_link_tag "style_import_mypage" %>
+<div id="screen_title">
+  付箋を貼った問題一覧
+</div>
+
+<div id="main">
+  <div class="subcontent">
+    <div id="question_list">
+      <% if @questions.size >= 1 %>
+        <ul>
+          <% @questions.each do |q| %>
+            <li class="question_text">
+              <!--<input id="is_collect[<= q.id %>]" name="is_collect[<= q.id %>]" type="checkbox"/>-->
+              <%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
+              <a href="/quiz/<%=q.id%>"><%=truncate(erase_tag(q.question_text), 45)%></a>
+              <%= link_to("#{image_tag('/images/bookmark.gif',
+                         :title => '付箋を剥がす',
+                         :style => 'vertical-align: middle;border: none;')}付箋を剥がす",
+                         :action => 'off_bookmark',
+                         :id => q.id) %>
+            </li>
+          <% end %>
+        </ul>
+      <% else %>
+        <div style="text-align:center;">付箋はありません。</div>
+      <% end %>
+    </div>
+</div>
+<div class="spacer_narrow" style="clear: both;">&nbsp;</div>
+<div id="submit_box">
+<ul class="book_and_test">
+  <% if @questions.size >= 1 %>
+    <li><%= button_to "この一覧からブックを作成する", :action => 'new_book' %></li>
+    <li><%= button_to "この一覧からテストを作成する", :action => 'new_exam' %></li>
+  <% else %>
+    <li><%= button_to "この一覧からブックを作成する", {:action => 'new_book'}, {:disabled => true} %></li>
+    <li><%= button_to "この一覧からテストを作成する", {:action => 'new_exam'}, {:disabled => true} %></li>
+  <% end %>
+</ul>
+</div>
+<div class="spacer_narrow" style="clear: both;">&nbsp;</div>
+
+</div>
+

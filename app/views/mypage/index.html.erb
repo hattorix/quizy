@@ -6,6 +6,11 @@
     <%= image_tag('/images/chart_bar.png', :style => 'vertical-align: middle;') %>
     <%= link_to('成績を見る', :action => 'result') %>
   </span>
+  <span id="show_result">
+    <%= image_tag('/images/bookmarks.png', :style => 'vertical-align: middle;') %>
+    <%= link_to('付箋を貼った問題一覧', :controller => 'bookmarks') %>
+  </span>
+
 </div>
 
 <div id="main">

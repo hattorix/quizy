@@ -91,9 +91,6 @@
     <% form_tag({:action => 'training_start', :id => @book.id},:target => ["_blank"]) do -%>
       この問題集から<%= text_field_tag "select_count", "",:style => 'width: 20pt;' %>問抽出し、
       <%= submit_tag "トレーニング" %>
-      <%= button_to_function('テスト開始',
-                          "OpenNew('training_start/#{@book.id}')",
-                          {:style=>"font-size:12px; width:108px; height:25px;"})%>
     <% end %>
   </div>
 </div>

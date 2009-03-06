@@ -1,0 +1,30 @@
+<%= stylesheet_link_tag "style_book_detail" %>
+<div id="screen_title">ブックの新規作成</div>
+<div id="message"></div>
+<div id="main">
+  <% remote_form_for(@book,:url=>{:action => 'create_book'}) do |f| %>
+    <%= f.error_messages %>
+    <div id="name_public_field">
+      <div class="field">
+        <%= f.label "ブック名" %><br />
+        <%= f.text_field :name %>
+      </div>
+      <div class="field">
+        <%= f.label "公開可否" %><br />
+        <%= f.radio_button(:is_public, 1) %>：公開
+        <%= f.radio_button(:is_public, 2) %>：非公開
+      </div>
+    </div>
+    <div id="outline_field">
+      <div class="field">
+        <%= f.label "概要" %><br />
+        <%= f.text_area :outline, :style => 'height: 10em;' %>
+      </div>
+    </div>
+    <div id="submit_box" style="padding-left:100px;">
+      <%= f.submit "作成する" %>
+      <input id="off_bookmark" name="off_bookmark" type="checkbox" checked />
+      作成後全ての付箋を剥がす
+    </div>
+  <% end -%>
+</div>

@@ -5,7 +5,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :lists
 
-  map.resources :lists
+  map.resources :bookmarks
 
   map.resources :selections
   map.resources :questions

@@ -1,0 +1,14 @@
+<%= stylesheet_link_tag("contents_register") %>
+<%if @is_bookmark %>
+  <%= image_tag('/images/bookmark.gif', :style => 'vertical-align: middle;') %>
+  <%= link_to_remote "付箋を剥がす", :url=>{:action => 'off_bookmark',
+                                        :id => @question.id},
+                                 :update => 'bookmark_form',
+                                 :disabled => true%>
+<% else %>
+  <%= image_tag('/images/bookmark_off.gif', :style => 'vertical-align: middle;') %>
+  <%= link_to_remote "付箋を貼る", :url=>{:action => 'on_bookmark',
+                                        :id => @question.id},
+                                 :update => 'bookmark_form',
+                                 :disable_with => 'Sending...' %>
+<% end %>

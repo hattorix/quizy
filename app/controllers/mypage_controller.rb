@@ -35,15 +35,23 @@ class MypageController < ApplicationController
     days = Array.new
 
     30.times do |t|
+      y = t.day.ago.strftime("%y")
+      m = t.day.ago.strftime("%m")
+      d = t.day.ago.strftime("%d")
+
+      first_time = Time.local(y, m, d, 00, 00, 00)
+      last_time = Time.local(y, m, d, 23, 59, 59)
+
+
       bar1.data << History.count(:conditions => ["created_at > ? and created_at < ? and user_id = ? and correct_or_wrong = 1",
-                                                  (t+1).day.ago,
-                                                  t.day.ago,
+                                                  first_time,
+                                                  last_time,
                                                   current_user.id])
       bar2.data << History.count(:conditions => ["created_at > ? and created_at < ? and user_id = ?",
-                                                  (t+1).day.ago,
-                                                  t.day.ago,
+                                                  first_time,
+                                                  last_time,
                                                   current_user.id])
-      days << t.day.ago.strftime("%m/%d")
+      days << last_time.strftime("%m/%d")
     end
 
     g = Graph.new

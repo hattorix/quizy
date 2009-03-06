@@ -35,7 +35,6 @@ ul {
   list-style: none;
   list-style-image: url(/images/quiz.png);
   list-style-position: outside;
-  float:left;
   clear:both;
 }
 

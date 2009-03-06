@@ -1,7 +1,7 @@
 <script type="text/javascript" src="/javascripts/swfobject.js"></script>
 <%= stylesheet_link_tag "style_import_mypage" %>
 <div id="screen_title">
-  あなたの成績
+  <%=h current_user.login %> さんの成績
 </div>
 <div id="bar_chart">
 <%= @graph %>

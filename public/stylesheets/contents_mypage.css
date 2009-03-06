@@ -154,3 +154,25 @@
 #navi {
   text-align: center;
 }
+
+#submit_box {
+  text-align: center;
+  padding: 10px;
+  margin-left:100px;
+  margin-right:100px;
+
+}
+.book_and_test{
+  padding:0;
+  margin:0 auto;
+  list-style-type:none;
+  float:left;
+  position:relative;
+  left:50%;
+  _left:35%;
+}
+.book_and_test li{
+  float:left;
+  position:relative;
+  right:50%;
+}
