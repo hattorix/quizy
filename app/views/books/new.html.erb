@@ -5,24 +5,47 @@
     location.href="../../";
   }
 
-  function add_tags(){
-  addText = document.getElementById("text").value;
-  addValue = document.getElementById("text").value;
+  function add_conditions(str){
+  if (str == "categories") {
+    a = "category";         //条件追加フォーム
+    b = "select_categories"; //条件確認フォーム
+    c = "categories";       //コントローラーへ送るフォーム
+  } else if (str == "tags") {
+    a = "text";            //条件追加フォーム
+    b = "select_tags";      //条件確認フォーム
+    c = "tags";            //コントローラーへ送るフォーム
+  } else {
+    a = "";
+    b = "";
+    c = "";
+  }
+  addText = document.getElementById(a).value;
+  addValue = document.getElementById(a).value;
   if (addText != "") {
-  options = document.getElementById("select_tags").options.text
+    options = document.getElementById(b).options.text;
 <!--  if(options.indexOf(addText) == -1){-->
-    document.getElementById("select_tags").options[document.getElementById("select_tags").options.length] = new Option(addText, addValue);
-    tags = document.getElementById("tags").value;
-    document.getElementById("tags").value = tags.concat(addText.concat(","));
+    document.getElementById(b).options[document.getElementById(b).options.length] = new Option(addText, addValue);
+    tags = document.getElementById(c).value;
+    document.getElementById(c).value = tags.concat(",".concat(addText));
 <!--  }-->
   }}
 
-  function del_tags(){
-  if (document.getElementById("select_tags").selectedIndex != -1) {
-  idx = document.getElementById("select_tags").selectedIndex;
-  val = document.getElementById("select_tags").options[idx].value;
-  document.getElementById("tags").value = document.getElementById("tags").value.replace(val, "")
-  document.getElementById("select_tags").options[idx] = null;
+  function del_conditions(str){
+  if (str == "categories") {
+    a = "select_categories"; //条件確認フォーム
+    b = "categories";       //コントローラーへ送るフォーム
+  } else if (str == "tags") {
+    a = "select_tags";      //条件確認フォーム
+    b = "tags";            //コントローラーへ送るフォーム
+  } else {
+    a = "";
+    b = "";
+  }
+  if (document.getElementById(a).selectedIndex != -1) {
+    idx = document.getElementById(a).selectedIndex;
+    val = document.getElementById(a).options[idx].value;
+    document.getElementById(b).value = document.getElementById(b).value.replace(val, "")
+    document.getElementById(a).options[idx] = null;
   }
   }
 
@@ -42,7 +65,6 @@
     window.addEventListener ?
     window.addEventListener('load', startSuggest, false) :
     window.attachEvent('onload', startSuggest);
-</script>
 </script>
 <div id="screen_title">ブックの新規作成</div>
 <div id="message"></div>
@@ -68,34 +90,64 @@
     </div>
 
     <div class="field" style="clear:both;">
-      <%= f.check_box(:is_smart, :onchange =>"Effect.toggle('smart_field', 'slide',{ duration: 0.5 });" ) %>スマートブックにする
+      <%= f.check_box(:is_smart, :onclick =>"Effect.toggle('smart_field', 'slide',{ duration: 0.5 });" ) %>スマートブックにする
     </div>
     <div id="smart_field" style="display:none;">
-      <div id="search_field">
-        <%= f.label "タグ名" %><br />
-        <input id="text" type="text" size="30" />
-        <div id="suggest"></div> 
+
+      <div id="categories_box">
+        <div class="search_field">
+          <%= f.label "カテゴリ" %><br />
+          <%= select_tag('category',
+                       options_from_collection_for_select(@categories, :name, :name),
+                       :size => 4,
+                       :onDblClick => 'add_conditions("categories");return false;') %>
+        </div>
+        <div class="search_button">
+          <div>&nbsp;</div>
+          <%= button_to("追加",
+                      "追加",
+                      :onclick => 'add_conditions("categories");return false;') %>
+        </div>
+        <div class="search_field">
+          <div>&nbsp;</div>
+          <%= f.hidden_field :categories, :id => "categories" %>
+          <select id="select_categories" size="4" style="width:150px;" onDblClick='del_conditions("categories");return false;'>
+          </select>
+        </div>
+        <div class="search_button">
+          <div>&nbsp;</div>
+          <%= button_to("削除",
+                      "削除",
+                      :onclick => 'del_conditions("categories");return false;') %>
+        </div>
       </div>
-      <div id="search_field">
-        <div>&nbsp;</div>
-        <%= button_to("追加",
-                    "追加",
-                    :onclick => "add_tags();return false;") %>
-      </div>
-      <div id="tags_field">
-        <div>&nbsp;</div>
-        <%= f.hidden_field :tags, :id => "tags" %>
-        <select id="select_tags" size="8" style="width:150px;">
-        </select>
-      </div>
-      <div id="search_field">
-        <div>&nbsp;</div>
-        <%= button_to("削除",
-                    "削除",
-                    :onclick => "del_tags();return false;") %>
+
+      <div id="tags_box">
+        <div class="search_field">
+          <%= f.label "タグ名" %><br />
+          <input id="text" type="text" size="20" />
+          <div id="suggest"></div>
+        </div>
+        <div class="search_button">
+          <div>&nbsp;</div>
+          <%= button_to("追加",
+                      "追加",
+                      :onclick => 'add_conditions("tags");return false;') %>
+        </div>
+        <div class="search_field">
+          <div>&nbsp;</div>
+          <%= f.hidden_field :tags, :id => "tags" %>
+          <select id="select_tags" size="4" style="width:150px;" onDblClick='del_conditions("tags");return false;'>
+          </select>
+        </div>
+        <div class="search_button">
+          <div>&nbsp;</div>
+          <%= button_to("削除",
+                      "削除",
+                      :onclick => 'del_conditions("tags");return false;') %>
+        </div>
       </div>
     </div>
-    
     <div id="submit_box">
       <%= f.submit "作成する" %>
     </div>

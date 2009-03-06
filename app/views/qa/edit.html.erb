@@ -123,20 +123,23 @@
   <div id="selection_box" style="display:<%= @question.question_type == 4 ? 'none;' : 'block;' %>clear:both;">
     <div class="subsubtitle">選択肢(正解にチェックを入れてください)</div>
     <ul>
+      <% i = 0 %>
       <div id="radio" style="display:<%= @question.question_type != 1 ? 'none;' : 'block' %>">
         <% @selections.each do |selection| %>
           <li class="selection">
-            <input id="is_collect" name="is_collect" value="<%= selection.id %>" type="radio" <%= "checked" if selection.is_collect == 1 %> />
-              <%= text_field_tag "selection[#{selection.id}]", selection.selection_text, {:size => 50} %><br />
+            <input id="is_collect" name="is_collect" value="<%= i %>" type="radio" <%= "checked" if selection.is_collect == 1 %> />
+              <%= text_field_tag "selection[#{i}]", selection.selection_text, {:size => 50} %><br />
           </li>
+          <% i+=1 %>
         <% end %>
       </div>
       <div id="check" style="display:<%= @question.question_type != 2 ? 'none;' : 'block' %>">
         <% @selections.each do |selection| %>
           <li class="selection">
-            <input id="is_collect2" name="is_collect2[<%= selection.id %>]" type="checkbox" <%= "checked" if selection.is_collect == 1 %> />
-              <%= text_field_tag "selection2[#{selection.id}]", selection.selection_text, {:size => 50} %><br />
+            <input id="is_collect2" name="is_collect2[<%= i %>]" type="checkbox" <%= "checked" if selection.is_collect == 1 %> />
+              <%= text_field_tag "selection2[#{i}]", selection.selection_text, {:size => 50} %><br />
           </li>
+          <% i+=1 %>
         <% end %>
       </div>
       <div id="y_or_n" style="display:<%= @question.question_type != 3 ? 'none;' : 'block' %>">

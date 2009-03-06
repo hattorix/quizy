@@ -1,12 +1,12 @@
 <div id="main">
   <%= stylesheet_link_tag 'basic' %>
   <%= stylesheet_link_tag 'style_exam_detail'  %>
-  <SCRIPT LANGUAGE="JavaScript">
-function OpenNew(page) {
-    ret = this.open(page, "CtrlWindow"
-             ,"toolbar=0, menubar=0, location=0, scrollbars=1, resize=0, width=960, height=900");
-}
-</SCRIPT>
+  <script language="JavaScript">
+  function OpenNew(page) {
+      ret = this.open(page, "CtrlWindow"
+               ,"toolbar=0, menubar=0, location=0, scrollbars=1, resize=0, width=960, height=900");
+  }
+  </script>
   <h1 class="this_exam_title">
     『<%=h @exam.name %>』
     <% if logged_in? %>

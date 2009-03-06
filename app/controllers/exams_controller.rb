@@ -35,12 +35,32 @@ class ExamsController < ApplicationController
     @exam = Exam.new
     @book = Book.find(params[:id])
     if @book.is_smart == true
-      @questions = Array.new
-      @tags = @book.tags.split(",")
-      @tags.each do |tag|
-        @questions << Question.find_tagged_with(tag)
+      if @book.tags != ""
+        questions_t = Array.new
+        @tags = @book.tags.split(",")
+        @tags.each do |tag|
+          questions_t << Question.find_tagged_with(tag)
+        end
+        questions_t.flatten!.uniq!
       end
-      @questions.flatten!.uniq!
+
+      if @book.categories != ""
+        questions_c = Array.new
+        @categories = @book.categories.split(",")
+        @categories.each do |category_name|
+          category = Category.find(:first, :conditions => ['name = ?', category_name])
+          questions_c << Question.find(:all, :conditions => ['category_id = ? and is_public = 1', category.id])
+        end
+        questions_c.flatten!.uniq!
+      end
+
+      if questions_t && questions_c
+        @questions = (questions_t & questions_c)
+      elsif @questions = questions_c
+        @tags = Array.new
+      elsif @questions = questions_t
+        @categories = Array.new
+      end
     else
       @questions = @book.questions
     end
@@ -77,8 +97,7 @@ class ExamsController < ApplicationController
         i += 1
       end
       render :update do |page|
-        page << 'mypage()'
-        page
+        page.redirect_to :controller => "mypage"
       end
     else
       @msgs = @exam.errors.full_messages
@@ -226,6 +245,7 @@ class ExamsController < ApplicationController
         hist.question_id = examtemp.question_id
         hist.user_id = current_user.id
         hist.correct_or_wrong = examtemp.t_or_f
+        hist.answer_mode = 2
         hist.save
       end
     end
@@ -279,7 +299,7 @@ class ExamsController < ApplicationController
 
     if @exam.update_attributes(params[:exam])
       render :update do |page|
-        page << 'mypage()'
+        page.redirect_to :controller => "mypage"
       end
     else
       @msgs = @exam.errors.full_messages

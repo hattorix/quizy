@@ -1,3 +1,9 @@
+  <script language="JavaScript">
+  function OpenNew(page) {
+      ret = this.open(page, "CtrlWindow"
+               ,"toolbar=0, menubar=0, location=0, scrollbars=1, resize=0, width=960, height=900");
+  }
+  </script>
 <div id="main">
   <%= stylesheet_link_tag 'basic' %>
   <%= stylesheet_link_tag 'style_book_detail'  %>
@@ -35,6 +41,7 @@
       問</td></tr>
       <tr><td>ブックの公開</td><td class="string"><%=h @book.is_public == 1 ? "公開" : "非公開" %></td></tr>
       <% if @book.is_smart == true %>
+        <tr><td>参照カテゴリ</td><td class="string"><%= @categories.map{|t| '<span class="tag">' + t + '</span>'} %></td></tr>
         <tr><td>参照タグ</td><td class="string"><%= @tags.map{|t| '<span class="tag">' + t + '</span>'} %></td></tr>
       <% end %>
     </table>
@@ -81,9 +88,9 @@
   <div class="spacer_narrow" style="clear:both">&nbsp;</div>
 
   <div id="submit_box">
-    <% form_tag(:action => 'training_start', :id => @book.id) do -%>
+    <% form_tag({:action => 'training_start', :id => @book.id},:target => ["_blank"]) do -%>
       この問題集から<%= text_field_tag "select_count", "",:style => 'width: 20pt;' %>問抽出し、
-      <%= submit_tag "トレーニング", :popup => ['Popup Show', 'width=200, height=150'] %>
+      <%= submit_tag "トレーニング" %>
     <% end %>
   </div>
 </div>

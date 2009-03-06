@@ -133,9 +133,15 @@
             <% end %>
             <% q = Question.find(h.question_id) %>
             <a href="/quiz/<%=q.id%>"><%=truncate(erase_tag(q.question_text), 45)%></a>
-                    <span style="color: silver; font-size: 8pt;">
-          <%= h.created_at.strftime("回答日 %Y/%m/%d %H:%M:%S") %>
-        </span>
+            <% if h.answer_mode == 1 %>
+              <span style="color: blue; font-size: 8pt;">(training)</span>
+            <% elsif h.answer_mode == 2 %>
+              <span style="color: orangered; font-size: 8pt;">(test)</span>
+            <% end %>
+            <span style="color: silver; font-size: 8pt;">
+              <%= h.created_at.strftime("回答日 %Y/%m/%d %H:%M:%S") %>
+            </span>
+
           </li>
         <% end %>
       </ul>

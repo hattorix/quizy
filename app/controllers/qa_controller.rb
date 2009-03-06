@@ -85,7 +85,7 @@ class QaController < ApplicationController
        book.questions << @q
       if params[:name] == 'submit1'
         render :update do |page|
-          page << 'mypage()'
+          page.redirect_to :controller => "mypage"
         end
       else
         render :update do |page|
@@ -116,7 +116,7 @@ class QaController < ApplicationController
     @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
     @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
     if logged_in?
-      @books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題'", current_user.id])
+      @books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart = 0", current_user.id])
     end
 
     # statstics information
@@ -226,6 +226,7 @@ class QaController < ApplicationController
       hist.question_id = @question.id
       hist.user_id = current_user.id
       hist.correct_or_wrong = @is_collect.to_i
+      hist.answer_mode = 0
       hist.save
     end
 
@@ -263,57 +264,69 @@ class QaController < ApplicationController
     selections = Selection.find(:all, :conditions => ["question_id = ?", params[:question_id]])
     old_selections = []
     selections.each do |selection|
-      old_selections << selection
+      old_selections << { "text" => selection.selection_text, "is_collect" => selection.is_collect}
     end
 
     new_selections = Array.new
 
     if params[:question_type] == "1"
-      selections.each do |selection|
+      10.times do |i|
         s = Selection.new
-        s[:selection_text] = params["selection"][selection.id.to_s]
-        s[:is_collect] = params["is_collect"] == [selection.id] ? 1 : 0
-        selection.attributes = s
+        s[:selection_text] = params[:selection][i.to_s]
+        s[:is_collect] = params[:is_collect].to_i == i ? 1 : 0
+        new_selections << s
       end
       quiz[:selections] = new_selections
 
     elsif params[:question_type] == "2"
-      selections.each do |s|
-        new_selection = Selection.new
-        new_selection.selection_text = params[:selection2][s.id.to_s]
-        new_selection.is_collect = params[:is_collect2][s.id.to_s] == "on" ? 1 : 0
-        new_selection.user_id = current_user.id
-        new_selections << new_selection
+      10.times do |i|
+        s = Selection.new
+        s[:selection_text] = params[:selection2][i.to_s]
+        s[:is_collect] = params[:is_collect2][i.to_s] == "on" ? 1 : 0
+        new_selections << s
       end
       quiz[:selections] = new_selections
 
     elsif params[:question_type] == "3"
         quiz[:y_or_n] = params[:is_collect3].to_i
     elsif params[:question_type] == "4"
-        a = Answer.new
-        a.answer_text = params[:answer_ta].gsub("\n", "<br />")
-        a.user_id = current_user.id
-        quiz[:answer] = a
+      old_answer = Answer.find(:first, :conditions => ["question_id = ?", params[:question_id]]).answer_text
+      a = Answer.new
+      a.answer_text = params[:answer_ta].gsub("\n", "<br />")
+      a.user_id = current_user.id
+      quiz[:answer] = a
     else
       # TODO: レコード数を調べて、0件だったら追加する処理
     end
 
-    d_text = Description.find(:first, :conditions => ["question_id = ?", params[:question_id]]).description_text
+    old_desctiprion = Description.find(:first, :conditions => ["question_id = ?", params[:question_id]]).description_text
     d = Description.new
     d.description_text = params[:description_ta].gsub("\n", "<br />")
     quiz[:description] = d
 
-        @question = Question.find(params[:question_id])
-        @question.attributes = quiz
+    @question = Question.find(params[:question_id])
+    @question.attributes = quiz
 
     if @question.save
       render :update do |page|
-        page << 'mypage()'
+        page.redirect_to :controller => "mypage"
       end
     else
-      @question.update_attributes({:selections => old_selections})
       @msgs = @question.errors.full_messages
 
+      # 編集前に戻す処理
+      if @question.question_type == 1 || @question.question_type == 2
+        i = 0
+        @question.selections.each do |selection|
+          selection.update_attribute(:selection_text, old_selections[i]["text"])
+          selection.update_attribute(:is_collect, old_selections[i]["is_collect"])
+          i += 1
+        end
+      elsif @question.question_type == 4
+        @question.answer.update_attribute(:answer_text, old_answer)
+      end
+      @question.description.update_attribute(:description_text, old_desctiprion)
+      
 
       render :update do |page|
         page << 'top()'

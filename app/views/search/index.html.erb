@@ -1,20 +1,22 @@
 <%= stylesheet_link_tag 'contents_search'  %>
 <div id="screen_title">検索結果</div>
 <% if @flg == 0 %>
-  <div class="add_book">
-    <div class="add_book_form">
-      <% remote_form_for :question,:url=>{:action => 'add_book',:id => 'all',:results => @results} do -%>
-        全てマイブック
-        <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題'", current_user.id])%>
-        <%= select_tag 'add_book_to',
-                      options_from_collection_for_select(books,
-                                                    :id, :name),
-                      :style => 'width: 80px;' %>
-        <%= submit_tag '登録',
-                     :class => 'button'%>
-      <% end -%></div>
-    <span id="add_book_message_all"></span>
-  </div>
+  <% if logged_in? %>
+    <div class="add_book">
+      <div class="add_book_form">
+        <% remote_form_for :question,:url=>{:action => 'add_book',:id => 'all',:results => @results} do -%>
+          全てマイブック
+          <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題'", current_user.id])%>
+          <%= select_tag 'add_book_to',
+                        options_from_collection_for_select(books,
+                                                      :id, :name),
+                        :style => 'width: 80px;' %>
+          <%= submit_tag '登録',
+                       :class => 'button'%>
+        <% end -%></div>
+      <span id="add_book_message_all"></span>
+    </div>
+  <% end %>
 <% end %>
 <div id="main">
   <div id="result_box">

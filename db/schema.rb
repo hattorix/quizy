@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090227024029) do
+ActiveRecord::Schema.define(:version => 20090302052222) do
 
   create_table "answers", :force => true do |t|
     t.text     "answer_text"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20090227024029) do
     t.text     "outline"
     t.boolean  "is_smart"
     t.text     "tags"
+    t.text     "categories"
   end
 
   create_table "categories", :force => true do |t|
@@ -84,6 +85,7 @@ ActiveRecord::Schema.define(:version => 20090227024029) do
     t.boolean  "correct_or_wrong"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "answer_mode",      :limit => 11
   end
 
   create_table "my_books", :force => true do |t|

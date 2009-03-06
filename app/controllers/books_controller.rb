@@ -26,12 +26,33 @@ class BooksController < ApplicationController
   def show
     @book = Book.find(params[:id])
     if @book.is_smart == true
-      @questions = Array.new
-      @tags = @book.tags.split(",")
-      @tags.each do |tag|
-        @questions << Question.find_tagged_with(tag)
+      if @book.tags != ""
+        questions_t = Array.new
+        @tags = @book.tags.split(",")
+        @tags.each do |tag|
+          questions_t << Question.find_tagged_with(tag)
+        end
+        questions_t.flatten!.uniq!
       end
-      @questions.flatten!.uniq!
+
+      if @book.categories != ""
+        questions_c = Array.new
+        @categories = @book.categories.split(",")
+        @categories.each do |category_name|
+          category = Category.find(:first, :conditions => ['name = ?', category_name])
+          questions_c << Question.find(:all, :conditions => ['category_id = ? and is_public = 1', category.id])
+        end
+        questions_c.flatten!.uniq!
+      end
+
+      if questions_t && questions_c
+        @questions = (questions_t & questions_c)
+      elsif @questions = questions_c
+        @tags = Array.new
+      elsif @questions = questions_t
+        @categories = Array.new
+      end
+
     end
   end
 
@@ -40,6 +61,7 @@ class BooksController < ApplicationController
   def new
     @book = Book.new
     @tags = Question.tag_counts
+    @categories = Category.find(:all, :order => 'id')
 
   end
 
@@ -48,6 +70,8 @@ class BooksController < ApplicationController
     @tags = Question.tag_counts
     if @book.is_smart == true
       @books_tags = @book.tags.split(",")
+      @books_categories = @book.categories.split(",")
+      @categories = Category.find(:all, :order => 'id')
     end
 
   end
@@ -61,12 +85,15 @@ class BooksController < ApplicationController
         tags = @book.tags.split(",")
         tags.delete("")
         @book.update_attribute(:tags ,tags.join(","))
+        categories = @book.categories.split(",")
+        categories.delete("")
+        @book.update_attribute(:categories ,categories.join(","))
         my_book = MyBook.new
         my_book.book_id = @book.id
         my_book.user_id = current_user.id
         my_book.save
         render :update do |page|
-          page << 'mypage()'
+          page.redirect_to :controller => "mypage"
         end
       else
         @msgs = @book.errors.full_messages
@@ -101,8 +128,11 @@ class BooksController < ApplicationController
         tags = @book.tags.split(",")
         tags.delete("")
         @book.update_attribute(:tags ,tags.join(","))
+        categories = @book.categories.split(",")
+        categories.delete("")
+        @book.update_attribute(:categories ,categories.join(","))
         render :update do |page|
-          page << 'mypage()'
+          page.redirect_to :controller => "mypage"
         end
       else
         @msgs = @book.errors.full_messages
@@ -146,7 +176,7 @@ class BooksController < ApplicationController
           params[:select_count].to_i.times do |i|
             @questions << Question.find(@books_questions[rand(@books_questions.size)].question_id)
           end
-          i = 0
+          @i = 0
           @question = @questions[@i]
           @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
           @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
@@ -164,14 +194,34 @@ class BooksController < ApplicationController
         end
       else
         @questions = Array.new
-        @tags_questions = Array.new
-        @tags = @book.tags.split(",")
-        @tags.sort_by{rand}.each do |tag|
-          @tags_questions << Question.find_tagged_with(tag)
+
+        if @book.tags != ""
+          @tags = @book.tags.split(",")
+          questions_t = Array.new
+          @tags.sort_by{rand}.each do |tag|
+            questions_t << Question.find_tagged_with(tag)
+          end
+          questions_t.flatten!.uniq!
         end
-        @tags_questions.flatten!.uniq!
+
+        if @book.categories != ""
+          @categories = @book.categories.split(",")
+          questions_c = Array.new
+          @categories.sort_by{rand}.each do |category_name|
+            category = Category.find(:first, :conditions => ['name = ?', category_name])
+            questions_c << Question.find(:all, :conditions => ['category_id = ? and is_public = 1', category.id])
+          end
+          questions_c.flatten!.uniq!
+        end
+
+        if questions_t && questions_c
+          @smart_questions = (questions_t & questions_c)
+        elsif @smart_questions = questions_c
+        elsif @smart_questions = questions_t
+        end
+
         params[:select_count].to_i.times do |i|
-          @questions << @tags_questions[rand(@tags_questions.size)]
+          @questions << @smart_questions[rand(@smart_questions.size)]
         end
         @i = 0
         @question = @questions[@i]
@@ -331,6 +381,7 @@ class BooksController < ApplicationController
       hist.question_id = @question.id
       hist.user_id = current_user.id
       hist.correct_or_wrong = @is_collect.to_i
+      hist.answer_mode = 1
       hist.save
     end
   end
