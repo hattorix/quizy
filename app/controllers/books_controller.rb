@@ -3,7 +3,9 @@ class BooksController < ApplicationController
     layout :select_layout
 
   def select_layout
-    if %w(answer next back).include?(action_name)
+    if action_name == "training_start"
+      "training"
+    elsif %w(answer next back).include?(action_name)
     else
       "application"
     end

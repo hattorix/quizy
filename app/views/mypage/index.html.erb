@@ -2,6 +2,10 @@
 <%= stylesheet_link_tag "style_import_mypage" %>
 <div id="screen_title">
   <%=h current_user.login %> さんのマイページ
+  <span id="show_result">
+    <%= image_tag('/images/chart_bar.png', :style => 'vertical-align: middle;') %>
+    <%= link_to('成績を見る', :action => 'result') %>
+  </span>
 </div>
 
 <div id="main">

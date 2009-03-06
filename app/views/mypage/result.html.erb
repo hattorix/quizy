@@ -1,0 +1,13 @@
+<script type="text/javascript" src="/javascripts/swfobject.js"></script>
+<%= stylesheet_link_tag "style_import_mypage" %>
+<div id="screen_title">
+  あなたの成績
+</div>
+<div id="bar_chart">
+<%= @graph %>
+</div>
+  <div class="spacer_narrow">&nbsp;</div>
+
+  <div id="navi">
+    <%= link_to 'マイページへ', :controller => 'mypage' %>
+  </div>

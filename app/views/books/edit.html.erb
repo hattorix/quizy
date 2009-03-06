@@ -1,10 +1,6 @@
 <%= stylesheet_link_tag "style_book_detail" %>
 <script type="text/javascript" src="/javascripts/suggest.js"></script>
 <script language="javascript">
-  function mypage() {
-    location.href="../../";
-  }
-
   function add_conditions(str){
   if (str == "categories") {
     a = "category";         //条件追加フォーム
@@ -23,11 +19,9 @@
   addValue = document.getElementById(a).value;
   if (addText != "") {
     options = document.getElementById(b).options.text;
-<!--  if(options.indexOf(addText) == -1){-->
     document.getElementById(b).options[document.getElementById(b).options.length] = new Option(addText, addValue);
-    tags = document.getElementById(c).value;
-    document.getElementById(c).value = tags.concat(",".concat(addText));
-<!--  }-->
+    values = document.getElementById(c).value;
+    document.getElementById(c).value = values.concat(",".concat(addText));
   }}
 
   function del_conditions(str){
@@ -48,7 +42,6 @@
     document.getElementById(a).options[idx] = null;
   }
   }
-
 
   function startSuggest() {
   var tag_list = [

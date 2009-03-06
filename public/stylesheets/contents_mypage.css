@@ -77,6 +77,11 @@
   float: right;
 }
 
+#show_result {
+  font-size: 12pt;
+  font-weight: normal;
+}
+
 .subtitle{
   font-size: 12pt;
   font-weight: bold;
@@ -138,4 +143,14 @@
 .blue {
   color:blue;
   font-weight: bold;
+}
+
+#bar_chart {
+  width:850px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+#navi {
+  text-align: center;
 }

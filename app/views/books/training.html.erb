@@ -128,7 +128,8 @@
 
       <div id="escape">
         <% book = Book.find(@id) %>
-        <%= button_to "トレーニングを終了する","/books/show/#{@id}" %>
+          <%= button_to_function("トレーニング終了",
+                             "window.close();") %>
       </div>
     </div>
 </div>

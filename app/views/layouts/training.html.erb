@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title><%=h @page_title || "Quizy" %></title>
+  <%= javascript_include_tag :defaults %>
+
+  <%= stylesheet_link_tag "basic" %>
+</head>
+<body>
+  <div id="container">
+    <div id="header">
+      <div id="header_menu">
+      </div>
+      <div id="logo">
+        <%= image_tag("logo.png", :style => 'border: none;', :title => 'Quizy') %>
+      </div>
+    </div>
+
+    <div id="contents">
+      <%= yield :layout %>
+    </div>
+
+    <div id="footer">
+      <div id="copyright">
+        Copyright &copy; 2008 ARK System CO., LTD. All Right Reserved.</div>
+    </div>
+  </div>
+</body>
+</html>
+
