@@ -1,9 +1,5 @@
-<%= stylesheet_link_tag("contents_register") %>
-
-<div id="screen_title">解答</div>
-
 <div id="main">
-  <div class="result"><%= @result_text %></div>
+<div class="result"><%= @result_text %></div>
   <% if @is_collect == "1" %>
     <div id="description_box">
       <div class="subtitle">解説</div>
@@ -43,16 +39,10 @@
 
     </div>
   <% end %>
-
-  <div id="evaluation">
-    <%= render(:partial => 'evals') %>
-  </div>
-  <div class="spacer_narrow">&nbsp;</div>
+      <div class="spacer_narrow">&nbsp;</div>
 
   <div id="navi">
-    <%= link_to '問題に戻る', :back %> | 
-    <%= link_to 'トップへ', :controller => 'top' %> | 
-    <%= link_to 'マイページへ', :controller => 'mypage' %> | 
-    <%= link_to('ランダムQuizy', "/quiz/#{@random}")%>
+    <%= link_to '問題に戻る', :back %>
   </div>
+      <div class="spacer_narrow">&nbsp;</div>
 </div>

@@ -51,7 +51,11 @@
             <% end %>
             <% answer = answers.join(",") %>
           <% elsif question.question_type == 3 %>
-            <% answer = answer == "1" ? "○" : "×" %>
+            <% if answer == "1" %>
+              <% answer = "○" %>
+            <% elsif answer == "0" %>
+              <% answer = "×" %>
+            <% end %>
           <% end %>
           <% status = examtemp.status %>
         <% else %>

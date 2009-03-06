@@ -1,6 +1,27 @@
 <%= stylesheet_link_tag("contents_register") %>
 <%= javascript_include_tag "prototype" %>
+<script language="javascript">
+  function evaon(index) {
+    a = document.getElementById('eva1');
+    b = document.getElementById('eva2');
+    c = document.getElementById('eva3');
+    d = document.getElementById('eva4');
+    e = document.getElementById('eva5');
+    f = document.getElementById('eva6');
+    g = document.getElementById('eva7');
+    h = document.getElementById('eva8');
+    i = document.getElementById('eva9');
+    k = document.getElementById('eva10');
 
+    <% ary = ["a","b","c","d","e","f","g","h","i","j","k"] %>
+    <% i = 0 %>
+      for (j=0;j<index;j++){
+      <%=ary[i]%>.src='batu.png';
+      <% i+=1 %>
+      }
+  }
+
+</script>
 <div id="toolbar_box">
 <% if logged_in? %>
   <% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id} do -%>
@@ -75,7 +96,7 @@
                                  :answer => 1},
                           :update => 'container') %>
       </div>
-      <div class="marufield">
+      <div class="batufield">
         <%= link_to_remote(image_tag("batu.jpg", :style => 'border: none;',
                                             :onmouseover=>"this.src='../images/batu_on.jpg'",
                                             :onmouseout=>"this.src='../images/batu.jpg'"),
@@ -106,25 +127,23 @@
 </div>
 <% end -%>
 
-<div id="question_information_box_quiz">
-  <a href="#" onclick="Effect.toggle('a', 'blind'); return false;"><div class="subtitle">分類</div></a>
-  <div id="a">
-  <div class="subsubtitle">カテゴリ</div>
-  <div class="field"><%= @question.category.name %></div>
-  <div class="subsubtitle">タグ</div>
-  <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
-  <%# あとでちゃんと書きましょう %>
-  <div class="subsubtitle">情報</div>
-  <div class="field">
-    みんなの正答率 <%= @right_answer_rate %>
-    <div style="float:right;"><span style="color: blue; font-weight: bold;">出</span>: <%= @question_count %></div>
-    <div style="clear:both;float:right;"><span style="color: green; font-weight: bold;">○</span>: <%= @correct_count %></div>
-    <div style="clear:both;float:right;"><span style="color: red; font-weight: bold;">×</span>: <%= @wrong_count %></div>
+  <div id="question_information_box_quiz">
+    <div class="subtitle">分類</div>
+    <div class="subsubtitle">カテゴリ</div>
+    <div class="field"><%= @question.category.name %></div>
+    <div class="subsubtitle">タグ</div>
+    <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
+    <%# あとでちゃんと書きましょう %>
+    <div class="subsubtitle">情報</div>
+    <div class="field">
+      みんなの正答率 <%= @right_answer_rate %>
+      <div style="float:right;"><span style="color: blue; font-weight: bold;">出</span>: <%= @question_count %></div>
+      <div style="clear:both;float:right;"><span style="color: green; font-weight: bold;">○</span>: <%= @correct_count %></div>
+      <div style="clear:both;float:right;"><span style="color: red; font-weight: bold;">×</span>: <%= @wrong_count %></div>
+    </div>
+    <div class="book_and_test">
+      -<%= link_to "この問題を含むブックを検索する", :controller => 'search', :action => 'search_book', :id => @question.id %>-<br/>
+      -<%= link_to "この問題を含むテストを検索する", :controller => 'search', :action => 'search_exam', :id => @question.id %>-
+    </div>
   </div>
-  <div class="book_and_test">
-    -<%= link_to "この問題を含むブックを検索する", :controller => 'search', :action => 'search_book', :id => @question.id %>-<br/>
-    -<%= link_to "この問題を含むテストを検索する", :controller => 'search', :action => 'search_exam', :id => @question.id %>-
-  </div>
-  </div>
-</div>
 </div>

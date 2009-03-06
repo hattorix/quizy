@@ -6,12 +6,12 @@ class MypageController < ApplicationController
 
     # マイブック一覧
     @mybooks = MyBook.find(:all,
-                       :limit => 6,
+                       :limit => 8,
                        :conditions => ['user_id = ?', current_user.id],
                        :order => "created_at desc")
     # マイテスト一覧
     @myexams = MyExam.find(:all,
-                       :limit => 4,
+                       :limit => 8,
                        :conditions => ['user_id = ?', current_user.id],
                        :order => "created_at desc")
     # 最近登録した問題

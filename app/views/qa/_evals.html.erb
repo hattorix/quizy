@@ -1,0 +1,6 @@
+<div class="subtitle">評価</div>
+<span id="sum_and_avg">合計評価：<%= @sum %>　平均評価：<%= @avg %></span>
+<% 10.times do |i| %>
+  <span id="eval<%=i%>">
+    <img src='../images/hosi_on.gif' onclick="<%= remote_function(:url => {:action=>'evaluation_in', :id => i+1 ,:question_id => @question.id}) %>"></span>
+<% end %>

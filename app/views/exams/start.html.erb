@@ -7,9 +7,11 @@
   <% remote_form_for :question, :update => 'main', :url => {:action => 'next', :id => @exam.id ,:question_id => @question.id, :i => @i} do |f| -%>
 
     <div id="review_check">
+    <% ans = "" %>
       <% if examtemp = ExamTemp.find(:first, :conditions => ["exam_id = ? and question_id = ? and user_id = ?",
                                                  @exam.id, @question.id, current_user.id]) %>
         <% status = examtemp.status %>
+        <% ans = examtemp.answer %>
       <% end %>
         <input id="review" name="review" type="checkbox" <%= "checked" if status == "review" %> />
       要見直し
@@ -37,38 +39,72 @@
     <div id="response_box" <%= "style='height:250px;'" if @question.question_type == 3 %>>
       <div class="subtitle">回答</div>
       <%= hidden_field_tag "question_type", @question.question_type %>
+      <% if @question.is_random == true %>
+        <% selections = @selections.sort_by{rand} %>
+      <% else %>
+        <% selections = @selections %>
+      <% end %>
       <% if @question.question_type == 1 %>
         <div id="selection_box">
-          <% @selections.sort_by{rand}.each do |s| %>
+          <% selections.each do |s| %>
             <div class="field">
               <input type="radio" id="answer" name="answer"
-                     value="<%= s.id %>" /> <%= s.selection_text %>
+                     value="<%= s.id %>" <%= "checked" if ans == s.id.to_s %>/> <%= s.selection_text %>
             </div>
           <% end %>
         </div>
       <% elsif @question.question_type == 2 %>
         <div id="selection_box">
-          <% @selections.sort_by{rand}.each do |s| %>
+          <% selections.each do |s| %>
             <div class="field">
               <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-                     value="<%= s.id %>" /> <%= s.selection_text %>
+                     value="<%= s.id %>" <%= "checked" if ans.split(",").include?(s.id.to_s) %> /> <%= s.selection_text %>
             </div>
           <% end %>
         </div>
       <% elsif @question.question_type == 3 %>
         <div id="selection_box">
-          <div class="marufield">
-            <input type="radio" id="answer" name="answer"
-                   value=1 /> <%= image_tag("maru.jpg", :style => 'border: none;', :title => '○')%>
-          </div>
-          <div class="batufield">
-            <input type="radio" id="answer" name="answer"
-                   value=0 /> <%= image_tag("batu.jpg", :style => 'border: none;', :title => '×')%>
-          </div>
+          <% if @question_exams[@i+1] == nil %>
+            <div class="marufield">
+              <%= link_to_remote(image_tag("maru.jpg", :style => 'border: none;',
+                                                 :onmouseover=>"this.src='../images/maru_on.jpg'",
+                                                 :onmouseout=>"this.src='../images/maru.jpg'"),
+                             :url=>{:action => 'check',
+                                    :i => @i,
+                                    :id => @exam.id,
+                                    :answer => 1},
+                             :update => 'main') %>
+            </div>
+            <div class="batufield">
+              <%= link_to_remote(image_tag("batu.jpg", :style => 'border: none;',
+                                                 :onmouseover=>"this.src='../images/batu_on.jpg'",
+                                                 :onmouseout=>"this.src='../images/batu.jpg'"),
+                             :url=>{:action => 'check',
+                                    :i => @i,
+                                    :id => @exam.id,
+                                    :answer => 0},
+                             :update => 'main') %>
+            </div>
+          <% else %>
+            <div class="marufield">
+              <%= link_to_remote(image_tag("maru.jpg", :style => 'border: none;',
+                                                 :onmouseover=>"this.src='../../images/maru_on.jpg'",
+                                                 :onmouseout=>"this.src='../../images/maru.jpg'"),
+                             :url => {:action => 'next', :id => @exam.id ,:question_id => @question.id, :i => @i, :answer => 1},
+                             :update => 'main') %>
+            </div>
+            <div class="batufield">
+              <%= link_to_remote(image_tag("batu.jpg", :style => 'border: none;',
+                                                 :onmouseover=>"this.src='../../images/batu_on.jpg'",
+                                                 :onmouseout=>"this.src='../../images/batu.jpg'"),
+                             :url => {:action => 'next', :id => @exam.id ,:question_id => @question.id, :i => @i, :answer => 0},
+                             :update => 'main') %>
+            </div>
+          <% end %>
         </div>
       <% else %>
         <div id="answer_box">
-          <input name="answer" type="text" size="30" />
+          <input name="answer" type="text" size="30" value = <%=ans%>>
         </div>
       <% end %>
     </div>
@@ -86,14 +122,18 @@
                           :update => 'main') %>
       <% end %>
       <% if @question_exams[@i+1] == nil %>
-        <%= submit_to_remote("解答一覧へ",
-                          "解答一覧へ",
-                          :url=>{:action => 'check',
-                                 :i => @i,
-                                 :id => @exam.id},
-                          :update => 'main') %>
+        <% unless @question.question_type == 3 %>
+          <%= submit_to_remote("解答一覧へ",
+                            "解答一覧へ",
+                            :url=>{:action => 'check',
+                                   :i => @i,
+                                   :id => @exam.id},
+                            :update => 'main') %>
+        <% end %>
       <% else %>
-        <%= submit_tag("次の問題へ", :class => 'button') %>
+        <% unless @question.question_type == 3 %>
+          <%= submit_tag("次の問題へ", :class => 'button') %>
+        <% end %>
       <% end %>
     </div>
 

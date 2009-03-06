@@ -1,4 +1,16 @@
 class BooksController < ApplicationController
+  
+    layout :select_layout
+
+  def select_layout
+    if %w(answer next).include?(action_name)
+    else
+      "application"
+    end
+#    %w(start back check finish).include?(action_name) ? "examination" : "application"
+  end
+  
+  
   # GET /books
   # GET /books.xml
   def index
@@ -96,6 +108,146 @@ class BooksController < ApplicationController
     end
   end
 
+  def training_start
+    if params[:select_count] == "" 
+      redirect_to :action => 'show',:id => params[:id]
+    else
+      @books_questions = QuestionBook.find(:all, :conditions => ["book_id = ?",params[:id]])
+      @questions = Array.new
+      params[:select_count].to_i.times do |i|
+        @questions << Question.find(@books_questions[rand(@books_questions.size)].question_id)
+      end
+      @i = 0
+      @question = @questions[@i]
+      @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
+      @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
+      @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
+
+      # statstics information
+      right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
+      @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
+      @question_count = @question.question_count
+      @correct_count = @question.correct_count
+      @wrong_count = @question.wrong_count
+
+      render :action => 'training'
+    end
+  end
+
+  def next
+    @i = params[:i].to_i+1
+    @questions = params[:questions]
+    @question = Question.find(@questions[@i].to_i)
+    @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
+    @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
+    @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
+
+    # statstics information
+    right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
+    @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
+    @question_count = @question.question_count
+    @correct_count = @question.correct_count
+    @wrong_count = @question.wrong_count
+
+    render :action => 'training'
+  end
+
+  def answer
+    question_id = params[:question_id]
+    @question = Question.find(question_id)
+    # for stastics
+    @question.update_attribute("question_count", @question.question_count.to_i + 1)
+    @question.save
+
+    question_type = params[:question_type]
+    answer = params[:answer]
+
+    @random = Question.find_by_sql('select id from questions order by rand() limit 1;').first.id
+
+    # TODO: いろいろとリファクタリングすること
+    if question_type == "1"
+      result = Selection.count(:conditions => ["id = ? and question_id = ? and is_collect = '1'",
+                                              answer, question_id])
+      @result_text = ""
+      @is_collect = ""
+      if result > 0
+        @description = Description.find(:first, :conditions => ["question_id = ?", question_id])
+        @result_text = "○ 正解です！"
+        @is_collect = "1"
+        @question.update_attribute("correct_count", @question.correct_count.to_i + 1)
+        @question.save
+      else
+        @result_text = "× 残念です！"
+        @is_collect = "0"
+        @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
+        @question.save
+      end
+    elsif question_type == "2"
+      if params[:answer]
+        user_answers = params[:answer].values
+      else
+        user_answers = Array.new
+      end
+      selections = Selection.find(:all, :conditions => ["question_id = ?", question_id])
+      answers = selections.map {|s| s.id.to_s if s.is_collect == 1}.compact
+      if (answers | user_answers).size == answers.size
+        if (answers & user_answers).size == answers.size
+          @description = Description.find(:first, :conditions => ["question_id = ?", question_id])
+          @result_text = "○ 正解です！"
+          @is_collect = "1"
+          @question.update_attribute("correct_count", @question.correct_count.to_i + 1)
+          @question.save
+        else
+          @result_text = "× 残念です！"
+          @is_collect = "0"
+          @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
+          @question.save
+        end
+      else
+        @result_text = "× 残念です！"
+        @is_collect = "0"
+        @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
+        @question.save
+      end
+    elsif question_type == "3"
+      result = Question.count(:conditions => ["id = ? and y_or_n = ?",
+                                              question_id,answer])
+      @result_text = ""
+      @is_collect = ""
+      if result > 0
+        @description = Description.find(:first, :conditions => ["question_id = ?", question_id])
+        @result_text = "○ 正解です！"
+        @is_collect = "1"
+        @question.update_attribute("correct_count", @question.correct_count.to_i + 1)
+        @question.save
+      else
+        @result_text = "× 残念です！"
+        @is_collect = "0"
+        @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
+        @question.save
+      end
+    elsif question_type == "4"
+      answer = params[:answer]
+      p answer
+      result = Answer.count(:conditions => ["question_id = ? and answer_text = ?",
+                                            question_id, answer])
+      if result > 0
+        @description = Description.find(:first, :conditions => ["question_id = ?", question_id])
+        @result_text = "○ 正解です！"
+        @is_collect = "1"
+        @question.update_attribute("correct_count", @question.correct_count.to_i + 1)
+        @question.save
+      else
+        @result_text = "× 残念です！"
+        @is_collect = "0"
+        @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
+        @question.save
+     end
+    else
+      raise("must not happend")
+    end
+  end
+
   # DELETE /books/1
   # DELETE /books/1.xml
   def destroy
@@ -121,7 +273,7 @@ class BooksController < ApplicationController
 
   def add_mybook
     @book = Book.find(params[:id])
-    mybooks = MyBook.find(:all,["user_id = ?",current_user.id])
+    mybooks = MyBook.find(:all, :conditions => ["user_id = ?",current_user.id])
     book_ids = Array.new
     mybooks.each do |mybook|
       book_ids << mybook.book_id

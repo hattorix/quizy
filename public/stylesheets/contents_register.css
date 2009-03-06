@@ -235,3 +235,13 @@ li {
   text-align: center;
   margin: 20px;
 }
+
+#command_box {
+  width:800px;
+  margin-left:40px;
+  margin-right:40px;
+  padding: 10px;
+  border: 1px solid silver;
+  clear:both;
+
+}

@@ -32,7 +32,11 @@
             <% end %>
             <% your_answer = answers.join(",") %>
           <% elsif question.question_type == 3 %>
-            <% your_answer = your_answer == "1" ? "○" : "×" %>
+            <% if your_answer == "1" %>
+              <% your_answer = "○" %>
+            <% elsif your_answer == "0" %>
+              <% your_answer = "×" %>
+            <% end %>
           <% end %>
         <% else %>
           <% your_answer = "" %>

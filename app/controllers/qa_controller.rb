@@ -221,6 +221,15 @@ class QaController < ApplicationController
     else
       raise("must not happend")
     end
+    evals = Evaluation.find(:all,:conditions => ["question_id = ?",@question.id])
+    @sum = 0
+    @avg = 0
+    if evals.size > 0
+      evals.each do |eval|
+        @sum+=eval.point
+      end
+      @avg = @sum/evals.size
+    end
   end
 
   def edit
@@ -316,10 +325,8 @@ class QaController < ApplicationController
     end
     @question.selections.delete_all()
 
-    Description.delete(:conditions => ["question_id = ?", params[:id]])
-
-    QuestionExam.delete(:conditions => ["question_id = ?", params[:id]])
-    QuestionBook.delete(:conditions => ["question_id = ?", params[:id]])
+    QuestionExam.delete_all(["question_id = ?", params[:id].to_i])
+    QuestionBook.delete_all(["question_id = ?", params[:id].to_i])    
 
     @question.destroy
     @title = ' - マイページ'
@@ -350,6 +357,46 @@ class QaController < ApplicationController
                            :to => 0,
                            :duration => 3
       end
+    end
+  end
+=begin
+  def evalchange_on
+    render :update do |page|
+      params[:id].to_i.times do |i|
+        page.replace_html("eval".concat(i.to_s),"<img src='../images/hosi_on.gif'>")
+      end
+    end
+  end
+
+  def evalchange_off
+    render :update do |page|
+      10.times do |i|
+        page.replace_html("eval".concat(i.to_s),"<img src='../images/hosi_off.gif'>")
+      end
+    end
+  end
+=end
+
+  def evaluation_in
+    @question = Question.find(params[:question_id].to_i)
+    @eval = Evaluation.new
+    @eval.question_id = params[:question_id].to_i
+    @eval.user_id = current_user.id
+    @eval.point = params[:id].to_i
+    @eval.save
+    evals = Evaluation.find(:all,:conditions => ["question_id = ?",params[:question_id].to_i])
+    @sum = 0
+    evals.each do |eval|
+      @sum+=eval.point
+    end
+    @avg = @sum/evals.size
+    render :update do |page|
+      page.replace_html("evaluation", :partial=>"evals",:object => {:sum => @sum, :avg => @avg})
+      page[:sum_and_avg].visual_effect :highlight,
+                                :startcolor => "#ffd900",
+                                :endcolor => "#ffffff",
+                                :duration => 1.5
+
     end
   end
   

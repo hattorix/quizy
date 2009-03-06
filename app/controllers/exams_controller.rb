@@ -45,6 +45,7 @@ class ExamsController < ApplicationController
     @exam = Exam.new(params[:exam])
     @exam.user_id = current_user.id
     @exam.book_id = params[:id]
+    @exam.questions.delete_all
 
     book = Book.find(params[:id])
     book.questions.each do |question|
@@ -302,7 +303,7 @@ class ExamsController < ApplicationController
 
   def add_myexam
     @exam = Exam.find(params[:id])
-    myexams = MyExam.find(:all,["user_id = ?",current_user.id])
+    myexams = MyExam.find(:all, :conditions => ["user_id = ?",current_user.id])
     exam_ids = Array.new
     myexams.each do |myexam|
       exam_ids << myexam.exam_id
