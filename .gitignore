@@ -1,0 +1,5 @@
+app/views/report/
+app/views/top/
+log/
+nbproject/
+test/fixtures/report/
