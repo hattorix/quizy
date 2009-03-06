@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090219051417) do
+ActiveRecord::Schema.define(:version => 20090224065422) do
 
   create_table "answers", :force => true do |t|
     t.text     "answer_text"
@@ -68,6 +68,20 @@ ActiveRecord::Schema.define(:version => 20090219051417) do
     t.text     "notes"
   end
 
+  create_table "my_books", :force => true do |t|
+    t.integer  "user_id",    :limit => 11, :null => false
+    t.integer  "book_id",    :limit => 11, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "my_exams", :force => true do |t|
+    t.integer  "user_id",    :limit => 11, :null => false
+    t.integer  "exam_id",    :limit => 11, :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "question_books", :force => true do |t|
     t.integer  "book_id",     :limit => 11, :null => false
     t.integer  "question_id", :limit => 11, :null => false
@@ -104,6 +118,14 @@ ActiveRecord::Schema.define(:version => 20090219051417) do
     t.integer  "wrong_count",      :limit => 11, :default => 0
     t.boolean  "y_or_n"
     t.boolean  "is_random"
+  end
+
+  create_table "reports", :force => true do |t|
+    t.integer  "user_id",     :limit => 11, :null => false
+    t.integer  "question_id", :limit => 11, :null => false
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "selections", :force => true do |t|

@@ -39,7 +39,7 @@ class Question < ActiveRecord::Base
     end
   end
   
- class << self
+  class << self
     HUMANIZED_ATTRIBUTE_KEY_NAMES = {
       "question_text" => "問題文",
     }

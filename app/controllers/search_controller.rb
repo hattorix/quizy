@@ -1,6 +1,6 @@
 class SearchController < ApplicationController
   def category
-    @results = Question.find(:all, :conditions => ['category_id = ?', params[:id]])
+    @results = Question.find(:all, :conditions => ['category_id = ? and is_public = 1', params[:id]])
 #    render :partial => 'results', :collection => results
     render :action => :index
   end
@@ -19,9 +19,13 @@ class SearchController < ApplicationController
       i = 0
       keywords.each do |keyword|
         if @flg == 0
-          @results_hash[i] = Question.find(:all, :conditions => ['question_text like ?', "%#{keyword}%"])
-        else
+          @results_hash[i] = Question.find(:all, :conditions => ['question_text like ? and is_public = 1', "%#{keyword}%"])
+        elsif @flg == 1
           @results_hash[i] = Tag.find(:all, :conditions => ['name like ?', "%#{keyword}%"])
+        elsif @flg == 2
+          @results_hash[i] = Book.find(:all, :conditions => ['(name like ? or outline like ?) and is_public = 1 ', "%#{keyword}%","%#{keyword}%"])
+        elsif @flg == 3
+          @results_hash[i] = Exam.find(:all, :conditions => ['name like ? and is_public = 1', "%#{keyword}%"])
         end
         i += 1
       end
@@ -41,7 +45,7 @@ class SearchController < ApplicationController
       end
       render :action => :index
     else
-      redirect_to :controller => :mypage
+      redirect_to :controller => :top
     end
   end
   
@@ -53,18 +57,48 @@ class SearchController < ApplicationController
       render :update do |page|
         page.replace_html("add_book_message#{params[:id]}", :partial=>"message",:locals => {:flug => false})
         page.visual_effect :Opacity,
-                                  "add_book_message#{params[:id]}",
-                                  :from => 1,
-                                  :to => 0,
-                                  :duration => 3
+                           "add_book_message#{params[:id]}",
+                           :from => 1,
+                           :to => 0,
+                           :duration => 3
       end
     else
       book.questions << question
       flash[:notice] = "登録しました！"
       render :update do |page|
         page.replace_html("add_book_message#{params[:id]}", :partial=>"message",:locals => {:flug => true})
+        page.visual_effect :Opacity,
+                           "add_book_message#{params[:id]}",
+                           :from => 1,
+                           :to => 0,
+                           :duration => 3
       end
     end
   end
 
+  def search_book
+    @results = Array.new
+    book_questions = QuestionBook.find(:all, :conditions => ["question_id = ?",params[:id]])
+    book_questions.each do |book_question|
+      if book = Book.find(:first, :conditions => ["id = ? and is_public = 1",book_question.book_id])
+        @results << book
+      end
+    end
+    @flg = 2
+    render :action => :index
+
+  end
+
+  def search_exam
+    @results = Array.new
+    exam_questions = QuestionExam.find(:all, :conditions => ["question_id = ?",params[:id]])
+    exam_questions.each do |exam_question|
+      if exam = Exam.find(:first, :conditions => ["id = ? and is_public = 1",exam_question.exam_id])
+        @results << exam
+      end
+    end
+    @flg = 3
+    render :action => :index
+
+  end
 end

@@ -39,22 +39,6 @@ ul {
   clear:both;
 }
 
-.subtitle {
-    font-size: 18pt;
-    font-family: Arial,Helvetica,sans-serif;
-    font-weight: bold;
-    text-align: left;
-    border-bottom: solid, 1px, silver;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-}
-
-.subsubtitle {
-  font-size: 14pt;
-  font-family: Arial,Helvetica,sans-serif;
-  margin-bottom: 5px;
-}
-
 #result_header {
   font-size: 11pt;
   text-align: right;
@@ -87,4 +71,11 @@ ul {
   float: left;
   font-size:10pt;
   font-weight: bold;
+}
+
+.book_and_test {
+  margin:0px 0 20px 15px; 
+  font-size:8pt;
+  font-style:oblique;
+  clear:both;
 }

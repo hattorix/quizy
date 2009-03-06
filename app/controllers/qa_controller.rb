@@ -116,7 +116,7 @@ class QaController < ApplicationController
     @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
     @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
     if logged_in?
-      @books = Book.find(:all, :conditions => ["user_id = ? or is_public = 1", current_user.id])
+      @books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題'", current_user.id])
     end
 
     # statstics information
@@ -300,7 +300,7 @@ class QaController < ApplicationController
       render :update do |page|
         page << 'top()'
         page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
-        page[:msg].visual_effect :shake,
+        page[:msg].visual_effect :highlight,
                                   :startcolor => "#ffd900",
                                   :endcolor => "#ffffff",
                                   :duration => 10.5
@@ -333,12 +333,22 @@ class QaController < ApplicationController
       flash[:notice] = "登録済みです。"
       render :update do |page|
         page.replace_html("add_book_message", :partial=>"message",:locals => {:flug => false})
+        page.visual_effect :Opacity,
+                           "add_book_message",
+                           :from => 1,
+                           :to => 0,
+                           :duration => 3
       end
     else
       book.questions << question
       flash[:notice] = "登録しました！"
       render :update do |page|
         page.replace_html("add_book_message", :partial=>"message",:locals => {:flug => true})
+        page.visual_effect :Opacity,
+                           "add_book_message",
+                           :from => 1,
+                           :to => 0,
+                           :duration => 3
       end
     end
   end
@@ -348,6 +358,29 @@ class QaController < ApplicationController
   end
   
   def report_send
-     Report.deliver_send()
+    @report = Report.new
+    if logged_in?
+      @report.user_id = current_user.id
+    end
+    @report.question_id = params[:id]
+    @report.description = params[:report_text]
+    if @report.save
+      render :update do |page|
+        page.remove("description_box")
+        page.remove("submit_box")
+        page.remove("message")
+        page.show("navi")
+        page.show("thanks")
+      end
+    else
+      @msgs = @report.errors.full_messages
+      render :update do |page|
+        page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
+        page[:msg].visual_effect :highlight,
+                                  :startcolor => "#ffd900",
+                                  :endcolor => "#ffffff",
+                                  :duration => 1.5
+      end
+    end
   end
 end

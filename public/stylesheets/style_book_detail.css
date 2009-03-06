@@ -19,6 +19,15 @@ Description: Quizy stylesheet - for book detail -
   list-style: disc;
 }
 
+#add_mybook_message {
+  float:left;
+  margin-right: 30px;
+  padding:11pt;
+  font-size:11pt;
+  height:11pt;
+  font-weight: bold;
+}
+
 #main {
   margin-left: 30px;
   margin-right: 30px;
@@ -57,6 +66,7 @@ td.string {
 
 h1.this_book_title {
   font-size: 24pt;
+  float:left;
 }
 
 #this_book_information {

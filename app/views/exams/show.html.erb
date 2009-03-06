@@ -9,13 +9,21 @@ function OpenNew(page) {
 </SCRIPT>
   <h1 class="this_exam_title">
     『<%=h @exam.name %>』
-    <% if @exam.user_id == current_user.id %>
-      <%= link_to(image_tag('/images/book_edit.png',
-                         :style => 'border: none;',
-                         :title => 'このテストを編集する'),
-                edit_exam_path(@exam))%>
+    <% if logged_in? %>
+      <% if @exam.user_id == current_user.id %>
+        <%= link_to(image_tag('/images/book_edit.png',
+                           :style => 'border: none;',
+                           :title => 'このテストを編集する'),
+                  edit_exam_path(@exam))%>
+      <% else %>
+        <%= link_to_remote(image_tag('/images/book_play.png',
+                                 :style => 'border: none;',
+                                 :title => 'このテストをマイテストに追加する'),
+                       :url => {:action => 'add_myexam', :id => @exam.id})%>
+      <% end %>
     <% end %>
   </h1>
+  <div id="add_myexam_message"></div>
 
   <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
   <% form_tag({:controller=>'exams',:action=>'start',:id => @exam.id},:target=>["_blank"]) do %>

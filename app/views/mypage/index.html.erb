@@ -27,7 +27,8 @@
         </span>
         <% end %>
       </li>
-      <% for book in @books %>
+      <% for mybook in @mybooks %>
+      <% book = Book.find(mybook.book_id) %>
       <li class="book_text">
         <%= image_tag('/images/book.png',
                         :style => 'vertical-align: middle;') %>
@@ -37,11 +38,13 @@
         <% end %>
         <span style="color: silver; font-size: 8pt;">
         <%= book.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
-        <% if book.user_id == current_user.id && book.name != "自分で登録した問題"%>
-          <%= link_to(image_tag('/images/book_edit.png',
-                            :title => '編集',
-                            :style => 'border: none;'),
-                   edit_book_path(book)) %>
+        <% if book.name != "自分で登録した問題"%>
+          <% if book.user_id == current_user.id && book.name != "自分で登録した問題" %>
+            <%= link_to(image_tag('/images/book_edit.png',
+                              :title => '編集',
+                              :style => 'border: none;'),
+                     edit_book_path(book)) %>
+          <% end %>
           <%= link_to(image_tag('/images/book_delete.png',
                             :title => '削除',
                             :style => 'border: none;'),
@@ -62,7 +65,8 @@
   </div>
   <div class="subcontent">
     <ul>
-      <% for exam in @exams %>
+      <% for myexam in @myexams %>
+      <% exam = Exam.find(myexam.exam_id) %>
       <li class="book_text">
         <%= image_tag('/images/book.png',
                         :style => 'vertical-align: middle;') %>
@@ -73,18 +77,18 @@
         <% end %>
         <span style="color: silver; font-size: 8pt;">
         <%= exam.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
-        <% if exam.user_id == current_user.id %>
+        <% if book.user_id == current_user.id %>
           <%= link_to(image_tag('/images/book_edit.png',
                             :title => '編集',
                             :style => 'border: none;'),
                    edit_exam_path(exam)) %>
-          <%= link_to(image_tag('/images/book_delete.png',
-                            :title => '削除',
-                            :style => 'border: none;'),
-                   exam,
-                   :confirm => '本当に削除してよろしいですか?',
-                   :method => :delete) %>
         <% end %>
+        <%= link_to(image_tag('/images/book_delete.png',
+                          :title => '削除',
+                          :style => 'border: none;'),
+                 exam,
+                 :confirm => '本当に削除してよろしいですか?',
+                 :method => :delete) %>
         </span>
       </li>
       <% end %>

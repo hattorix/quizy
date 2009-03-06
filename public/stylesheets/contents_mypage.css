@@ -31,7 +31,7 @@
 
 #mybook{
   margin-left:15px;
-  width: 410px;
+  width: 405px;
   height: 300px;
   float: left;
   text-align: left;
@@ -41,7 +41,7 @@
 
 #mytest{
   margin-left:20px;
-  width: 410px;
+  width: 405px;
   height: 300px;
   float: left;
   text-align: left;
@@ -52,7 +52,7 @@
 #latest{
   margin-top:15px;
   margin-left:15px;
-  width: 410px;
+  width: 405px;
   height: 260px;
   float: left;
   text-align: left;
@@ -64,7 +64,7 @@
 #recent{
   margin-top:15px;
   margin-left:20px;
-  width: 400px;
+  width: 405px;
   height: 260px;
   float: left;
   text-align: left;

@@ -32,6 +32,10 @@ class BooksController < ApplicationController
 
     if @book.name != "自分で登録した問題"
       if @book.save
+        my_book = MyBook.new
+        my_book.book_id = @book.id
+        my_book.user_id = current_user.id
+        my_book.save
         render :update do |page|
           page << 'mypage()'
         end
@@ -95,9 +99,13 @@ class BooksController < ApplicationController
   # DELETE /books/1
   # DELETE /books/1.xml
   def destroy
-    @book = Book.find(params[:id])
-    @book.questions.delete_all()
-    @book.destroy
+    book = Book.find(params[:id])
+    mybook = MyBook.find(:first, :conditions =>["book_id = ? and user_id = ?",params[:id],current_user.id])
+    mybook.destroy
+    if book.user_id == current_user.id
+      book.questions.delete_all()
+      book.destroy
+    end
     redirect_to :controller => 'mypage'
   end
 
@@ -111,4 +119,37 @@ class BooksController < ApplicationController
       redirect_to :action => :show
   end
 
+  def add_mybook
+    @book = Book.find(params[:id])
+    mybooks = MyBook.find(:all,["user_id = ?",current_user.id])
+    book_ids = Array.new
+    mybooks.each do |mybook|
+      book_ids << mybook.book_id
+    end
+    unless book_ids.include?(params[:id].to_i)
+      my_book = MyBook.new
+      my_book.book_id = @book.id
+      my_book.user_id = current_user.id
+      my_book.save
+      flash[:notice] = "マイブックに登録しました！"
+      render :update do |page|
+        page.replace_html("add_mybook_message", :partial=>"message",:locals => {:flug => true})
+        page.visual_effect :Opacity,
+                           "add_mybook_message",
+                           :from => 1,
+                           :to => 0,
+                           :duration => 3
+      end
+    else
+      flash[:notice] = "登録済みです"
+      render :update do |page|
+        page.replace_html("add_mybook_message", :partial=>"message",:locals => {:flug => false})
+        page.visual_effect :Opacity,
+                           "add_mybook_message",
+                           :from => 1,
+                           :to => 0,
+                           :duration => 3
+      end
+    end
+  end
 end

@@ -15,7 +15,7 @@
           <% if logged_in? %>
             <li><div id="wellcome">ようこそ、<%= current_user.login %>さん</div></li>
             <li><%= link_to("マイページ", {:controller => 'mypage'})%>&nbsp;|&nbsp;</li>
-            <li><a href="">設定</a>&nbsp;|&nbsp;</li>
+            <li><%= link_to("設定", "/users/edit/#{current_user.id}/") %>&nbsp;|&nbsp;</li>
           <% else %>
             <li><%= link_to("会員登録", signup_path)%>&nbsp;|&nbsp;</li>
           <% end %>
@@ -38,7 +38,7 @@
         <% form_tag(:controller => 'search', :action => 'text') do -%>
         <div id="searchform"><%= text_field_tag("id") %>
                              <%= select_tag("search_for",
-                                       "<option value=0>問題文</option><option value=1>タグ</option>") %>
+                                       "<option value=0>問題文</option><option value=1>タグ</option><option value=2>ブック</option><option value=3>テスト</option>") %>
                        <%= submit_tag("検索") %></div>
         <div id="searchradio">
           <input type="radio" id="searchtype" name="searchtype" value="and" checked />and検索

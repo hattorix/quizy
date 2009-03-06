@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   # render new.rhtml
   def new
   end
-
+  
   def create
     cookies.delete :auth_token
     # protects against session fixation attacks, wreaks havoc with 
@@ -32,6 +32,12 @@ class UsersController < ApplicationController
 
   def remember_me
     remember_me_for 2.weeks
+  end
+
+  def edit
+  end
+
+  def update
   end
 
 end

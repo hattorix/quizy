@@ -1,0 +1,19 @@
+<%= stylesheet_link_tag "style_book_detail" %>
+<div id="screen_title">設定変更</div>
+<div id="main">
+<%= error_messages_for :user %>
+<% form_for :user, :url => {:action => 'update'} do |f| -%>
+<%= flash[:notice] %>
+
+<p><label for="password">パスワード</label><br/>
+<%= password_field :password,"" %></p>
+
+<p><label for="password">新しいパスワード</label><br/>
+<%= password_field :new_password,"" %></p>
+
+<p><label for="password_confirmation">新しいパスワード確認</label><br/>
+<%= password_field :new_password_confirmation,"" %></p>
+
+<p><%= button_to '変更', :action => 'update' %></p>
+<% end -%>
+</div>

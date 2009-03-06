@@ -3,18 +3,25 @@
   <%= stylesheet_link_tag 'style_book_detail'  %>
   <h1 class="this_book_title">
     『<%=h @book.name %>』
-  <% if @book.user_id == current_user.id && @book.name != "自分で登録した問題"%>
-    <%= link_to(image_tag('/images/book_edit.png',
-                       :style => 'border: none;',
-                       :title => 'このブックを編集する'),
-                       edit_book_path(@book))%>
-  <% end %>
-    <%= link_to(image_tag('/images/book_play.png',
-              :style => 'border: none;',
-              :title => 'この問題集からテストを作成する'),
-              :controller => 'exams', :action => 'new', :id => @book.id)%>
+    <% if logged_in? %>
+      <% if @book.user_id == current_user.id && @book.name != "自分で登録した問題"%>
+        <%= link_to(image_tag('/images/book_edit.png',
+                           :style => 'border: none;',
+                           :title => 'このブックを編集する'),
+                           edit_book_path(@book))%>
+      <% elsif @book.user_id != current_user.id %>
+        <%= link_to_remote(image_tag('/images/book_play.png',
+                                 :style => 'border: none;',
+                                 :title => 'この問題集をマイブックに追加する'),
+                       :url => {:action => 'add_mybook', :id => @book.id})%>
+      <% end %>
+      <%= link_to(image_tag('/images/book_play.png',
+                :style => 'border: none;',
+                :title => 'この問題集からテストを作成する'),
+                :controller => 'exams', :action => 'new', :id => @book.id)%>
+    <% end %>
   </h1>
-
+  <div id="add_mybook_message"></div>
   <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
   <div id="this_book_information">
     <h2 class="subtitle">ブック情報</h2>
@@ -35,16 +42,18 @@
           <%= image_tag('/images/quiz.png', :style => 'border: none') %>
           <%= link_to(truncate(erase_tag(question.question_text), 40),
                    "/quiz/#{question.id}") %>
-          <% if @book.name != "自分で登録した問題"%>
-            <%= link_to(image_tag('/images/page_delete.png',
-                              :style => 'border: none;',
-                              :title => 'このブックから削除する'),
-                    {:controller => 'books',
-                     :action => 'rip',
-                     :id => @book.id,
-                     :question_id => question.id},
-                     :confirm => '本当に削除してよろしいですか?'
-                    ) %>
+          <% if logged_in? %>
+            <% if @book.user_id == current_user.id && @book.name != "自分で登録した問題"%>
+              <%= link_to(image_tag('/images/page_delete.png',
+                                :style => 'border: none;',
+                                :title => 'このブックから削除する'),
+                      {:controller => 'books',
+                       :action => 'rip',
+                       :id => @book.id,
+                       :question_id => question.id},
+                       :confirm => '本当に削除してよろしいですか?'
+                      ) %>
+            <% end %>
           <% end %>
         </li>
       <% end %>

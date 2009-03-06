@@ -1,13 +1,14 @@
-class Report < ActionMailer::Base
-  
+class Report < ActiveRecord::Base
+  validates_presence_of :description,
+                        :message => 'を記入してください。'
 
-  def send(sent_at = Time.now)
-    subject    '通報です'
-    recipients 'arais@ark-system.co.jp'
-    from       ''
-    sent_on    sent_at
+  class << self
+    HUMANIZED_ATTRIBUTE_KEY_NAMES = {
+      "description" => "内容",
+    }
     
-    body       :greeting => 'Hi,'
+    def human_attribute_name(attribute_key_name)
+      HUMANIZED_ATTRIBUTE_KEY_NAMES[attribute_key_name] || super
+    end
   end
-
 end

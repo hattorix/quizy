@@ -52,6 +52,11 @@ class ExamsController < ApplicationController
     end
 
     if @exam.save
+      my_exam = MyExam.new
+      my_exam.exam_id = @exam.id
+      my_exam.user_id = current_user.id
+      my_exam.save
+
       @question_exams = QuestionExam.find(:all, :conditions => "exam_id = #{@exam.id}")
       i = 0
       @question_exams.each do |question_exam|
@@ -86,7 +91,6 @@ class ExamsController < ApplicationController
     @selections = Selection.find(:all, :conditions => ["question_id = ? and selection_text != ''",@question.id])
     @answer = Answer.find(:all, :conditions => ["question_id = ?",@question.id])
     @description = Description.find(:all, :conditions => ["question_id = ?",@question.id])
-    @books = Book.find(:all, :conditions => ["user_id = ? or is_public = 1", current_user.id])
 
     @seq = 0
 
@@ -276,9 +280,13 @@ class ExamsController < ApplicationController
   # DELETE /exams/1
   # DELETE /exams/1.xml
   def destroy
-    @exam = Exam.find(params[:id])
-    @exam.questions.delete_all()
-    @exam.destroy
+    exam = Exam.find(params[:id])
+    myexam = MyExam.find(:first, :conditions =>["exam_id = ? and user_id = ?",params[:id],current_user.id])
+    myexam.destroy
+    if exam.user_id == current_user.id
+      exam.questions.delete_all()
+      exam.destroy
+    end
     redirect_to :controller => 'mypage'
   end
 
@@ -292,6 +300,39 @@ class ExamsController < ApplicationController
       redirect_to :action => :show
   end
 
+  def add_myexam
+    @exam = Exam.find(params[:id])
+    myexams = MyExam.find(:all,["user_id = ?",current_user.id])
+    exam_ids = Array.new
+    myexams.each do |myexam|
+      exam_ids << myexam.exam_id
+    end
+    unless exam_ids.include?(params[:id].to_i)
+      my_exam = MyExam.new
+      my_exam.exam_id = @exam.id
+      my_exam.user_id = current_user.id
+      my_exam.save
+      flash[:notice] = "マイテストに登録しました！"
+      render :update do |page|
+        page.replace_html("add_myexam_message", :partial=>"message",:locals => {:flug => true})
+        page.visual_effect :Opacity,
+                           "add_myexam_message",
+                           :from => 1,
+                           :to => 0,
+                           :duration => 3
+      end
+    else
+      flash[:notice] = "登録済みです"
+      render :update do |page|
+        page.replace_html("add_myexam_message", :partial=>"message",:locals => {:flug => false})
+        page.visual_effect :Opacity,
+                           "add_myexam_message",
+                           :from => 1,
+                           :to => 0,
+                           :duration => 3
+      end
+    end
+  end
 
   def quiz(params)
       if @temp = ExamTemp.find(:first, :conditions => ["exam_id = ? and question_id = ? and user_id = ?",
