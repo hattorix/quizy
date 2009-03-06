@@ -139,13 +139,10 @@ class BooksController < ApplicationController
           categories.delete("")
           @book.update_attribute(:categories ,categories.join(","))
         else
-          @book.questions.each do |question|
-            if params[:is_collect]
-              unless params[:is_collect][question.id.to_s] == "on"
-                @book.questions.delete(question)
-              end
-            else
-              @book.questions.delete_all
+          if params[:is_collect]
+            params[:is_collect].each_pair do |id,value|
+              q = Question.find(id.to_i)
+              @book.questions.delete(q)
             end
           end
         end

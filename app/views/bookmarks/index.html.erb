@@ -27,18 +27,28 @@
       <% end %>
     </div>
 </div>
+
 <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
+
 <div id="submit_box">
-<ul class="book_and_test">
   <% if @questions.size >= 1 %>
-    <li><%= button_to "この一覧からブックを作成する", :action => 'new_book' %></li>
-    <li><%= button_to "この一覧からテストを作成する", :action => 'new_exam' %></li>
+    <%= button_to "全ての付箋を剥がす", :action => 'off_bookmark', :id => @questions %>
   <% else %>
-    <li><%= button_to "この一覧からブックを作成する", {:action => 'new_book'}, {:disabled => true} %></li>
-    <li><%= button_to "この一覧からテストを作成する", {:action => 'new_exam'}, {:disabled => true} %></li>
+    <%= button_to "全ての付箋を剥がす", {:action => 'off_bookmark', :id => @questions}, {:disabled => true} %>
   <% end %>
-</ul>
+  <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
+
+  <ul class="book_and_test">
+    <% if @questions.size >= 1 %>
+      <li><%= button_to "この一覧からブックを作成する", :action => 'new_book' %></li>
+      <li><%= button_to "この一覧からテストを作成する", :action => 'new_exam' %></li>
+    <% else %>
+      <li><%= button_to "この一覧からブックを作成する", {:action => 'new_book'}, {:disabled => true} %></li>
+      <li><%= button_to "この一覧からテストを作成する", {:action => 'new_exam'}, {:disabled => true} %></li>
+    <% end %>
+  </ul>
 </div>
+
 <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
 
 </div>

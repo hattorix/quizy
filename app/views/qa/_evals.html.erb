@@ -1,6 +1,5 @@
-<%= stylesheet_link_tag("star_rating") %>
-
 <div class="subtitle">評価</div>
+<%= stylesheet_link_tag("star_rating") %>
 <span id="sum_and_avg">合計評価：<%= @sum %>　平均評価：<%= @avg %></span>
 <% if logged_in? %>
   <% eval = Evaluation.find(:all, :conditions => ["question_id = ? and user_id = ?",@question.id,current_user.id]) %>

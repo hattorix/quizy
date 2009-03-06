@@ -29,7 +29,7 @@
         <% if book = Book.find(:first, :conditions => ['user_id = ? and name = "自分で登録した問題"', current_user.id]) %>
           <%= image_tag('/images/book.png',
                      :style => 'vertical-align: middle;') %>
-          <span style="font-weight: bold;"><%= link_to(book.name, book) %></span>
+          <span style="font-weight: bold;"><%= link_to(truncate(erase_tag(book.name), 45), book) %></span>
           <span class="red">★</span>
           <span style="color: silver; font-size: 8pt;">
             <%= book.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
@@ -41,7 +41,7 @@
       <li class="book_text">
         <%= image_tag('/images/book.png',
                         :style => 'vertical-align: middle;') %>
-        <span <%= "style='font-weight: bold;'" if book.name == "自分で登録した問題" %>><%= link_to(book.name, book) %></span>
+        <span <%= "style='font-weight: bold;'" if book.name == "自分で登録した問題" %>><%= link_to(truncate(erase_tag(book.name), 45), book) %></span>
         <% if book.user_id == current_user.id %>
           <span class="red">★</span>
         <% end %>
@@ -80,7 +80,7 @@
         <%= image_tag('/images/book.png',
                         :style => 'vertical-align: middle;') %>
                         
-        <%= link_to(exam.name, exam) %>
+        <%= link_to(truncate(erase_tag(exam.name), 45), exam) %>
         <% if exam.user_id == current_user.id %>
           <span class="red">★</span>
         <% end %>

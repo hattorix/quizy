@@ -110,6 +110,64 @@ class SearchController < ApplicationController
     end
   end
 
+  def on_bookmark
+    ids = params[:id].split("/")
+    if ids.size == 1
+      @question = Question.find(params[:id])
+      unless Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",params[:id],current_user.id])
+        bookmark = Bookmark.new
+        bookmark.question_id = params[:id]
+        bookmark.user_id = current_user.id
+        bookmark.save
+      end
+      render :update do |page|
+        page.replace_html("bookmark#{params[:id]}", :partial=>"bookmark", :locals =>{:is_bookmark => true,:question_id => params[:id]})
+      end
+    else
+      ids.each do |id|
+        @question = Question.find(id.to_i)
+        unless Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",id.to_i,current_user.id])
+          bookmark = Bookmark.new
+          bookmark.question_id = id.to_i
+          bookmark.user_id = current_user.id
+          bookmark.save
+        end
+      end
+      render :update do |page|
+        ids.each do |id|
+          page.replace_html("bookmark#{id.to_i}", :partial=>"bookmark", :locals =>{:is_bookmark => true,:question_id => id.to_i})
+        end
+        page.replace_html("bookmark", :partial=>"bookmark", :locals =>{:is_bookmark => true,:question_id => ids})
+      end
+    end
+  end
+
+  def off_bookmark
+    ids = params[:id].split("/")
+    if ids.size == 1
+      @question = Question.find(params[:id])
+      if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",params[:id],current_user.id])
+        bookmark.destroy
+      end
+      render :update do |page|
+        page.replace_html("bookmark#{params[:id]}", :partial=>"bookmark", :locals =>{:question_id => params[:id]})
+      end
+    else
+      ids.each do |id|
+        @question = Question.find(id.to_i)
+        if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",id.to_i,current_user.id])
+          bookmark.destroy
+        end
+      end
+      render :update do |page|
+        ids.each do |id|
+          page.replace_html("bookmark#{id.to_i}", :partial=>"bookmark", :locals =>{:question_id => id.to_i})
+        end
+        page.replace_html("bookmark", :partial=>"bookmark", :locals =>{:question_id => ids})
+      end
+    end
+  end
+
   def search_book
     @results = Array.new
     book_questions = QuestionBook.find(:all, :conditions => ["question_id = ?",params[:id]])

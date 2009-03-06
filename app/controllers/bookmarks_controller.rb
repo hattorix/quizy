@@ -123,8 +123,17 @@ class BookmarksController < ApplicationController
 
 
   def off_bookmark
-    if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",params[:id],current_user.id])
-      bookmark.destroy
+    ids = params[:id].split("/")
+    if ids.size == 1
+      if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",params[:id],current_user.id])
+        bookmark.destroy
+      end
+    else
+      ids.each do |id|
+        if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",id,current_user.id])
+          bookmark.destroy
+        end
+      end
     end
     redirect_to :action => :index
   end

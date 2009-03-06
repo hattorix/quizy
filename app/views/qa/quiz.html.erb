@@ -1,37 +1,18 @@
 <%= stylesheet_link_tag("contents_register") %>
 <%= stylesheet_link_tag("star_rating") %>
 <%= javascript_include_tag "prototype" %>
-<script language="javascript">
-  function evaon(index) {
-    a = document.getElementById('eva1');
-    b = document.getElementById('eva2');
-    c = document.getElementById('eva3');
-    d = document.getElementById('eva4');
-    e = document.getElementById('eva5');
-    f = document.getElementById('eva6');
-    g = document.getElementById('eva7');
-    h = document.getElementById('eva8');
-    i = document.getElementById('eva9');
-    k = document.getElementById('eva10');
-
-    <% ary = ["a","b","c","d","e","f","g","h","i","j","k"] %>
-    <% i = 0 %>
-      for (j=0;j<index;j++){
-      <%=ary[i]%>.src='batu.png';
-      <% i+=1 %>
-      }
-  }
-
-</script>
 <div id="toolbar_box">
   <% if logged_in? %>
     <div id="add_book_form">
       <% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id} do -%>
         <div id="add_book">
           マイブック
-            <%= select_tag 'add_book_to',
-                        options_from_collection_for_select(@books,
-                        :id, :name), :style => 'width: 180px;' %>
+            <select name="add_book_to" style="width:180px;">
+              <% @books.each do |book| %>
+                <%= "<option value='#{book.id}'>#{book.name}</option>" %>
+              <% end %>
+              <option value='new'>新規ブックを作成</option>
+            </select>
             <%= submit_tag '登録',
                         :class => 'button'%>
         </div>
@@ -40,10 +21,10 @@
     </div>
     <% if @question.user_id == current_user.id %>
       <div class="question_edit_and_delete">
-          <%= image_tag('/images/page_edit.png', :style => 'vertical-align: middle;') %>
-          <%= link_to 'この問題を編集', :action => 'edit', :id => @question.id %>
-          <%= image_tag('/images/page_delete.png', :style => 'vertical-align: middle;') %>
-          <%= link_to 'この問題を削除', {:action => 'destroy', :id => @question.id}, :confirm => '本当に削除してよろしいですか?' %>
+        <%= image_tag('/images/page_edit.png', :style => 'vertical-align: middle;') %>
+        <%= link_to 'この問題を編集', :action => 'edit', :id => @question.id %>
+        <%= image_tag('/images/page_delete.png', :style => 'vertical-align: middle;') %>
+        <%= link_to 'この問題を削除', {:action => 'destroy', :id => @question.id}, :confirm => '本当に削除してよろしいですか?' %>
       </div>
     <% end %>
     <div id="bookmark_form" style="float:right;">
@@ -138,10 +119,17 @@
   <div id="question_information_box_quiz">
     <div class="subtitle">分類</div>
     <div class="subsubtitle">カテゴリ</div>
-    <div class="field"><%= @question.category.name %></div>
+    <div class="field"><%=link_to(@question.category.name,
+                              {:controller => 'search',
+                               :action => 'category',
+                               :id => @question.category.id},
+                              :class => "tag") %></div>
     <div class="subsubtitle">タグ</div>
-    <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
-    <%# あとでちゃんと書きましょう %>
+    <div class="field">
+      <% @question.tag_list.map do |t| %>
+        <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
+      <% end %>
+    </div>
     <div class="subsubtitle">情報</div>
     <div class="field">
       みんなの正答率 <%= @right_answer_rate %>

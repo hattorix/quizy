@@ -1,8 +1,17 @@
 <%= stylesheet_link_tag 'contents_search'  %>
 <div id="screen_title">検索結果</div>
-<% if @flg == 0 %>
+<% if @flg == 0 && @results.size >= 1 %>
   <% if logged_in? %>
-    <div class="add_book">
+      <div class="add_book">
+        <% bookmarks = Array.new %>
+        <% @results.each do |result| %>
+          <% bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?", result.id,current_user.id]) %>
+        <% end %>
+        <% bookmarks.compact! %>
+        <% @is_bookmark = "" if bookmarks.size == @results.size %>
+        <% @question_id = @results %>
+        <span id="bookmark"><%= render :partial => "bookmark", :locals=>{:question_id => @question_id,:is_bookmark=>@is_bookmark} %></span>
+
       <div class="add_book_form">
         <% remote_form_for :question,:url=>{:action => 'add_book',:id => 'all',:results => @results} do -%>
           全てマイブック
@@ -26,10 +35,16 @@
       <ul>
         <% @results.each do |result| %>
           <% if @flg == 0 %>
-            <li>
-              <%= link_to(truncate(result.question_text, 30),
-                       "/quiz/#{result.id}") %></li>
+            <div class="question_text">
+              <li><%= link_to(truncate(result.question_text, 30),
+                           "/quiz/#{result.id}") %>
             <% if logged_in? %>
+
+                <% @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?", result.id,current_user.id]) %>
+                <% @question_id = result.id %>
+                <span id="bookmark<%= @question_id %>"><%= render :partial => "bookmark", :locals=>{:question_id => @question_id,:is_bookmark=>@is_bookmark} %></span>
+              </li>
+            </div>
               <div class="add_book">
                 <div class="add_book_form">
                 <% remote_form_for :question,:url=>{:action => 'add_book', :id => result.id} do -%>
@@ -49,6 +64,7 @@
               <%= link_to "この問題を含むブックを検索する", :action => 'search_book', :id => result.id %> - 
               <%= link_to "この問題を含むテストを検索する", :action => 'search_exam', :id => result.id %>
             </div>
+
           <% elsif @flg == 1 %>
             <li>
               <%= link_to(truncate(result.name, 30),

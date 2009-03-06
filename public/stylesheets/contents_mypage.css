@@ -32,7 +32,9 @@
 #mybook{
   margin-left:15px;
   width: 405px;
-  height: 300px;
+  height:auto !important;
+  height:300px;
+  min-height: 300px;
   float: left;
   text-align: left;
   background: #FFFFFF;
@@ -42,7 +44,9 @@
 #mytest{
   margin-left:20px;
   width: 405px;
-  height: 300px;
+  height:auto !important;
+  height:300px;
+  min-height: 300px;
   float: left;
   text-align: left;
   background: #FFFFFF;
@@ -53,7 +57,9 @@
   margin-top:15px;
   margin-left:15px;
   width: 405px;
-  height: 270px;
+  height:auto !important;
+  height:270px;
+  min-height: 270px;
   float: left;
   text-align: left;
   background: #FFFFFF;
@@ -65,7 +71,9 @@
   margin-top:15px;
   margin-left:20px;
   width: 405px;
-  height: 270px;
+  height:auto !important;
+  height:270px;
+  min-height: 270px;
   float: left;
   text-align: left;
   background: #FFFFFF;
@@ -101,7 +109,7 @@
 .subcontent{
   padding: 10px;
   background: #FFFFFF;
-  height: 133px;
+  height: auto;
 }
 
 .s_content li{

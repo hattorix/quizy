@@ -85,10 +85,12 @@ class QaController < ApplicationController
        book.questions << @q
       if params[:name] == 'submit1'
         render :update do |page|
+          page.alert "登録完了しました。"
           page.redirect_to :controller => "mypage"
         end
       else
         render :update do |page|
+          page.alert "登録完了しました。"
           page << 'reload()'
           page.visual_effect :ScrollTo,
                              'container',
@@ -359,6 +361,16 @@ class QaController < ApplicationController
   
   def add_book
     if params[:add_book_to]
+      if params[:add_book_to] == "new"
+            @book = Book.new
+    @tags = Question.tag_counts
+    @categories = Category.find(:all, :order => 'id')
+
+        render :update do |page|
+          page.redirect_to :controller => "books", :action => "new", :locals => {:book => @book,:tags => @tags,:categories => @categories}
+        end
+
+      else
       book = Book.find(params[:add_book_to])
       question = Question.find(params[:id])
       if book.questions.include?(question)
@@ -382,6 +394,7 @@ class QaController < ApplicationController
                              :to => 0,
                              :duration => 3
         end
+      end
       end
     else
       flash[:notice] = "ブックが存在しません。"
