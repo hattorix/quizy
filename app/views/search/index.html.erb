@@ -3,19 +3,16 @@
 <% if @flg == 0 && @results.size >= 1 %>
   <% if logged_in? %>
       <div class="add_book">
-        <% bookmarks = Array.new %>
-        <% @results.each do |result| %>
-          <% bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?", result.id,current_user.id]) %>
-        <% end %>
-        <% bookmarks.compact! %>
-        <% @is_bookmark = "" if bookmarks.size == @results.size %>
-        <% @question_id = @results %>
-        <span id="bookmark"><%= render :partial => "bookmark", :locals=>{:question_id => @question_id,:is_bookmark=>@is_bookmark} %></span>
+        <span id="bookmark">
+          <%= render :partial => "bookmark", :locals => {:question_id => @results,
+                                                    :is_bookmark => @is_bookmark_all} %>
+        </span>
 
       <div class="add_book_form">
         <% remote_form_for :question,:url=>{:action => 'add_book',:id => 'all',:results => @results} do -%>
           全てマイブック
-          <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1", current_user.id])%>
+          <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1",
+                                                 current_user.id])%>
           <%= select_tag 'add_book_to',
                         options_from_collection_for_select(books,
                                                       :id, :name),
@@ -38,27 +35,36 @@
             <div class="question_text">
               <li><%= link_to(truncate(result.question_text, 30),
                            "/quiz/#{result.id}") %>
-            <% if logged_in? %>
-
-                <% @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?", result.id,current_user.id]) %>
-                <% @question_id = result.id %>
-                <span id="bookmark<%= @question_id %>"><%= render :partial => "bookmark", :locals=>{:question_id => @question_id,:is_bookmark=>@is_bookmark} %></span>
+                <% if logged_in? %>
+                  <% @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
+                                                                    result.id,
+                                                                    current_user.id]) %>
+                  <% @question_id = result.id %>
+                  <span id="bookmark<%= @question_id %>">
+                    <%= render :partial => "bookmark", :locals=>{:question_id => @question_id,
+                                                           :is_bookmark => @is_bookmark,
+                                                           :results => @results} %>
+                  </span>
+                <% end %>
               </li>
             </div>
+
+            <% if logged_in? %>
               <div class="add_book">
                 <div class="add_book_form">
-                <% remote_form_for :question,:url=>{:action => 'add_book', :id => result.id} do -%>
-                  マイブック
-                  <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1", current_user.id])%>
-                  <%= select_tag 'add_book_to',
-                               options_from_collection_for_select(books,
-                                                              :id, :name),
-                            :style => 'width: 80px;' %>
-                  <%= submit_tag '登録',
-                              :class => 'button'%>
-                <% end -%></div>
-                <span id="add_book_message<%=result.id%>"></span>
-              </div>
+                  <% remote_form_for :question,:url=>{:action => 'add_book', :id => result.id} do -%>
+                    マイブック
+                    <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1",
+                                                         current_user.id])%>
+                    <%= select_tag 'add_book_to',
+                                options_from_collection_for_select(books,
+                                                               :id, :name),
+                               :style => 'width: 80px;' %>
+                    <%= submit_tag '登録',
+                               :class => 'button'%>
+                  <% end -%></div>
+                  <span id="add_book_message<%=result.id%>"></span>
+                </div>
             <% end %>
             <div class="book_and_test">
               <%= link_to "この問題を含むブックを検索する", :action => 'search_book', :id => result.id %> - 

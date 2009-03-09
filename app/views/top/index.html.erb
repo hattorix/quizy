@@ -1,0 +1,111 @@
+<%= stylesheet_link_tag "style_import_top" %>
+<div id="search_box">
+        <% form_tag(:controller => 'search', :action => 'text') do -%>
+        <div id="searchform"><%= text_field_tag("id") %>
+                             <%= select_tag("search_for",
+                                       "<option value=0>問題文</option><option value=1>タグ</option><option value=2>ブック</option><option value=3>テスト</option>") %>
+                       <%= image_submit_tag("kensaku.png", :style => 'border: none;height: 35px;width:150px;')%></div>
+        <div id="searchradio">
+          <input type="radio" id="searchtype" name="searchtype" value="and" checked />and検索
+          <input type="radio" id="searchtype" name="searchtype" value="or"/>or検索
+        </div>
+        <% end -%>
+</div>
+<div id="main">
+  <% if !logged_in? %>
+    <div id="this_site_title">このサイトについて</div>
+    <div id="this_site">
+      <ul>
+        <li><%= link_to 'いますぐ会員登録する！', signup_path %></li>
+      </ul>
+    </div>
+  <% end %>
+  <div id="category_title">カテゴリ一覧</div>
+    <div id="category_list">
+      <% @categories.each do |category| %>
+      <span class="category"><%=link_to(category.name,
+                        :controller => 'search',
+                        :action => 'category',
+:id => category.id) %></span>
+      <% end %>
+  </div>
+  <div id="favorite_title">新着問題</div>
+  <div id="favorite">
+    <ul style="list-style-type: decimal;">
+    <% @new_questions.each do |question| %>
+      <li style="font-size: 11pt;">
+        <%= link_to(truncate(erase_tag(question.question_text), 35), "/quiz/#{question.id}") %>
+        <span style="color: slategray; font-size: 8pt;">
+          <%= question.created_at.strftime("%Y/%m/%d %H:%M:%S 登録") %>
+        </span>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+  <div id="favorite_title">新着ブック</div>
+  <div id="favorite">
+    <ul style="list-style-type: decimal;">
+    <% @new_books.each do |book| %>
+      <li style="font-size: 11pt;">
+        <%= link_to(truncate(erase_tag(book.name), 35), "/books/#{book.id}") %>
+        <span style="color: slategray; font-size: 8pt;">
+          <%= book.created_at.strftime("%Y/%m/%d %H:%M:%S 登録") %>
+        </span>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+  <!--<div id="favorite_title">最近の解答</div>
+  <div id="favorite">
+    <ul style="list-style-type: decimal;">
+    < @rank_questions.each do |question| %>
+      <li style="font-size: 11pt;">
+        <= link_to(truncate(erase_tag(question.question_text), 35), "/quiz/#{question.id}") %>
+        <span style="color: slategray; font-size: 8pt;">
+          <= question.question_count %>回出題
+        </span>
+      </li>
+    < end %>
+    </ul>
+  </div>-->
+  <div id="favorite_title">出題数ランキング</div>
+  <div id="favorite">
+    <ul style="list-style-type: decimal;">
+    <% @rank_questions.each do |question| %>
+      <li style="font-size: 11pt;">
+        <%= link_to(truncate(erase_tag(question.question_text), 35), "/quiz/#{question.id}") %>
+        <span style="color: slategray; font-size: 8pt;">
+          <%= question.question_count %>回出題
+        </span>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+  <div id="update_title">更新情報</div>
+  <div id="update">
+    <ul>
+      <li style="font-size: 11pt;">[2009/02/23] ポータルサイトっぽくしてみました。</li>
+      <li style="font-size: 11pt;">[2008/07/15] 人気ランキングを表示してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/10] 問題毎正答率を表示してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/06] 全体的にそれっぽくしてみました。</li>
+      <li style="font-size: 11pt;">[2008/07/05] カテゴリ検索機能を追加してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/04] タグ検索機能を追加してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/03] ブック機能を追加してみました。</li>
+      <li style="font-size: 11pt;">[2008/07/02] デザインをなんかそれっぽくしてみました。</li>
+      <li style="font-size: 11pt;">[2008/06/30] たたき台を作ってみました。</li>
+    </ul>
+  </div>
+</div>
+
+<!-- サイドバー -->
+<div id="side">
+  <div id="tag_cloud">
+    <div class="subtitle">タグクラウド</div>
+    <div class="subcontent">
+    <% @tags = Question.tag_counts %>
+      <% tag_cloud(@tags, ['tag-x-small', 'tag-small', 'tag-medium', 'tag-large', 'tag-x-large']) do |tag, css_class| %>
+      <%= link_to(tag.name, { :controller => :search, :action => :tag, :id => tag.name }, :class => css_class) %>
+    <% end %>
+    </div>
+  </div>
+</div>

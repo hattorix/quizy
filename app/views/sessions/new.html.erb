@@ -1,12 +1,14 @@
 <%= stylesheet_link_tag "style_import_top" %>
-
 <div id="login">
   <% form_tag session_path do -%>
   <div id="login_box">
-    <div class="field">ユーザ<br /><%= text_field_tag 'login', "", :size => "10", :style => "width:100px;"%></div>
+    <div class="field">ユーザ<br /><%= text_field_tag 'login', "", :size => "10", :id => "name", :style => "width:100px;"%></div>
     <div class="field">パスワード<br /><%= password_field_tag 'password', "", :size => "10", :style => "width:100px;" %></div>
     <div class="field"><%= check_box_tag 'Remember_me' %> ログイン情報を2週間保存する</div>
     <div class="login_button"><%= submit_tag "ログイン" %></div>
   </div>
   <% end -%>
 </div>
+<script language="javascript">
+  document.getElementById("name").focus();
+</script>

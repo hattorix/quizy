@@ -1,19 +1,27 @@
 <%= stylesheet_link_tag "style_book_detail" %>
 <div id="screen_title">設定変更</div>
 <div id="main">
-  <%= error_messages_for :user %>
-    <% form_for :user, :url => "/users/update/#{current_user.id}"do |f| -%>
-    <%= flash[:notice] %>
+<%= error_messages_for :user %>
+<% form_for current_user do |f| -%>
+<%= flash[:notice] %>
 
-    <p><label for="password">パスワード</label><br/>
-      <%= password_field :password,"" %></p>
+<%= f.hidden_field :login %></p>
+<%= f.hidden_field :email %></p>
 
-    <p><label for="password">新しいパスワード</label><br/>
-      <%= password_field :new_password,"" %></p>
+<p><label for="password">パスワード</label><br/>
+<%= password_field :old_password, "" %></p>
 
-    <p><label for="password_confirmation">新しいパスワード確認</label><br/>
-      <%= password_field :new_password_confirmation,"" %></p>
+<p><label for="password">新しいパスワード</label><br/>
+<%= f.password_field :password %></p>
 
-    <p><%= submit_tag '変更' %></p>
-  <% end -%>
+<p><label for="password_confirmation">新しいパスワード確認</label><br/>
+<%= f.password_field :password_confirmation %></p>
+
+<p><%= submit_tag '変更' %></p>
+<% end -%>
+
+  <div class="spacer_narrow">&nbsp;</div>
+
+<%= button_to '退会する', {:action => "delete"}, :confirm => '本当に退会してよろしいですか?'%>
+<div style="color:red;font-size:11px;">※退会しても問題は削除されません。</div>
 </div>

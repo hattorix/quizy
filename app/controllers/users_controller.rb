@@ -39,24 +39,30 @@ class UsersController < ApplicationController
 
   def update
     @user = current_user
-    if @user.password != params[:password]
+    if !User.authenticate(current_user.login, params[:old_password])
       flash[:notice] = "パスワードが違います。"
             render :action => 'edit'
     else
-    @user.save
-    if @user.errors.empty?
-      self.current_user = @user
-      book = Book.new
-      book.name = "自分で登録した問題"
-      book.is_public = 2
-      book.user_id = @user.id
-      book.save
-      redirect_back_or_default('/')
-      flash[:notice] = "Thanks for signing up!"
-    else
-      render :action => 'new'
+    @user.update_attributes(params[:user])
+      if @user.errors.empty?
+        redirect_back_or_default('/')
+        flash[:notice] = "Thanks for signing up!"
+      else
+        render :action => 'edit'
+      end
     end
-    end
+  end
+
+  def delete
+    Bookmark.delete_all(["user_id = ?", current_user.id])
+    History.delete_all(["user_id = ?", current_user.id])
+    ExamTemp.delete_all(["user_id = ?", current_user.id])
+    MyBook.delete_all(["user_id = ?", current_user.id])
+    MyExam.delete_all(["user_id = ?", current_user.id])
+    Book.delete_all(["user_id = ? and name = '自分で登録した問題'", current_user.id])
+    current_user.destroy
+
+    redirect_back_or_default('/')
   end
 
 end
