@@ -9,8 +9,7 @@ module AuthenticatedSystem
     # Accesses the current user from the session. 
     # Future calls avoid the database because nil is not equal to false.
     def current_user
-#      @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie) unless @current_user == false
-      @current_user ||= (login_from_session || login_from_cookie || login_from_basic_auth) unless @current_user == false
+      @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie) unless @current_user == false
     end
 
     # Store the given user id in the session.
@@ -65,8 +64,7 @@ module AuthenticatedSystem
       respond_to do |format|
         format.html do
           store_location
-#          redirect_to new_session_path
-          redirect_to index_path
+          redirect_to new_session_path
         end
         format.any do
           request_http_basic_authentication 'Web Password'

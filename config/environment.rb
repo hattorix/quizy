@@ -52,6 +52,17 @@ Rails::Initializer.run do |config|
     :session_key => '_quizy_session',
     :secret      => 'b7ccfd9c5a0fc39d932f320e4edc7a213ddf1aab82c26b6a2aedafa4df69908d289b651c463706240754a4deae5bd3023e3a0ab6919f22e61e9d896c972c6703'
   }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address => 'mail.ark-system.co.jp',
+    :port => 587,               # or 587 SMTP 設定に依存
+#    :domain => 'arais@ark-system.co.jp',  # 分かるなら FQDN を設定
+  #  :authentication => :login, # SMTP 認証設定に依存
+  #  :user_name => 'redmoon_stargazers',  # 認証がないなら削除
+  #  :password => 'samurai'    # 認証がないなら削除
+  }
+
+  config.active_record.observers = :user_observer
 
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information

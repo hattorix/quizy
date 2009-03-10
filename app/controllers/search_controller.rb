@@ -1,4 +1,14 @@
 class SearchController < ApplicationController
+
+  layout :select_layout
+
+  def select_layout
+    if %w(new_book).include?(action_name)
+    else
+      "application"
+    end
+  end
+
   def category
     @results = Question.find(:all, :conditions => ['category_id = ? and is_public = 1', params[:id]])
 #    render :partial => 'results', :collection => results
@@ -72,7 +82,7 @@ class SearchController < ApplicationController
   
   def add_book
     if params[:id] == "all"
-      if params[:add_book_to]
+      if params[:add_book_to] != "" and params[:add_book_to] != "new"
         book = Book.find(params[:add_book_to])
         question_ids = params[:results]
         i = 0
@@ -91,7 +101,7 @@ class SearchController < ApplicationController
           flug = true
         end
       else
-        flash[:notice] = "ブックが存在しません。"
+        flash[:notice] = "ブックを選択してください。"
         flug = false
       end
       render :update do |page|
@@ -103,7 +113,7 @@ class SearchController < ApplicationController
                             :duration => 3
       end
     else
-      if params[:add_book_to]
+      if params[:add_book_to] != "" and params[:add_book_to] != "new"
         book = Book.find(params[:add_book_to])
         question = Question.find(params[:id])
         if book.questions.include?(question)
@@ -115,7 +125,7 @@ class SearchController < ApplicationController
           flug = true
         end
       else
-        flash[:notice] = "ブックが存在しません。"
+        flash[:notice] = "ブックを選択してください。"
         flug = false
       end
       render :update do |page|
@@ -125,6 +135,54 @@ class SearchController < ApplicationController
                             :from => 1,
                             :to => 0,
                             :duration => 3
+      end
+    end
+  end
+
+  def new_book
+    @book = Book.new
+  end
+  
+
+  def create_book
+    @book = Book.new(params[:book])
+    @book.user_id = current_user.id
+    @book.is_smart = 0
+
+    if @book.name != "自分で登録した問題"
+      if @book.save
+        my_book = MyBook.new
+        my_book.book_id = @book.id
+        my_book.user_id = current_user.id
+        my_book.save
+        render :update do |page|
+          page << "len = window.opener.document.getElementById('add_book_to').options.length;"
+          page << "window.opener.document.getElementById('add_book_to').options.length++;"
+          page << "window.opener.document.getElementById('add_book_to').options[len].text = \"#{@book.name}\";"
+          page << "window.opener.document.getElementById('add_book_to').options[len].value = #{@book.id};"
+          page << "window.opener.document.getElementById('add_book_to').selectedIndex = len;"
+          page << "window.close();"
+        end
+      else
+        @msgs = @book.errors.full_messages
+        render :update do |page|
+          page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
+          page[:msg].visual_effect :highlight,
+                                    :startcolor => "#ffd900",
+                                    :endcolor => "#ffffff",
+                                    :duration => 1.5
+        end
+      end
+    else
+      @book.valid?
+      @msgs = @book.errors.full_messages
+      @msgs << "そのブック名は使用できません。"
+      render :update do |page|
+        page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
+        page[:msg].visual_effect :highlight,
+                                  :startcolor => "#ffd900",
+                                  :endcolor => "#ffffff",
+                                  :duration => 1.5
       end
     end
   end

@@ -1,13 +1,12 @@
 class UsersController < ApplicationController
-  def index
-    if logged_in?
-      redirect_to :controller => :mypage
-    end
-  end
+  # Be sure to include AuthenticationSystem in Application Controller instead
+  include AuthenticatedSystem
+  
+
   # render new.rhtml
   def new
   end
-  
+
   def create
     cookies.delete :auth_token
     # protects against session fixation attacks, wreaks havoc with 
@@ -23,32 +22,61 @@ class UsersController < ApplicationController
       book.is_public = 2
       book.user_id = @user.id
       book.save
-      redirect_back_or_default('/')
+      render :update do |page|
+        page.redirect_to :controller => "mypage"
+      end
       flash[:notice] = "Thanks for signing up!"
     else
-      render :action => 'new'
+      @msgs =  @user.errors.full_messages
+      render :update do |page|
+        page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
+        page[:msg].visual_effect :highlight,
+                                  :startcolor => "#ffd900",
+                                  :endcolor => "#ffffff",
+                                  :duration => 1.5
+      end
     end
   end
 
-  def remember_me
-    remember_me_for 2.weeks
-  end
-
-  def edit
+  def activate
+    self.current_user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
+    if logged_in? && !current_user.active?
+      current_user.activate
+      flash[:notice] = "Signup complete!"
+    end
+    redirect_back_or_default('/')
   end
 
   def update
     @user = current_user
     if !User.authenticate(current_user.login, params[:old_password])
-      flash[:notice] = "パスワードが違います。"
-            render :action => 'edit'
+      @user.valid?
+      @msgs =  @user.errors.full_messages
+      @msgs << "パスワードが違います。"
+      render :update do |page|
+        page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
+        page[:msg].visual_effect :highlight,
+                                  :startcolor => "#ffd900",
+                                  :endcolor => "#ffffff",
+                                  :duration => 1.5
+      end
     else
     @user.update_attributes(params[:user])
       if @user.errors.empty?
-        redirect_back_or_default('/')
+        render :update do |page|
+          page.redirect_to :controller => "mypage"
+        end
         flash[:notice] = "Thanks for signing up!"
       else
-        render :action => 'edit'
+        @msgs =  @user.errors.full_messages
+        render :update do |page|
+          page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
+          page[:msg].visual_effect :highlight,
+                                  :startcolor => "#ffd900",
+                                  :endcolor => "#ffffff",
+                                  :duration => 1.5
+
+        end
       end
     end
   end
@@ -64,5 +92,4 @@ class UsersController < ApplicationController
 
     redirect_back_or_default('/')
   end
-
 end

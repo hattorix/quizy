@@ -1,10 +1,8 @@
 # This controller handles the login/logout function of the site.  
 class SessionsController < ApplicationController
+  # Be sure to include AuthenticationSystem in Application Controller instead
+  include AuthenticatedSystem
 
-  def index
-    redirect_to :controller => :mypage
-  end
-  
   # render new.rhtml
   def new
   end
@@ -27,10 +25,7 @@ class SessionsController < ApplicationController
     self.current_user.forget_me if logged_in?
     cookies.delete :auth_token
     reset_session
-    session = nil
-#    p session
     flash[:notice] = "You have been logged out."
-#    redirect_back_or_default('/')
-    redirect_back_or_default('/top')
+    redirect_back_or_default('/')
   end
 end

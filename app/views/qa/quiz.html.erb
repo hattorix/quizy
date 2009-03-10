@@ -1,17 +1,30 @@
 <%= stylesheet_link_tag("contents_register") %>
 <%= stylesheet_link_tag("star_rating") %>
 <%= javascript_include_tag "prototype" %>
+<script language="javascript">
+  function add_book(){
+  var a = document.getElementById("add_book_to");
+  if (a.value == "new") {
+    ret = this.open("/qa/new_book/", "CtrlWindow"
+                   ,"toolbar=0, menubar=0, location=0, scrollbars=0, resize=0, width=800, height=470");
+  }
+  }
+</script>
 <div id="toolbar_box">
   <% if logged_in? %>
     <div id="add_book_form">
       <% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id} do -%>
         <div id="add_book">
           マイブック
-            <select name="add_book_to" style="width:180px;">
+            <select id="add_book_to" name="add_book_to" onchange='add_book()'>
+              <option value=''>選択されていません</option>
+              <option value='' disabled>------------------------</option>
+              <option value='new'>新規ブックを作成</option>
+              <option value='' disabled>------------------------</option>
               <% @books.each do |book| %>
                 <%= "<option value='#{book.id}'>#{book.name}</option>" %>
               <% end %>
-              <option value='new'>新規ブックを作成</option>
+
             </select>
             <%= submit_tag '登録',
                         :class => 'button'%>

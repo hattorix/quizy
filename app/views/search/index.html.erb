@@ -1,11 +1,21 @@
 <%= stylesheet_link_tag 'contents_search'  %>
+<script language="javascript">
+  function add_book(){
+  var a = document.getElementById("add_book_to");
+  if (a.value == "new") {
+    ret = this.open("/search/new_book/", "CtrlWindow"
+                   ,"toolbar=0, menubar=0, location=0, scrollbars=0, resize=0, width=800, height=470");
+  }
+  }
+</script>
 <div id="screen_title">検索結果</div>
 <% if @flg == 0 && @results.size >= 1 %>
   <% if logged_in? %>
       <div class="add_book">
         <span id="bookmark">
           <%= render :partial => "bookmark", :locals => {:question_id => @results,
-                                                    :is_bookmark => @is_bookmark_all} %>
+                                                    :is_bookmark => @is_bookmark_all,
+                                                    :results => @results} %>
         </span>
 
       <div class="add_book_form">
@@ -13,11 +23,16 @@
           全てマイブック
           <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1",
                                                  current_user.id])%>
-          <%= select_tag 'add_book_to',
-                        options_from_collection_for_select(books,
-                                                      :id, :name),
-                        :style => 'width: 80px;' %>
-          <%= submit_tag '登録',
+            <select id="add_book_to" name="add_book_to" onchange='add_book()'>
+              <option value=''>選択されていません</option>
+              <option value='' disabled>------------------------</option>
+              <option value='new'>新規ブックを作成</option>
+              <option value='' disabled>------------------------</option>
+              <% books.each do |book| %>
+                <%= "<option value='#{book.id}'>#{book.name}</option>" %>
+              <% end %>
+            </select>
+            <%= submit_tag '登録',
                        :class => 'button'%>
         <% end -%></div>
       <span id="add_book_message_all"></span>
@@ -56,10 +71,15 @@
                     マイブック
                     <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1",
                                                          current_user.id])%>
-                    <%= select_tag 'add_book_to',
-                                options_from_collection_for_select(books,
-                                                               :id, :name),
-                               :style => 'width: 80px;' %>
+                      <select id="add_book_to" name="add_book_to" onchange='add_book()'>
+                        <option value=''>選択されていません</option>
+                        <option value='' disabled>------------------------</option>
+                        <option value='new'>新規ブックを作成</option>
+                        <option value='' disabled>------------------------</option>
+                        <% books.each do |book| %>
+                          <%= "<option value='#{book.id}'>#{book.name}</option>" %>
+                        <% end %>
+                      </select>
                     <%= submit_tag '登録',
                                :class => 'button'%>
                   <% end -%></div>

@@ -1,9 +1,8 @@
 <%= stylesheet_link_tag "style_book_detail" %>
 <div id="screen_title">設定変更</div>
+<div id="message"></div>
 <div id="main">
-<%= error_messages_for :user %>
-<% form_for current_user do |f| -%>
-<%= flash[:notice] %>
+<% remote_form_for current_user do |f| -%>
 
 <%= f.hidden_field :login %></p>
 <%= f.hidden_field :email %></p>
