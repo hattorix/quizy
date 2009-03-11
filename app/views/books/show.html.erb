@@ -47,7 +47,31 @@
     </table>
     <h2 class="subtitle">概要</h2>
     <div id="outline"><%= hbr @book.outline %></div>
-    </table>
+
+    <div class="spacer_narrow" style="clear:both">&nbsp;</div>
+
+    <h2 class="subtitle">トレーニング</h2>
+    <div id="traning_box">
+      <% form_tag({:action => 'training_start', :id => @book.id},:target => ["_blank"]) do -%>
+      <div class="field">
+        <input type="radio" id="training_type" name="training_type"
+               value="all" checked /> 全ての問題から
+      </div>
+      <div class="field">
+        <input type="radio" id="training_type" name="training_type"
+               value="weak" /> 苦手な問題から
+      </div>
+      <div class="field">
+        <input type="radio" id="training_type" name="training_type"
+               value="quiz_count" /> 解答数<%= text_field_tag "quiz_count", "",:style => 'width: 20pt;' %>回以下の問題から
+      </div>
+        <%= text_field_tag "select_count", "",:style => 'width: 20pt;' %>問選択し、
+        <%= submit_tag "トレーニング開始" %>
+      <% end %>
+    </div>
+
+  <div class="spacer_narrow" style="clear:both">&nbsp;</div>
+
   </div>
 
   <div id="this_book_questions">
@@ -83,14 +107,5 @@
         <% end %>
       <% end %>
     </ul>
-  </div>
-  
-  <div class="spacer_narrow" style="clear:both">&nbsp;</div>
-
-  <div id="submit_box">
-    <% form_tag({:action => 'training_start', :id => @book.id},:target => ["_blank"]) do -%>
-      この問題集から<%= text_field_tag "select_count", "",:style => 'width: 20pt;' %>問抽出し、
-      <%= submit_tag "トレーニング" %>
-    <% end %>
   </div>
 </div>

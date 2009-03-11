@@ -1,26 +1,44 @@
-<%= stylesheet_link_tag "style_book_detail" %>
+<%= stylesheet_link_tag "contents_user" %>
 <div id="screen_title">設定変更</div>
 <div id="message"></div>
 <div id="main">
-<% remote_form_for current_user do |f| -%>
+  <div id="weak_form">
+    <h2 class="subtitle">苦手ライン</h2>
+    <div id="weak_box">
+      <% remote_form_for :user,:url =>{:action => 'update_weak'} do |f| -%>
+        <%= text_field :weak_line, current_user.weak_line %>％以下
+        <p><%= submit_tag '変更' %></p>
+      <% end -%>
+    </div>
+  </div>
 
-<%= f.hidden_field :login %></p>
-<%= f.hidden_field :email %></p>
+  <div id="password_form">
+    <h2 class="subtitle">パスワード</h2>
+    <div id="password_box">
+      <% remote_form_for current_user do |f| -%>
 
-<p><label for="password">パスワード</label><br/>
-<%= password_field :old_password, "" %></p>
+        <%= f.hidden_field :login %></p>
+        <%= f.hidden_field :email %></p>
+        <%= f.hidden_field :weak_line %></p>
 
-<p><label for="password">新しいパスワード</label><br/>
-<%= f.password_field :password %></p>
+        <p><label for="password">パスワード</label><br/>
+        <%= password_field :old_password, "" %></p>
 
-<p><label for="password_confirmation">新しいパスワード確認</label><br/>
-<%= f.password_field :password_confirmation %></p>
+        <p><label for="password">新しいパスワード</label><br/>
+        <%= f.password_field :password %></p>
 
-<p><%= submit_tag '変更' %></p>
-<% end -%>
+        <p><label for="password_confirmation">新しいパスワード確認</label><br/>
+        <%= f.password_field :password_confirmation %></p>
 
-  <div class="spacer_narrow">&nbsp;</div>
+        <p><%= submit_tag '変更' %></p>
+      <% end -%>
+    </div>
+  </div>
 
-<%= button_to '退会する', {:action => "delete"}, :confirm => '本当に退会してよろしいですか?'%>
-<div style="color:red;font-size:11px;">※退会しても問題は削除されません。</div>
+  <div class="spacer_narrow" style="clear:both;">&nbsp;</div>
+
+  <div id="secession_form">
+    <%= button_to '退会する', {:action => "delete"}, :confirm => '本当に退会してよろしいですか?'%>
+    <div style="color:red;font-size:11px;">※退会しても問題は削除されません。</div>
+  </div>
 </div>

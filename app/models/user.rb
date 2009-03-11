@@ -5,14 +5,14 @@ class User < ActiveRecord::Base
 
   validates_presence_of     :login, :email,
                             :message => 'を入力してください。'
-  validates_presence_of     :password,                   :if => :password_required? ,
+  validates_presence_of     :password,                   
                             :message => 'を入力してください。'
-  validates_presence_of     :password_confirmation,      :if => :password_required? ,
+  validates_presence_of     :password_confirmation,      
                             :message => 'を入力してください。'
-  validates_length_of       :password, :within => 4..40, :if => :password_required? ,
+  validates_length_of       :password, :within => 4..40,
                             :too_short => 'を４文字以上で入力してください。',
                             :too_long => 'を４０文字以内で入力してください。'
-  validates_confirmation_of :password,                   :if => :password_required? ,
+  validates_confirmation_of :password,                   
                             :message => 'と確認用パスワードは同じものを入力してください。'
   validates_length_of       :login,    :within => 3..40,
                             :too_short => 'を３文字以上で入力してください。',

@@ -188,25 +188,63 @@ class BooksController < ApplicationController
           redirect_to :action => 'show',:id => params[:id]
         else
           @questions = Array.new
-          params[:select_count].to_i.times do |i|
-            @questions << Question.find(@books_questions[rand(@books_questions.size)].question_id)
+          # 全ての問題からの場合
+          if params[:training_type] == "all"
+            params[:select_count].to_i.times do |i|
+              @questions << Question.find(@books_questions[rand(@books_questions.size)].question_id)
+            end
+          # 苦手問題の場合
+          elsif params[:training_type] == "weak"
+            weak_questions = Array.new
+            @books_questions.each do |books_question|
+              my_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ?",books_question.question_id,current_user.id])
+              if my_questions.size != 0
+                my_true_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ? and correct_or_wrong = 1",books_question.question_id,current_user.id])
+                if ((my_true_questions.size*100)/my_questions.size) < 60
+                  weak_questions << books_question
+                end
+              else
+                weak_questions << books_question
+              end
+            end
+            if weak_questions.size != 0
+              params[:select_count].to_i.times do |i|
+                @questions << Question.find(weak_questions[rand(weak_questions.size)].question_id)
+              end
+            end
+          # 解答数の場合
+          elsif params[:training_type] == "quiz_count"
+            if params[:quiz_count] != ""
+              low_questions = Array.new
+              @books_questions.each do |books_question|
+                if my_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ?",books_question.question_id,current_user.id])
+                  if my_questions.size < params[:quiz_count].to_i
+                    low_questions << books_question
+                  end
+                else
+                  low_questions << books_question
+                end
+              end
+              if low_questions.size != 0
+                params[:select_count].to_i.times do |i|
+                  @questions << Question.find(low_questions[rand(low_questions.size)].question_id)
+                end
+              end
+            end
           end
-          @i = 0
-          @question = @questions[@i]
-          @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
-          @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
-          @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
 
-          # statstics information
-          right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
-          @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
-          @question_count = @question.question_count
-          @correct_count = @question.correct_count
-          @wrong_count = @question.wrong_count
-
-          render :action => 'training'
-
+          if @questions.size == 0
+            redirect_to :action => 'show',:id => params[:id]
+          else
+            question_ids = Array.new
+            @questions.each do |question|
+              question_ids << question.id
+            end
+            traning_show(:questions => question_ids,:i => 0)
+            render :action => 'training'
+          end
         end
+      # スマートブックの場合
       else
         @questions = Array.new
 
@@ -235,62 +273,74 @@ class BooksController < ApplicationController
         elsif @smart_questions = questions_t
         end
 
-        params[:select_count].to_i.times do |i|
-          @questions << @smart_questions[rand(@smart_questions.size)]
+        # 全ての問題からの場合
+        if params[:training_type] == "all"
+          params[:select_count].to_i.times do |i|
+            @questions << Question.find(@smart_questions[rand(@smart_questions.size)].id)
+          end
+        # 苦手問題の場合
+        elsif params[:training_type] == "weak"
+          weak_questions = Array.new
+          @smart_questions.each do |smart_question|
+            my_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ?",smart_question.id,current_user.id])
+            if my_questions.size != 0
+              my_true_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ? and correct_or_wrong = 1",smart_question.id,current_user.id])
+              if ((my_true_questions.size*100)/my_questions.size) < 60
+                weak_questions << smart_question
+              end
+            else
+              weak_questions << smart_question
+            end
+          end
+          if weak_questions.size != 0
+            params[:select_count].to_i.times do |i|
+              @questions << Question.find(weak_questions[rand(weak_questions.size)].id)
+            end
+          end
+        # 解答数の場合
+        elsif params[:training_type] == "quiz_count"
+          if params[:quiz_count] != ""
+            low_questions = Array.new
+            @smart_questions.each do |smart_question|
+              if my_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ?",smart_question.id,current_user.id])
+                if my_questions.size < params[:quiz_count].to_i
+                  low_questions << smart_question
+                end
+              else
+                low_questions << smart_question
+              end
+            end
+            if low_questions.size != 0
+              params[:select_count].to_i.times do |i|
+                @questions << Question.find(low_questions[rand(low_questions.size)].id)
+              end
+            end
+          end
         end
-        @i = 0
-        @question = @questions[@i]
-        @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
-        @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
-        @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
 
-        # statstics information
-        right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
-        @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
-        @question_count = @question.question_count
-        @correct_count = @question.correct_count
-        @wrong_count = @question.wrong_count
-
-        render :action => 'training'
+        if @questions.size == 0
+          redirect_to :action => 'show',:id => params[:id]
+        else
+          question_ids = Array.new
+          @questions.each do |question|
+            question_ids << question.id
+          end
+          traning_show(:questions => question_ids,:i => 0)
+          render :action => 'training'
+        end
       end
     end
   end
 
   def next
     @id = params[:id]
-    @i = params[:i].to_i+1
-    @questions = params[:questions]
-    @question = Question.find(@questions[@i].to_i)
-    @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
-    @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
-    @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
-
-    # statstics information
-    right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
-    @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
-    @question_count = @question.question_count
-    @correct_count = @question.correct_count
-    @wrong_count = @question.wrong_count
-
+    traning_show(:questions => params[:questions],:i => params[:i].to_i+1)
     render :action => 'training'
   end
 
   def back
     @id = params[:id]
-    @i = params[:i].to_i-1
-    @questions = params[:questions]
-    @question = Question.find(@questions[@i].to_i)
-    @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
-    @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
-    @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
-
-    # statstics information
-    right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
-    @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
-    @question_count = @question.question_count
-    @correct_count = @question.correct_count
-    @wrong_count = @question.wrong_count
-
+    traning_show(:questions => params[:questions],:i => params[:i].to_i-1)
     render :action => 'training'
   end
   
@@ -456,5 +506,31 @@ class BooksController < ApplicationController
                            :duration => 3
       end
     end
+  end
+  
+  private
+  
+  def traning_show(params)
+    @questions = params[:questions]
+    @i = params[:i]
+    @question = Question.find(@questions[@i])
+    @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
+    @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
+    @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
+
+    # statstics information
+    my_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ?",@question.id,current_user.id])
+    if my_questions.size != 0
+      my_true_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ? and correct_or_wrong = 1",@question.id,current_user.id])
+      @my_reat = ((my_true_questions.size*100)/my_questions.size)
+    else
+      @my_reat = 0
+    end
+
+    right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
+    @right_answer_rate = right_answer_rate.nan? ? '---' : sprintf("%.1f%%", right_answer_rate * 100)
+    @question_count = @question.question_count
+    @correct_count = @question.correct_count
+    @wrong_count = @question.wrong_count
   end
 end

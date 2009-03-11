@@ -56,8 +56,13 @@ ul {
 }
 
 .add_book {
-  margin: 5px;
+  margin: 5px 15px 5px 5px;
   float:right;
+}
+
+.to_add_book_controller {
+  float: right;
+  clear:both;
 }
 
 .add_book_form {
@@ -77,6 +82,7 @@ ul {
   float: left;
   font-size:12pt;
   font-weight:normal;
+  clear:both;
 }
 .book_and_test {
   margin:0px 0 20px -20px; 

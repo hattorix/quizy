@@ -1,4 +1,3 @@
-<%= stylesheet_link_tag("contents_register") %>
 <%= javascript_include_tag "prototype" %>
 <div id="question">
   <div id="toolbar_box">
@@ -8,7 +7,6 @@
 
   <% remote_form_for :question, :update => 'quiz', :url => {:action => 'answer', :questions =>@questions, :i => @i, :id => @id} do |f| -%>
     <div id="quiz">
-    <%= stylesheet_link_tag("contents_register") %>
       <div id="main_quiz">
         <div id="question_box_quiz">
           <div id="question_text_box">
@@ -98,7 +96,8 @@
           <div class="subsubtitle">タグ</div>
           <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
           <%# あとでちゃんと書きましょう %>
-          <div class="book_and_test">
+          <div class="subsubtitle">あなたの正答率</div>
+          <div class="field">：<%= @my_reat %>％
           </div>
         </div>
 

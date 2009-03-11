@@ -70,7 +70,7 @@ class UsersController < ApplicationController
                                   :duration => 1.5
       end
     else
-    @user.update_attributes(params[:user])
+      @user.update_attributes(params[:user])
       if @user.errors.empty?
         render :update do |page|
           page.redirect_to :controller => "mypage"
@@ -81,11 +81,30 @@ class UsersController < ApplicationController
         render :update do |page|
           page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
           page[:msg].visual_effect :highlight,
+                                    :startcolor => "#ffd900",
+                                    :endcolor => "#ffffff",
+                                    :duration => 1.5
+        end
+      end
+    end
+  end
+
+  def update_weak
+    @user = current_user
+    @user.update_attributes(:weak_line => params[:weak_line][0].to_i)
+    if @user.errors.empty?
+      render :update do |page|
+        page.redirect_to :controller => "mypage"
+      end
+      flash[:notice] = "Thanks for signing up!"
+    else
+      @msgs =  @user.errors.full_messages
+      render :update do |page|
+        page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
+        page[:msg].visual_effect :highlight,
                                   :startcolor => "#ffd900",
                                   :endcolor => "#ffffff",
                                   :duration => 1.5
-
-        end
       end
     end
   end

@@ -91,6 +91,14 @@ h1.this_book_title {
   float: left;
 }
 
+#traning_box {
+  width: 276px;
+  margin: 10px 10px 10px 0px;
+  padding: 10px;
+  border: 1px solid silver;
+  clear: both;
+}
+
 #delete_book_questions {
   width:100%;
   padding-left:15px;

@@ -81,12 +81,11 @@ class SearchController < ApplicationController
   end
   
   def add_book
-    if params[:id] == "all"
-      if params[:add_book_to] != "" and params[:add_book_to] != "new"
+    if params[:add_book_to] != "" and params[:add_book_to] != "new"
+      if params[:to_add_book]
         book = Book.find(params[:add_book_to])
-        question_ids = params[:results]
         i = 0
-        question_ids.each do |question_id|
+        params[:to_add_book].each do |question_id|
           question = Question.find(question_id.to_i)
           unless book.questions.include?(question)
             book.questions << question
@@ -101,41 +100,20 @@ class SearchController < ApplicationController
           flug = true
         end
       else
-        flash[:notice] = "ブックを選択してください。"
+        flash[:notice] = "問題を選択してください。"
         flug = false
-      end
-      render :update do |page|
-        page.replace_html("add_book_message_all", :partial=>"message",:locals => {:flug => flug})
-        page.visual_effect :Opacity,
-                            "add_book_message_all",
-                            :from => 1,
-                            :to => 0,
-                            :duration => 3
       end
     else
-      if params[:add_book_to] != "" and params[:add_book_to] != "new"
-        book = Book.find(params[:add_book_to])
-        question = Question.find(params[:id])
-        if book.questions.include?(question)
-          flash[:notice] = "登録済みです。"
-          flug = false
-        else
-          book.questions << question
-          flash[:notice] = "登録しました！"
-          flug = true
-        end
-      else
-        flash[:notice] = "ブックを選択してください。"
-        flug = false
-      end
-      render :update do |page|
-        page.replace_html("add_book_message#{params[:id]}", :partial=>"message",:locals => {:flug => flug})
-        page.visual_effect :Opacity,
-                            "add_book_message#{params[:id]}",
-                            :from => 1,
-                            :to => 0,
-                            :duration => 3
-      end
+      flash[:notice] = "ブックを選択してください。"
+      flug = false
+    end
+    render :update do |page|
+      page.replace_html("add_book_message_all", :partial=>"message",:locals => {:flug => flug})
+      page.visual_effect :Opacity,
+                          "add_book_message_all",
+                          :from => 1,
+                          :to => 0,
+                          :duration => 3
     end
   end
 

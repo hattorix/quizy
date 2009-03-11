@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090310014418) do
+ActiveRecord::Schema.define(:version => 20090311072313) do
 
   create_table "answers", :force => true do |t|
     t.text     "answer_text"
@@ -189,6 +189,7 @@ ActiveRecord::Schema.define(:version => 20090310014418) do
     t.datetime "remember_token_expires_at"
     t.string   "activation_code",           :limit => 40
     t.datetime "activated_at"
+    t.integer  "weak_line",                 :limit => 11
   end
 
 end
