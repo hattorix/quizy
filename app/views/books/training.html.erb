@@ -8,6 +8,7 @@
 
   <% remote_form_for :question, :update => 'quiz', :url => {:action => 'answer', :questions =>@questions, :i => @i, :id => @id} do |f| -%>
     <div id="quiz">
+    <%= stylesheet_link_tag("contents_register") %>
       <div id="main_quiz">
         <div id="question_box_quiz">
           <div id="question_text_box">

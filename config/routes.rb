@@ -25,6 +25,7 @@ ActionController::Routing::Routes.draw do |map|
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.index '/', :controller => 'top', :action => 'index'
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate'
+  map.activate_all '/activate_all/', :controller => 'users', :action => 'activate_all'
 
   # The priority is based upon order of creation: first created -> highest priority.
 

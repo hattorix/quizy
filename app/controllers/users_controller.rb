@@ -47,6 +47,15 @@ class UsersController < ApplicationController
     redirect_back_or_default('/')
   end
 
+  def activate_all
+    users = User.find(:all,["activated_at = ?",nil])
+    users.each do |user|
+      user.update_attribute("activated_at", Time.now)
+    end
+    redirect_back_or_default('/')
+  end
+
+
   def update
     @user = current_user
     if !User.authenticate(current_user.login, params[:old_password])

@@ -13,4 +13,12 @@ class TopController < ApplicationController
   # render new.rhtml
   def new
   end
+
+  def activate_all
+    users = User.find(:all,["activated_at = ?",nil])
+    users.each do |user|
+      user.update_attribute("activated_at = ?", Time.now)
+    end
+    redirect_to :controller => "top", :action => "index"
+  end
 end
