@@ -9,6 +9,7 @@
   </script>
   <h1 class="this_exam_title">
     『<%=h @exam.name %>』
+    <span style="font-size:12pt;">(作成者：<%=h @user_name %>)</span>
     <% if logged_in? %>
       <% if @exam.user_id == current_user.id %>
         <%= link_to(image_tag('/images/book_edit.png',
@@ -22,6 +23,7 @@
                        :url => {:action => 'add_myexam', :id => @exam.id})%>
       <% end %>
     <% end %>
+
   </h1>
   <div id="add_myexam_message"></div>
 

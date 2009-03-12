@@ -1,10 +1,21 @@
 class UsersController < ApplicationController
+
+  before_filter :login_required, :only =>["edit"]
+
   # Be sure to include AuthenticationSystem in Application Controller instead
   include AuthenticatedSystem
   
 
   # render new.rhtml
   def new
+  end
+
+  def edit
+    if setting = Setting.find(:first,:conditions => ["user_id = ?",current_user.id])
+      @weak_line = setting.weak_line
+    else
+      @weak_line = 99
+    end
   end
 
   def create
@@ -22,6 +33,10 @@ class UsersController < ApplicationController
       book.is_public = 2
       book.user_id = @user.id
       book.save
+      setting = Setting.new
+      setting.user_id = @user.id
+      setting.weak_line = 99
+      setting.save
       render :update do |page|
         page.redirect_to :controller => "mypage"
       end
@@ -44,7 +59,7 @@ class UsersController < ApplicationController
       current_user.activate
       flash[:notice] = "Signup complete!"
     end
-    redirect_back_or_default('/')
+    redirect_to :controller => "mypage"
   end
 
   def activate_all
@@ -90,9 +105,15 @@ class UsersController < ApplicationController
   end
 
   def update_weak
-    @user = current_user
-    @user.update_attributes(:weak_line => params[:weak_line][0].to_i)
-    if @user.errors.empty?
+    if @setting = Setting.find(:first,:conditions => ["user_id = ?",current_user.id])
+      @setting.update_attributes("weak_line" => params[:weak_line].to_i)
+    else
+      @setting = Setting.new
+      @setting.user_id = current_user.id
+      @setting.weak_line = params[:weak_line].to_i
+      @setting.save
+    end
+    if @setting.errors.empty?
       render :update do |page|
         page.redirect_to :controller => "mypage"
       end

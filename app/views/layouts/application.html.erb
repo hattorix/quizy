@@ -16,7 +16,7 @@
           <% if logged_in? %>
             <li><div id="wellcome">ようこそ、<%= current_user.login %>さん</div></li>
             <li><%= link_to("マイページ", {:controller => 'mypage'})%>&nbsp;|&nbsp;</li>
-            <li><%= link_to("設定", "/users/edit/#{current_user.id}/") %>&nbsp;|&nbsp;</li>
+            <li><%= link_to("設定", edit_path) %>&nbsp;|&nbsp;</li>
           <% else %>
             <li><%= link_to("会員登録", signup_path)%>&nbsp;|&nbsp;</li>
           <% end %>

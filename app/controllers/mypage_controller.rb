@@ -18,8 +18,17 @@ class MypageController < ApplicationController
     @questions = Question.find(:all, :limit => 10, :order => "created_at desc",
                                :conditions => ['user_id = ?', current_user.id])
     # 最近解答した問題
-    @histories = History.find(:all, :limit => 10, :order => "created_at desc",
+    @histories = Array.new
+    all_histories = History.find(:all, :order => "created_at desc",
                                :conditions => ['user_id = ?', current_user.id])
+    all_histories.each do |history|
+      if Question.find(:first,:conditions => ["id = ?",history.question_id])
+        @histories << history
+      end
+      if @histories.size == 10
+        break
+      end
+    end
   end
   
   def result

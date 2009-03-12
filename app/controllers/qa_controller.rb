@@ -1,5 +1,7 @@
 class QaController < ApplicationController
 
+  before_filter :login_required, :only =>["new","edit","destroy"]
+
   layout :select_layout
 
   def select_layout
@@ -126,6 +128,7 @@ class QaController < ApplicationController
     @selections = Selection.find(:all, :conditions => "question_id = #{@question.id} and selection_text != ''")
     @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
     @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
+    @user_name = User.find(@question.user_id).login
     if logged_in?
       @books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1", current_user.id])
       @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?", @question.id,current_user.id])

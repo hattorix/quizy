@@ -1,37 +1,66 @@
 <%= stylesheet_link_tag "contents_user" %>
+<link rel="stylesheet" type="text/css" href="/YUI/tabview/assets/tabview.css">
+<link rel="stylesheet" type="text/css" href="/YUI/tabview/assets/border_tabs.css">
+<script type="text/javascript" src="/YUI/yahoo/yahoo.js"></script>
+<script type="text/javascript" src="/YUI/event/event.js"></script>
+<script type="text/javascript" src="/YUI/dom/dom.js"></script>
+<script type="text/javascript" src="/YUI/element/element.js"></script>
+<script type="text/javascript" src="/YUI/tabview/tabview.js"></script>
+
+<script type="text/javascript">
+YAHOO.example.init = function() {
+var tabView = new YAHOO.widget.TabView('settings');
+};
+YAHOO.example.init();
+</script>
+
+<style type="text/css">
+<!--
+#yuidemo01 {
+width:500px; /* 幅の指定 */
+}
+a{text-decoration:none;}
+#yuidemo01 .yui-content {
+padding:5px;
+}
+-->
+</style>
 <div id="screen_title">設定変更</div>
 <div id="message"></div>
 <div id="main">
-  <div id="weak_form">
-    <h2 class="subtitle">苦手ライン</h2>
-    <div id="weak_box">
-      <% remote_form_for :user,:url =>{:action => 'update_weak'} do |f| -%>
-        <%= text_field :weak_line, current_user.weak_line %>％以下
-        <p><%= submit_tag '変更' %></p>
-      <% end -%>
-    </div>
-  </div>
+  <div id="settings" class="yui-navset">
+    <ul class="yui-nav">
+      <li class="selected"><a href="#tab1">パスワード変更</a></li>
+      <li><a href="#tab2">苦手レベル設定</a></li>
+    </ul>
+    <div class="yui-content">
+      <div id="tab1">
+          <div id="password_box">
+            <% remote_form_for current_user,:url =>{:action => 'update'} do |f| -%>
 
-  <div id="password_form">
-    <h2 class="subtitle">パスワード</h2>
-    <div id="password_box">
-      <% remote_form_for current_user do |f| -%>
+              <%= f.hidden_field :login %>
+              <%= f.hidden_field :email %>
 
-        <%= f.hidden_field :login %></p>
-        <%= f.hidden_field :email %></p>
-        <%= f.hidden_field :weak_line %></p>
+              <p><label for="password">パスワード</label><br/>
+              <%= password_field :old_password, "" %></p>
 
-        <p><label for="password">パスワード</label><br/>
-        <%= password_field :old_password, "" %></p>
+              <p><label for="password">新しいパスワード</label><br/>
+              <%= f.password_field :password %></p>
 
-        <p><label for="password">新しいパスワード</label><br/>
-        <%= f.password_field :password %></p>
+              <p><label for="password_confirmation">新しいパスワード確認</label><br/>
+              <%= f.password_field :password_confirmation %></p>
 
-        <p><label for="password_confirmation">新しいパスワード確認</label><br/>
-        <%= f.password_field :password_confirmation %></p>
-
-        <p><%= submit_tag '変更' %></p>
-      <% end -%>
+              <p><%= submit_tag '変更' %></p>
+            <% end -%>
+          </div>
+      </div>
+      <div id="tab2">
+          <div id="weak_box">
+            <% remote_form_for :setting,:url =>{:action => 'update_weak'} do |f| -%>
+              <%= text_field_tag :weak_line,@weak_line, :size => 1,:maxlength => 2 %>％以下
+              <p><%= submit_tag '変更' %></p>
+            <% end -%>
+          </div>
     </div>
   </div>
 

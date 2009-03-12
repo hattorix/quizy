@@ -40,9 +40,10 @@ ul {
 #result_header {
   font-size: 11pt;
   text-align: right;
+  font-weight: bold;
   width: 100%;
   border-top: 1px solid silver;
-  padding-top: 5px;
+  padding: 5px 0px 20px 0px;
   clear: both;
 }
 

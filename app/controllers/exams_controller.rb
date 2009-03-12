@@ -1,6 +1,7 @@
 class ExamsController < ApplicationController
   # GET /exams
   # GET /exams.xml
+  before_filter :login_required, :only =>["new","edit","destroy"]
 
   layout :select_layout
 
@@ -27,6 +28,7 @@ class ExamsController < ApplicationController
   # GET /exams/1.xml
   def show
     @exam = Exam.find(params[:id])
+    @user_name = User.find(@exam.user_id).login
   end
 
   # GET /exams/new

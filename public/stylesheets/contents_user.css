@@ -29,6 +29,10 @@ Description: Quizy stylesheet - for user -
   font-weight: normal;
 }
 
+#settings li a {
+padding: 10px 10px 0px 10px;
+}
+
 #weak_form {
   width: 276px;
   margin: 10px 10px 10px 0px;
@@ -39,7 +43,6 @@ Description: Quizy stylesheet - for user -
 #weak_box {
   margin: 10px 10px 10px 0px;
   padding: 10px;
-  border: 1px solid silver;
   clear: both;
 }
 
@@ -54,7 +57,6 @@ Description: Quizy stylesheet - for user -
 #password_box {
   margin: 10px 10px 10px 0px;
   padding: 10px;
-  border: 1px solid silver;
 }
 
 

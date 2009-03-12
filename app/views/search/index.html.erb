@@ -18,94 +18,98 @@
 <div id="screen_title">検索結果</div>
 <% remote_form_for :question,:url=>{:action => 'add_book'} do -%>
 
-<% if @flg == 0 && @results.size >= 1 && logged_in? %>
-  <div class="add_book">
-    <div style="float:right;">
-      <span id="bookmark">
-        <%= render :partial => "bookmark", :locals => {:question_id => @results,
-                                                  :is_bookmark => @is_bookmark_all,
-                                                  :results => @results} %>
-      </span>
-      <div class="add_book_form">
-        選択した問題をマイブック
-        <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1",
-                                               current_user.id])%>
-        <select id="add_book_to" name="add_book_to" onchange='add_book()'>
-          <option value=''>選択されていません</option>
-          <option value='' disabled>------------------------</option>
-          <option value='new'>新規ブックを作成</option>
-          <option value='' disabled>------------------------</option>
-          <% books.each do |book| %>
-            <%= "<option value='#{book.id}'>#{book.name}</option>" %>
-          <% end %>
-        </select>
-        <%= submit_tag '登録',
-                   :class => 'button'%>
-      </div>
-      <span id="add_book_message_all"></span>
-    </div>
-    <div class="to_add_book_controller">
-      <%= button_to_function '全て選択','all_check(true);' %>
-      <%= button_to_function '全て解除','all_check(false);' %>
-    </div>
-  </div>
-<% end %>
-
-<div id="main">
-  <div id="result_box">
-    <div id="result_header"><%=  result_count = (@results == nil) ? 0 : @results.size %> 件の検索結果</div>
-    <% if result_count != 0 %>
-      <div id="result_table">
-      <ul>
-        <% @results.each do |result| %>
-          <% if @flg == 0 %>
-            <div class="question_text">
-              <li><%= link_to(truncate(result.question_text, 30),
-                           "/quiz/#{result.id}") %>
-                <% if logged_in? %>
-                  <% @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
-                                                                    result.id,
-                                                                    current_user.id]) %>
-                  <% @question_id = result.id %>
-                  <span id="bookmark<%= @question_id %>">
-                    <%= render :partial => "bookmark", :locals=>{:question_id => @question_id,
-                                                           :is_bookmark => @is_bookmark,
-                                                           :results => @results} %>
-                  </span>
-                <% end %>
-              </li>
-            </div>
-
-            <% if logged_in? %>
-              <div class="add_book">
-                <div class="add_book_form">
-                  マイブックに追加
-                  <%= check_box_tag("to_add_book[]", result.id ) %>
-                </div>
-              </div>
+  <% if @flg == 0 && @results.size >= 1 && logged_in? %>
+    <div class="add_book">
+      <div style="float:right;">
+        <span id="bookmark">
+          <%= render :partial => "bookmark", :locals => {:question_id => @results,
+                                                    :is_bookmark => @is_bookmark_all,
+                                                    :results => @results} %>
+        </span>
+        <div class="add_book_form">
+          選択した問題をマイブック
+          <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1",
+                                                 current_user.id])%>
+          <select id="add_book_to" name="add_book_to" onchange='add_book()'>
+            <option value=''>選択されていません</option>
+            <option value='' disabled>------------------------</option>
+            <option value='new'>新規ブックを作成</option>
+            <option value='' disabled>------------------------</option>
+            <% books.each do |book| %>
+              <%= "<option value='#{book.id}'>#{book.name}</option>" %>
             <% end %>
-            <div class="book_and_test">
-              <%= link_to "この問題を含むブックを検索する", :action => 'search_book', :id => result.id %> - 
-              <%= link_to "この問題を含むテストを検索する", :action => 'search_exam', :id => result.id %>
-            </div>
+          </select>
+          <%= submit_tag '登録',
+                     :class => 'button'%>
+        </div>
+        <span id="add_book_message_all"></span>
+      </div>
+      <div class="to_add_book_controller">
+        <%= button_to_function '全て選択','all_check(true);' %>
+        <%= button_to_function '全て解除','all_check(false);' %>
+      </div>
+    </div>
+  <% end %>
 
-          <% elsif @flg == 1 %>
-            <li>
-              <%= link_to(truncate(result.name, 30),
-                       :action => 'tag',:id => result.name) %></li>
-          <% elsif @flg == 2 %>
-            <li>
-              <%= link_to(truncate(result.name, 30),
-                       "/books/#{result.id}") %></li>
-          <% elsif @flg == 3 %>
-            <li>
-              <%= link_to(truncate(result.name, 30),
-                       "/exams/#{result.id}") %></li>
+  <div id="main">
+    <div id="result_box">
+      <div id="result_header">
+      <%= @result_text %>：<%=  result_count = (@results == nil) ? 0 : @results.size %> 件の検索結果</div>
+      <% if result_count != 0 %>
+        <div id="result_table">
+        <ul>
+          <% @results.each do |result| %>
+            <% if @flg == 0 %>
+              <div class="question_text">
+                <li><%= link_to(truncate(result.question_text, 30),
+                             "/quiz/#{result.id}") %>
+                  <% if logged_in? %>
+                    <% @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
+                                                                      result.id,
+                                                                      current_user.id]) %>
+                    <% @question_id = result.id %>
+                    <span id="bookmark<%= @question_id %>">
+                      <%= render :partial => "bookmark", :locals=>{:question_id => @question_id,
+                                                             :is_bookmark => @is_bookmark,
+                                                             :results => @results} %>
+                    </span>
+                  <% end %>
+                </li>
+              </div>
+
+              <% if logged_in? %>
+                <div class="add_book">
+                  <div class="add_book_form">
+                    マイブックに追加
+                    <%= check_box_tag("to_add_book[]", result.id ) %>
+                  </div>
+                </div>
+              <% end %>
+              <div class="book_and_test">
+                <%= link_to "この問題を含むブックを検索する", :action => 'search_book', :id => result.id %> - 
+                <%= link_to "この問題を含むテストを検索する", :action => 'search_exam', :id => result.id %>
+              </div>
+
+            <% elsif @flg == 1 %>
+              <li>
+                <%= link_to(truncate(result.name, 30),
+                         :action => 'tag',:id => result.name) %></li>
+            <% elsif @flg == 2 %>
+              <li>
+                <%= link_to(truncate(result.name, 30),
+                         "/books/#{result.id}") %></li>
+            <% elsif @flg == 3 %>
+              <li>
+                <%= link_to(truncate(result.name, 30),
+                         "/exams/#{result.id}") %></li>
+            <% end %>
           <% end %>
-        <% end %>
-      </ul>
-    <% end %>
+        </ul>
+      <% else %>
+        <div id="result_table">
+          <div style="text-align: center;"><%= @result_text %>は見つかりませんでした。</div>
+        </div>
+      <% end %>
     </div>
   </div>
-</div>
 <% end -%>

@@ -61,6 +61,10 @@
                    :confirm => '本当に削除してよろしいですか?',
                    :method => :delete) %>
         <% end %>
+        <% if book.user_id != current_user.id %>
+          <% user_name = User.find(book.user_id).login %>
+          <span style="margin-left:5px;color: black">(作成者：<%= user_name %>)</span>
+        <% end %>
         </span>
       </li>
       <% end %>
@@ -98,6 +102,10 @@
                  exam,
                  :confirm => '本当に削除してよろしいですか?',
                  :method => :delete) %>
+        <% if exam.user_id != current_user.id %>
+          <% user_name = User.find(exam.user_id).login %>
+          <span style="margin-left:5px;color: black">(作成者：<%= user_name %>)</span>
+        <% end %>
         </span>
       </li>
       <% end %>

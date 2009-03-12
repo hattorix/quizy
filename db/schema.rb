@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090311072313) do
+ActiveRecord::Schema.define(:version => 20090312053659) do
 
   create_table "answers", :force => true do |t|
     t.text     "answer_text"
@@ -164,6 +164,13 @@ ActiveRecord::Schema.define(:version => 20090311072313) do
     t.datetime "updated_at"
   end
 
+  create_table "settings", :force => true do |t|
+    t.integer  "user_id",    :limit => 11
+    t.integer  "weak_line",  :limit => 11
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "taggings", :force => true do |t|
     t.integer  "tag_id",        :limit => 11
     t.integer  "taggable_id",   :limit => 11
@@ -189,7 +196,6 @@ ActiveRecord::Schema.define(:version => 20090311072313) do
     t.datetime "remember_token_expires_at"
     t.string   "activation_code",           :limit => 40
     t.datetime "activated_at"
-    t.integer  "weak_line",                 :limit => 11
   end
 
 end

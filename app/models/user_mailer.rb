@@ -1,21 +1,21 @@
 class UserMailer < ActionMailer::Base
 def signup_notification(user)
   setup_email(user)
-  @subject    += 'Please activate your new account'
+  @subject    += '仮登録完了のお知らせ'
   @body[:url] = "http://localhost:3000/activate/#{user.activation_code}" # テストサーバのURLにあわせて
 end
   
   def activation(user)
     setup_email(user)
     @subject    += 'Your account has been activated!'
-    @body[:url]  = "http://YOURSITE/"
+    @body[:url]  = "http://localhost:3000/"
   end
   
   protected
     def setup_email(user)
       @recipients  = "#{user.email}"
-      @from        = "arais@ark-system.co.jp"
-      @subject     = "[YOURSITE] "
+      @from        = "master@quizy.co.jp"
+      @subject     = "[Quizy] "
       @sent_on     = Time.now
       @body[:user] = user
     end

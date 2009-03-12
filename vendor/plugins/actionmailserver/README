@@ -1,0 +1,30 @@
+ActionMailServer: a simple SMTP server for receiving email with ActionMailer.
+
+Copyright (c) 2006 Shinya Kasatani
+Licensed under MIT License (see MIT-LICENSE)
+
+ smtpd.rb and getssafe.rb are Copyright (C) 2003-2004 TOMITA Masahiro
+ and are licensed under Ruby License.
+
+= Usage
+
+1. Put this plugin into your vendor/plugin directory.
+   (./script/plugin install svn://rubyforge.org/var/svn/railsmailserver/plugins/actionmailserver)
+
+2. Add following lines to config/environment.rb.
+
+$mail_server = MailServer.new('127.0.0.1', 10025) do |server|
+  server.filter_rcpt {|rcpt| rcpt =~ /@example\.com$/i }
+  server.handle {|data| TheMailHandler.receive(data)}
+end
+
+# You should change following parts:
+# '127.0.0.1' - IP address that the mail server will listen on.
+# 10025 - Port number of the mail server.
+# example\.com - The name of the domain you're receiving email.
+# TheMailHandler - Subclass of ActionMailer::Base that has "receive" method to handle incoming email.
+
+3. Start server with ./script/runner '$mail_server.start'
+
+That's all.
+You should be able to send email to the server using your favourite email client.

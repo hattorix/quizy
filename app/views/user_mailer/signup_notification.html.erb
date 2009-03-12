@@ -1,8 +1,15 @@
-Your account has been created.
+<%= @user.login %>様
 
-  Username: <%= @user.login %>
-  Password: <%= @user.password %>
+ご登録ありがとうございます。
+あなたのアカウントが仮登録されました.
 
-Visit this url to activate your account:
+  ユーザ名: <%= @user.login %>
+  パスワード: <%= @user.password %>
+
+
+下記のURLにアクセスすると本登録が完了します。
 
   <%= @url %>
+  
+  
+このメールに覚えのない方はうんたら

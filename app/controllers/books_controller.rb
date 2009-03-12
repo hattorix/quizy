@@ -1,6 +1,7 @@
 class BooksController < ApplicationController
   
-    layout :select_layout
+  before_filter :login_required, :only =>["new","edit","destroy"]
+  layout :select_layout
 
   def select_layout
     if action_name == "training_start"
@@ -27,6 +28,7 @@ class BooksController < ApplicationController
   # GET /books/1.xml
   def show
     @book = Book.find(params[:id])
+    @user_name = User.find(@book.user_id).login
     if @book.is_smart == true
       if @book.tags != ""
         questions_t = Array.new
@@ -200,7 +202,8 @@ class BooksController < ApplicationController
               my_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ?",books_question.question_id,current_user.id])
               if my_questions.size != 0
                 my_true_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ? and correct_or_wrong = 1",books_question.question_id,current_user.id])
-                if ((my_true_questions.size*100)/my_questions.size) < 60
+                weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_line
+                if ((my_true_questions.size*100)/my_questions.size) < weak_line
                   weak_questions << books_question
                 end
               else
@@ -285,7 +288,8 @@ class BooksController < ApplicationController
             my_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ?",smart_question.id,current_user.id])
             if my_questions.size != 0
               my_true_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ? and correct_or_wrong = 1",smart_question.id,current_user.id])
-              if ((my_true_questions.size*100)/my_questions.size) < 60
+              weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_line
+              if ((my_true_questions.size*100)/my_questions.size) < weak_line
                 weak_questions << smart_question
               end
             else

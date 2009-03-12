@@ -53,6 +53,11 @@ Rails::Initializer.run do |config|
     :secret      => 'b7ccfd9c5a0fc39d932f320e4edc7a213ddf1aab82c26b6a2aedafa4df69908d289b651c463706240754a4deae5bd3023e3a0ab6919f22e61e9d896c972c6703'
   }
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    :address => 'localhost',
+    :port => 25,               # or 587 SMTP 設定に依存
+    :domain => 'quizy.co.jp',  # 分かるなら FQDN を設定
+  }
 
   config.active_record.observers = :user_observer
 
@@ -71,3 +76,8 @@ Rails::Initializer.run do |config|
 end
 
 ActiveRecord::Errors.default_error_messages[:invalid]      = "" 
+
+$mail_server = MailServer.new('127.0.0.1', 10025) do |server|
+  server.filter_rcpt {|rcpt| rcpt =~ /@example¥.com$/i }
+  server.handle {|data| TheMailHandler.receive(data)}
+end

@@ -11,14 +11,17 @@ class SearchController < ApplicationController
 
   def category
     @results = Question.find(:all, :conditions => ['category_id = ? and is_public = 1', params[:id]])
+    category = Category.find(params[:id])
 #    render :partial => 'results', :collection => results
     @flg = 0
+    @result_text = "『#{category.name}』カテゴリの問題"
     render :action => :index
   end
 
   def tag
     @results = Question.find_tagged_with(params[:id])
     @flg = 0
+    @result_text = "『#{params[:id]}』タグの問題"
     render :action => :index
   end
 
@@ -27,17 +30,28 @@ class SearchController < ApplicationController
     if keywords.size > 0
       @results_hash = Hash.new
       @results = Array.new
+      @result_text = Array.new
       @flg = params[:search_for].to_i
       i = 0
+      keywords.compact!
       keywords.each do |keyword|
         if @flg == 0            #問題検索
           @results_hash[i] = Question.find(:all, :conditions => ['question_text like ? and is_public = 1', "%#{keyword}%"])
+          @result_text << "\"#{keyword}\""
+          @type = "問題"
         elsif @flg == 1         #タグ検索
           @results_hash[i] = Tag.find(:all, :conditions => ['name like ?', "%#{keyword}%"])
+          @result_text << "\"#{keyword}\""
+          @type = "タグ"
         elsif @flg == 2         #ブック検索
           @results_hash[i] = Book.find(:all, :conditions => ['(name like ? or outline like ?) and is_public = 1 ', "%#{keyword}%","%#{keyword}%"])
+          @result_text << "\"#{keyword}\""
+          @type = "ブック"
         elsif @flg == 3         #テスト検索
           @results_hash[i] = Exam.find(:all, :conditions => ['name like ? and is_public = 1', "%#{keyword}%"])
+          @result_text << "\"#{keyword}\""
+          @type = "テスト"
+
         end
         i += 1
       end
@@ -51,13 +65,17 @@ class SearchController < ApplicationController
             @results = (@results & @results_hash[i+1]) 
           end
           @results.uniq!
+          @result_text << "の全てを含む"
         # or検索
         else
           (@results_hash.size-1).times do |i|
             @results = @results.concat(@results_hash[i+1])
           end
           @results.uniq!
+          @result_text << "のいずれかを含む"
         end
+      else
+        @result_text << "を含む"
       end
 
       # 問題検索の場合、付箋を調べる
@@ -74,6 +92,8 @@ class SearchController < ApplicationController
         end
       end
 
+      @result_text << @type
+      @result_text.join("")
       render :action => :index
     else
       redirect_to :controller => :top

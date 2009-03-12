@@ -143,6 +143,11 @@
         <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
       <% end %>
     </div>
+    <div class="subsubtitle">作成者</div>
+    <div class="field">
+      <%= link_to(@user_name, { :controller => :search, :action => :user, :id => @user_name }, :class => "tag") %>
+    </div>
+
     <div class="subsubtitle">情報</div>
     <div class="field">
       みんなの正答率 <%= @right_answer_rate %>
@@ -150,6 +155,7 @@
       <div style="clear:both;float:right;"><span style="color: green; font-weight: bold;">○</span>: <%= @correct_count %></div>
       <div style="clear:both;float:right;"><span style="color: red; font-weight: bold;">×</span>: <%= @wrong_count %></div>
     </div>
+
     <div class="book_and_test">
       -<%= link_to "この問題を含むブックを検索する", :controller => 'search', :action => 'search_book', :id => @question.id %>-<br/>
       -<%= link_to "この問題を含むテストを検索する", :controller => 'search', :action => 'search_exam', :id => @question.id %>-
