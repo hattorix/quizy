@@ -207,6 +207,18 @@ li {
   padding: 3px;
 }
 
+#description_open {
+  font-size:12px;
+  color: gray;
+  text-align: center;
+}
+
+#description_close {
+  font-size:12px;
+  color: gray;
+  text-align: center;
+}
+
 .description {
   background-color: pink;
   font-size: 11pt;

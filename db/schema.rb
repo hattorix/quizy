@@ -166,7 +166,11 @@ ActiveRecord::Schema.define(:version => 20090312053659) do
 
   create_table "settings", :force => true do |t|
     t.integer  "user_id",    :limit => 11
-    t.integer  "weak_line",  :limit => 11
+    t.integer  "weak_lv_1",  :limit => 11
+    t.integer  "weak_lv_2",  :limit => 11
+    t.integer  "weak_lv_3",  :limit => 11
+    t.integer  "weak_lv_4",  :limit => 11
+    t.integer  "weak_lv_5",  :limit => 11
     t.datetime "created_at"
     t.datetime "updated_at"
   end

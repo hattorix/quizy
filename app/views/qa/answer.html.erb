@@ -1,11 +1,10 @@
 <%= stylesheet_link_tag("contents_register") %>
-
 <div id="screen_title">解答</div>
 
 <div id="main">
   <div class="result"><%= @result_text %></div>
-  <% if @is_collect == "1" %>
-    <div id="description_box">
+  <div id="description_box">
+    <div id="descriptions" <%= "style='display:none;'" if @is_collect != "1"%>>
       <div class="subtitle">解説</div>
       <% desc = @description.description_text %>
       <% if desc == ""  %>
@@ -42,6 +41,21 @@
       <div class="question"><%= answer %></div>
 
     </div>
+    <% if @is_collect != "1" %>
+      <div id="description_open" onclick="Effect.toggle('descriptions', 'slide',{ duration: 0.5 });
+                                          document.getElementById('description_open').style.display = 'none';
+                                          document.getElementById('description_close').style.display = 'block';">
+      （解説と解答を表示する）
+      </div>
+      <div id="description_close" onclick="Effect.toggle('descriptions', 'slide',{ duration: 0.5 });
+                                          document.getElementById('description_close').style.display = 'none';
+                                          document.getElementById('description_open').style.display = 'block';"
+                                 style="display:none;">
+      （解説と解答を閉じる）
+      </div>
+    <% end %>
+  </div>
+  <% if @is_collect == "1" %>
 
     <div class="spacer_narrow">&nbsp;</div>
 

@@ -12,6 +12,17 @@ YAHOO.example.init = function() {
 var tabView = new YAHOO.widget.TabView('settings');
 };
 YAHOO.example.init();
+
+function tab_change(tabs){
+  var a = document.getElementById('message');
+  var b = document.getElementById('secession_form_1');
+  var c = document.getElementById('secession_form_2');
+  $('message').hide();
+  if (tabs == 3){
+    b.style.display = "block";
+    c.style.display = "none";
+  }
+}
 </script>
 
 <style type="text/css">
@@ -26,48 +37,93 @@ padding:5px;
 -->
 </style>
 <div id="screen_title">設定変更</div>
-<div id="message"></div>
+<div id="message" style="display:none;"></div>
 <div id="main">
   <div id="settings" class="yui-navset">
     <ul class="yui-nav">
-      <li class="selected"><a href="#tab1">パスワード変更</a></li>
-      <li><a href="#tab2">苦手レベル設定</a></li>
+      <li class="selected"><a href="#tab1" onclick="tab_change(1)">パスワード変更</a></li>
+      <li><a href="#tab2" onclick="tab_change(2)">苦手レベル設定</a></li>
+      <li><a href="#tab3" onclick="tab_change(3)">退会</a></li>
+
     </ul>
     <div class="yui-content">
       <div id="tab1">
-          <div id="password_box">
-            <% remote_form_for current_user,:url =>{:action => 'update'} do |f| -%>
+        <div id="password_box">
+          <% remote_form_for current_user,:url =>{:action => 'update'} do |f| -%>
 
-              <%= f.hidden_field :login %>
-              <%= f.hidden_field :email %>
+            <%= f.hidden_field :login %>
+            <%= f.hidden_field :email %>
 
-              <p><label for="password">パスワード</label><br/>
-              <%= password_field :old_password, "" %></p>
+            <p><label for="password">パスワード</label><br/>
+            <%= password_field :old_password, "" %></p>
 
-              <p><label for="password">新しいパスワード</label><br/>
-              <%= f.password_field :password %></p>
+            <p><label for="password">新しいパスワード</label><br/>
+            <%= f.password_field :password %></p>
 
-              <p><label for="password_confirmation">新しいパスワード確認</label><br/>
-              <%= f.password_field :password_confirmation %></p>
+            <p><label for="password_confirmation">新しいパスワード確認</label><br/>
+            <%= f.password_field :password_confirmation %></p>
 
-              <p><%= submit_tag '変更' %></p>
-            <% end -%>
-          </div>
+            <p><%= submit_tag '変更' %></p>
+          <% end -%>
+        </div>
       </div>
       <div id="tab2">
-          <div id="weak_box">
-            <% remote_form_for :setting,:url =>{:action => 'update_weak'} do |f| -%>
-              <%= text_field_tag :weak_line,@weak_line, :size => 1,:maxlength => 2 %>％以下
-              <p><%= submit_tag '変更' %></p>
-            <% end -%>
+        <div id="weak_box">
+          <% remote_form_for :setting,:url =>{:action => 'update_weak'} do |f| -%>
+            <p><label for="password">苦手レベル１（完璧）</label><br/>
+            <%= text_field_tag :weak_lv_1,@weak_lv_1, :size => 1,:maxlength => 2 %>％
+
+            <p><label for="password">苦手レベル２（得意）</label><br/>
+            <%= text_field_tag :weak_lv_2,@weak_lv_2, :size => 1,:maxlength => 2 %>％
+
+            <p><label for="password">苦手レベル３（普通）</label><br/>
+            <%= text_field_tag :weak_lv_3,@weak_lv_3, :size => 1,:maxlength => 2 %>％
+
+            <p><label for="password">苦手レベル４（苦手）</label><br/>
+            <%= text_field_tag :weak_lv_4,@weak_lv_4, :size => 1,:maxlength => 2 %>％
+
+            <p><label for="password">苦手レベル５（とても苦手or解いたことがない）</label><br/>
+            <%= text_field_tag :weak_lv_5,@weak_lv_5, :size => 1,:maxlength => 2 %>％
+
+            <p><%= submit_tag '変更' %></p>
+          <% end -%>
+        </div>
+      </div>
+      <div id="tab3">
+        <div id="secession_form_1">
+          <div id="secession_notice">
+          注意事項<br>
+          注意事項<br>
+          注意事項<br>
+          注意事項<br>
+          注意事項<br>
+          注意事項<br>
+          注意事項<br>
+          注意事項<br>
+          注意事項<br>
+          注意事項<br>
           </div>
+          <div class="spacer_narrow" style="clear:both;">&nbsp;</div>
+          <% remote_form_for :user,:url =>{:action => 'check_delete'} do |f| -%>
+            <p><label for="password">パスワード</label><br/>
+            <%= password_field :password, "" %></p>
+            <p><label for="password">退会理由</label><br/>
+            <%= text_area_tag :reason,@reason,:style => 'width: 20em; height: 5em;' %></p>
+            <%= submit_tag '確認画面へ' %>
+          <% end -%>
+          <div class="spacer_narrow" style="clear:both;">&nbsp;</div>
+        </div>
+        <div id="secession_form_2" style="display:none;">
+          本当に退会してよろしいですか？
+          <div class="spacer_narrow" style="clear:both;">&nbsp;</div>
+          <%= button_to '退会する', :action => 'delete' %>
+          <%= button_to_function 'キャンセル', 'check_delete_reset()' %>
+          <div class="spacer_narrow" style="clear:both;">&nbsp;</div>
+        </div>
+
+      </div>
     </div>
-  </div>
 
   <div class="spacer_narrow" style="clear:both;">&nbsp;</div>
 
-  <div id="secession_form">
-    <%= button_to '退会する', {:action => "delete"}, :confirm => '本当に退会してよろしいですか?'%>
-    <div style="color:red;font-size:11px;">※退会しても問題は削除されません。</div>
-  </div>
 </div>

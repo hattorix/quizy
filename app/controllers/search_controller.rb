@@ -137,6 +137,14 @@ class SearchController < ApplicationController
     end
   end
 
+  def user
+    user = User.find(:first, :conditions => ["login = ?",params[:id]])
+    @results = Question.find(:all, :conditions => ["user_id = ?",user.id])
+    @result_text = "#{params[:id]}の問題"
+    @flg = 0
+    render :action => :index
+  end
+  
   def new_book
     @book = Book.new
   end

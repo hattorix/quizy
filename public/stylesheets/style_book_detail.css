@@ -70,6 +70,7 @@ h1.this_book_title {
 }
 
 #this_book_information {
+  width:40%;
   float: left;
 }
 
@@ -88,6 +89,7 @@ h1.this_book_title {
 }
 
 #this_book_questions {
+  width:60%;
   float: left;
 }
 

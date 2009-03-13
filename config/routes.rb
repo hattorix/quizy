@@ -23,9 +23,12 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.index '/', :controller => 'top', :action => 'index'
+  map.send_mail '/send_mail', :controller => 'users', :action => 'send_mail'
   map.activate '/activate/:activation_code', :controller => 'users', :action => 'activate'
   map.activate_all '/activate_all/', :controller => 'users', :action => 'activate_all'
   map.edit '/edit', :controller => 'users', :action => 'edit'
+  map.secession '/secession', :controller => 'users', :action => 'secession'
+
 
   # The priority is based upon order of creation: first created -> highest priority.
 

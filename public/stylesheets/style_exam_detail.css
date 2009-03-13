@@ -74,10 +74,12 @@ h1.this_exam_title {
 }
 
 #this_exam_information {
+  width:40%;
   float: left;
 }
 
 #this_exam_questions {
+  width:60%;
   float: left;
 }
 

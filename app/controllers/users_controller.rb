@@ -10,11 +10,23 @@ class UsersController < ApplicationController
   def new
   end
 
+  def send_mail
+  end
+
   def edit
+    @reason = ""
     if setting = Setting.find(:first,:conditions => ["user_id = ?",current_user.id])
-      @weak_line = setting.weak_line
+      @weak_lv_1 = setting.weak_lv_1
+      @weak_lv_2 = setting.weak_lv_2
+      @weak_lv_3 = setting.weak_lv_3
+      @weak_lv_4 = setting.weak_lv_4
+      @weak_lv_5 = setting.weak_lv_5
     else
-      @weak_line = 99
+      @weak_lv_1 = 99
+      @weak_lv_2 = 80
+      @weak_lv_3 = 70
+      @weak_lv_4 = 60
+      @weak_lv_5 = 50
     end
   end
 
@@ -27,7 +39,6 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     @user.save
     if @user.errors.empty?
-      self.current_user = @user
       book = Book.new
       book.name = "自分で登録した問題"
       book.is_public = 2
@@ -35,10 +46,14 @@ class UsersController < ApplicationController
       book.save
       setting = Setting.new
       setting.user_id = @user.id
-      setting.weak_line = 99
+      setting.weak_lv_1 = 99
+      setting.weak_lv_2 = 80
+      setting.weak_lv_3 = 70
+      setting.weak_lv_4 = 60
+      setting.weak_lv_5 = 50
       setting.save
       render :update do |page|
-        page.redirect_to :controller => "mypage"
+        page.redirect_to (:action => "send_mail", :method => :get)
       end
       flash[:notice] = "Thanks for signing up!"
     else
@@ -76,8 +91,9 @@ class UsersController < ApplicationController
     if !User.authenticate(current_user.login, params[:old_password])
       @user.valid?
       @msgs =  @user.errors.full_messages
-      @msgs << "パスワードが違います。"
+      @msgs << "パスワードが違います。#{params[:old_password]}"
       render :update do |page|
+        page.show("message")
         page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
         page[:msg].visual_effect :highlight,
                                   :startcolor => "#ffd900",
@@ -94,6 +110,7 @@ class UsersController < ApplicationController
       else
         @msgs =  @user.errors.full_messages
         render :update do |page|
+          page.show("message")
           page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
           page[:msg].visual_effect :highlight,
                                     :startcolor => "#ffd900",
@@ -110,7 +127,11 @@ class UsersController < ApplicationController
     else
       @setting = Setting.new
       @setting.user_id = current_user.id
-      @setting.weak_line = params[:weak_line].to_i
+      @setting.weak_lv_1 = params[:weak_lv_1].to_i
+      @setting.weak_lv_2 = params[:weak_lv_2].to_i
+      @setting.weak_lv_3 = params[:weak_lv_3].to_i
+      @setting.weak_lv_4 = params[:weak_lv_4].to_i
+      @setting.weak_lv_5 = params[:weak_lv_5].to_i
       @setting.save
     end
     if @setting.errors.empty?
@@ -121,11 +142,33 @@ class UsersController < ApplicationController
     else
       @msgs =  @user.errors.full_messages
       render :update do |page|
+        page.show("message")
         page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
         page[:msg].visual_effect :highlight,
                                   :startcolor => "#ffd900",
                                   :endcolor => "#ffffff",
                                   :duration => 1.5
+      end
+    end
+  end
+
+  def check_delete
+    if !User.authenticate(current_user.login, params[:password][0])
+      @msgs = Array.new
+      @msgs << "パスワードが違います。"
+      render :update do |page|
+        page.show("message")
+        page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
+        page[:msg].visual_effect :highlight,
+                                  :startcolor => "#ffd900",
+                                  :endcolor => "#ffffff",
+                                  :duration => 1.5
+      end
+    else
+      render :update do |page|
+        page.hide("message")
+        page.hide("secession_form_1")
+        page.show("secession_form_2")
       end
     end
   end
@@ -139,6 +182,9 @@ class UsersController < ApplicationController
     Book.delete_all(["user_id = ? and name = '自分で登録した問題'", current_user.id])
     current_user.destroy
 
-    redirect_back_or_default('/')
+    redirect_to secession_path
+  end
+  
+  def secession
   end
 end

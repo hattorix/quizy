@@ -12,7 +12,7 @@
     <span style="font-size:12pt;">(作成者：<%=h @user_name %>)</span>
     <% if logged_in? %>
       <% if @exam.user_id == current_user.id %>
-        <%= link_to(image_tag('/images/book_edit.png',
+        <%= link_to(image_tag('/images/exam_edit.png',
                            :style => 'border: none;',
                            :title => 'このテストを編集する'),
                   edit_exam_path(@exam))%>

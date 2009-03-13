@@ -7,7 +7,7 @@ end
   
   def activation(user)
     setup_email(user)
-    @subject    += 'Your account has been activated!'
+    @subject    += '本登録完了のお知らせ'
     @body[:url]  = "http://localhost:3000/"
   end
   

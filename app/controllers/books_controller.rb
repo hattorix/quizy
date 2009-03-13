@@ -28,7 +28,11 @@ class BooksController < ApplicationController
   # GET /books/1.xml
   def show
     @book = Book.find(params[:id])
-    @user_name = User.find(@book.user_id).login
+    if user = User.find(:first, :conditions =>["id =?",@book.user_id])
+      @user_name = user.login
+    else
+      @user_name = "-"
+    end
     if @book.is_smart == true
       if @book.tags != ""
         questions_t = Array.new
@@ -376,6 +380,7 @@ class BooksController < ApplicationController
         @question.update_attribute("correct_count", @question.correct_count.to_i + 1)
         @question.save
       else
+        @description = Description.find(:first, :conditions => ["question_id = ?", question_id])
         @result_text = "× 残念です！"
         @is_collect = "0"
         @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
@@ -397,12 +402,14 @@ class BooksController < ApplicationController
           @question.update_attribute("correct_count", @question.correct_count.to_i + 1)
           @question.save
         else
+          @description = Description.find(:first, :conditions => ["question_id = ?", question_id])
           @result_text = "× 残念です！"
           @is_collect = "0"
           @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
           @question.save
         end
       else
+        @description = Description.find(:first, :conditions => ["question_id = ?", question_id])
         @result_text = "× 残念です！"
         @is_collect = "0"
         @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
@@ -420,6 +427,7 @@ class BooksController < ApplicationController
         @question.update_attribute("correct_count", @question.correct_count.to_i + 1)
         @question.save
       else
+        @description = Description.find(:first, :conditions => ["question_id = ?", question_id])
         @result_text = "× 残念です！"
         @is_collect = "0"
         @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
@@ -437,6 +445,7 @@ class BooksController < ApplicationController
         @question.update_attribute("correct_count", @question.correct_count.to_i + 1)
         @question.save
       else
+        @description = Description.find(:first, :conditions => ["question_id = ?", question_id])
         @result_text = "× 残念です！"
         @is_collect = "0"
         @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)

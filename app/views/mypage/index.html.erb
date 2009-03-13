@@ -62,8 +62,11 @@
                    :method => :delete) %>
         <% end %>
         <% if book.user_id != current_user.id %>
-          <% user_name = User.find(book.user_id).login %>
-          <span style="margin-left:5px;color: black">(作成者：<%= user_name %>)</span>
+          <% if user = User.find(:first, :conditions =>["id = ?",book.user_id]) %>
+            <span style="margin-left:5px;color: black">(作成者：<%= user.login %>)</span>
+          <% else %>
+            <span style="margin-left:5px;color: black">(作成者：-)</span>
+          <% end %>
         <% end %>
         </span>
       </li>
@@ -81,7 +84,7 @@
       <% for myexam in @myexams %>
       <% exam = Exam.find(myexam.exam_id) %>
       <li class="book_text">
-        <%= image_tag('/images/book.png',
+        <%= image_tag('/images/exam.png',
                         :style => 'vertical-align: middle;') %>
                         
         <%= link_to(truncate(erase_tag(exam.name), 45), exam) %>
@@ -91,20 +94,23 @@
         <span style="color: silver; font-size: 8pt;">
         <%= exam.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
         <% if exam.user_id == current_user.id %>
-          <%= link_to(image_tag('/images/book_edit.png',
+          <%= link_to(image_tag('/images/exam_edit.png',
                             :title => '編集',
                             :style => 'border: none;'),
                    edit_exam_path(exam)) %>
         <% end %>
-        <%= link_to(image_tag('/images/book_delete.png',
+        <%= link_to(image_tag('/images/exam_delete.png',
                           :title => '削除',
                           :style => 'border: none;'),
                  exam,
                  :confirm => '本当に削除してよろしいですか?',
                  :method => :delete) %>
         <% if exam.user_id != current_user.id %>
-          <% user_name = User.find(exam.user_id).login %>
-          <span style="margin-left:5px;color: black">(作成者：<%= user_name %>)</span>
+          <% if user = User.find(:first, :conditions =>["id = ?",exam.user_id]) %>
+            <span style="margin-left:5px;color: black">(作成者：<%= user.login %>)</span>
+          <% else %>
+            <span style="margin-left:5px;color: black">(作成者：-)</span>
+          <% end %>
         <% end %>
         </span>
       </li>
@@ -126,7 +132,13 @@
       <ul>
         <% @questions.each do |q| %>
           <li class="question_text"><%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
-            <a href="/quiz/<%=q.id%>"><%=truncate(erase_tag(q.question_text), 45)%></a>
+            <a href="/quiz/<%=q.id%>" title = "<%=h q.question_text %>" ><%=truncate(erase_tag(q.question_text), 45)%></a>
+            <div class="tags">
+              タグ：
+              <% q.tag_list.map do |t| %>
+                <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
+              <% end %>
+            </div>
           </li>
         <% end %>
       </ul>
@@ -149,7 +161,7 @@
               <span class="blue">×</span>
             <% end %>
             <% q = Question.find(h.question_id) %>
-            <a href="/quiz/<%=q.id%>"><%=truncate(erase_tag(q.question_text), 45)%></a>
+            <a href="/quiz/<%=q.id%>" title = "<%=h q.question_text %>"><%=truncate(erase_tag(q.question_text), 45)%></a>
             <% if h.answer_mode == 1 %>
               <span style="color: blue; font-size: 8pt;">(training)</span>
             <% elsif h.answer_mode == 2 %>

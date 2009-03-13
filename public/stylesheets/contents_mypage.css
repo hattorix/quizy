@@ -133,6 +133,19 @@
   margin: 3px;
 }
 
+.tags {
+  margin:0px 0px 2px 10px; 
+  padding:2px 0px 2px 10px;
+  clear:both;
+}
+
+.tag {
+  background-color: silver;
+  line-height:12px;
+  margin: 2px;
+  padding: 1px;
+}
+
 .add_book {
   text-align: right;
   font-weight: normal;
