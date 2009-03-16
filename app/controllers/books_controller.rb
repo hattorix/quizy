@@ -79,6 +79,9 @@ class BooksController < ApplicationController
 
   def edit
     @book = Book.find(params[:id])
+    if @book.user_id != current_user.id
+      redirect_to :action => "show", :id => params[:id]
+    end
     @tags = Question.tag_counts
     if @book.is_smart == true
       @books_tags = @book.tags.split(",")

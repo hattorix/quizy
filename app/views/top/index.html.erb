@@ -30,6 +30,30 @@
 :id => category.id) %></span>
       <% end %>
   </div>
+  <div id="favorite_title">出題数ランキング</div>
+  <div id="favorite">
+    <ul style="list-style-type: decimal;">
+    <% i = 1 %>
+    <% @rank_questions.each do |question| %>
+      <li style="font-size: 11pt;">
+        <% if i == 1 %>
+          <%= image_tag "flag_red.png" %>
+        <% elsif i == 2 %>
+          <%= image_tag "flag_yellow.png" %>
+        <% elsif i == 3 %>
+          <%= image_tag "flag_blue.png" %>
+        <% else %>
+          <%= image_tag "bullet_yellow.png" %>
+        <% end %>
+        <%= i %>位：<%= link_to(truncate(erase_tag(question.question_text), 35), "/quiz/#{question.id}") %>
+        <span style="color: slategray; font-size: 8pt;">
+          <%= question.question_count %>回出題
+        </span>
+      </li>
+    <% i+=1 %>
+    <% end %>
+    </ul>
+  </div>
   <div id="favorite_title">新着問題</div>
   <div id="favorite">
     <ul style="list-style-type: decimal;">
@@ -69,19 +93,6 @@
     < end %>
     </ul>
   </div>-->
-  <div id="favorite_title">出題数ランキング</div>
-  <div id="favorite">
-    <ul style="list-style-type: decimal;">
-    <% @rank_questions.each do |question| %>
-      <li style="font-size: 11pt;">
-        <%= link_to(truncate(erase_tag(question.question_text), 35), "/quiz/#{question.id}") %>
-        <span style="color: slategray; font-size: 8pt;">
-          <%= question.question_count %>回出題
-        </span>
-      </li>
-    <% end %>
-    </ul>
-  </div>
   <div id="update_title">更新情報</div>
   <div id="update">
     <ul>

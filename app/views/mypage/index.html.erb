@@ -14,6 +14,21 @@
 </div>
 
 <div id="main">
+  <div id="message">
+  <% if @flug%>
+    <% if @flug == true %>
+      <div style="color:blue"><%= flash[:notice] %></div>
+    <% elsif @flug == false %>
+      <div style="color:red"><%= flash[:notice] %></div>
+    <% else %>
+      <ul id="msg" type="disc">
+        <% @msgs.reverse.each do |msg| %>
+          <li style="color:red"><%= msg %></li>
+        <% end %>
+      <ul>
+    <% end %>
+  <% end %>
+  </div>
 
 <div id="mybook">
   <div class="subtitle">
@@ -134,7 +149,6 @@
           <li class="question_text"><%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
             <a href="/quiz/<%=q.id%>" title = "<%=h q.question_text %>" ><%=truncate(erase_tag(q.question_text), 45)%></a>
             <div class="tags">
-              タグ：
               <% q.tag_list.map do |t| %>
                 <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
               <% end %>

@@ -94,10 +94,10 @@ class QaController < ApplicationController
     if @q.save
        book = Book.find(:first,:conditions => ["name = '自分で登録した問題' and user_id =? ", current_user.id])
        book.questions << @q
+       flash[:notice] = "登録しました！"
       if params[:name] == 'submit1'
         render :update do |page|
-          page.alert "登録完了しました。"
-          page.redirect_to :controller => "mypage"
+          page.redirect_to :controller => "mypage",:flug => true
         end
       else
         render :update do |page|
@@ -263,6 +263,10 @@ class QaController < ApplicationController
   def edit
     question_id = params[:id]
     @question = Question.find(question_id)
+
+    if @question.user_id != current_user.id
+      redirect_to :action => "quiz", :question_id => params[:id]
+    end
     @selections = Selection.find(:all, :conditions => "question_id = #{@question.id}", :order => "question_id")
     @answer = Answer.find(:first, :conditions => "question_id = #{@question.id}")
 
@@ -361,18 +365,22 @@ class QaController < ApplicationController
   # TODO: deleteとdestoryはどっちがいいかを検討する
   def destroy
     @question = Question.find(params[:id])
-    if @question.answer
-      @question.answer.destroy
+    if @question.user_id != current_user.id
+      redirect_to :action => "quiz", :question_id => params[:id]
+    else
+      if @question.answer
+        @question.answer.destroy
+      end
+      @question.selections.delete_all()
+
+      QuestionExam.delete_all(["question_id = ?", params[:id].to_i])
+      QuestionBook.delete_all(["question_id = ?", params[:id].to_i])
+      Bookmark.delete_all(["question_id = ?", params[:id].to_i])
+
+      @question.destroy
+      @title = ' - マイページ'
+      redirect_to :controller => 'mypage'
     end
-    @question.selections.delete_all()
-
-    QuestionExam.delete_all(["question_id = ?", params[:id].to_i])
-    QuestionBook.delete_all(["question_id = ?", params[:id].to_i])
-    Bookmark.delete_all(["question_id = ?", params[:id].to_i])
-
-    @question.destroy
-    @title = ' - マイページ'
-    redirect_to :controller => 'mypage'
   end
   
   def add_book

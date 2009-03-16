@@ -86,7 +86,7 @@
                 </div>
               <% end %>
               <div class="tags">
-                タグ：
+                <%= image_tag "tag_blue.png" %>：
                 <% if result.tag_list.size > 0 %>
                   <% result.tag_list.map do |t| %>
                     <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
@@ -97,9 +97,9 @@
               </div>
               <div class="user">
                 <% if user = User.find(:first, :conditions => ["id = ?",result.user_id]) %>
-                  作成者：<%= link_to(user.login, { :controller => :search, :action => :user, :id => user.login }, :class => "tag") %>
+                  <%= image_tag "user.png" %>：<%= link_to(user.login, { :controller => :search, :action => :user, :id => user.login }, :class => "tag") %>
                 <% else %>
-                  作成者：-
+                  <%= image_tag "user.png" %>：-
                 <% end %>
               </div>
               <div class="book_and_test">

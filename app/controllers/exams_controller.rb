@@ -70,6 +70,9 @@ class ExamsController < ApplicationController
 
   def edit
     @exam = Exam.find(params[:id])
+    if @exam.user_id != current_user.id
+      redirect_to :action => "show", :id => params[:id]
+    end
     @question_exams = QuestionExam.find(:all, :conditions => "exam_id = #{params[:id]}")
   end
 

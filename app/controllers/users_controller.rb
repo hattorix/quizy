@@ -53,7 +53,7 @@ class UsersController < ApplicationController
       setting.weak_lv_5 = 50
       setting.save
       render :update do |page|
-        page.redirect_to (:action => "send_mail", :method => :get)
+        page.redirect_to :action => "send_mail"
       end
       flash[:notice] = "Thanks for signing up!"
     else
@@ -123,7 +123,11 @@ class UsersController < ApplicationController
 
   def update_weak
     if @setting = Setting.find(:first,:conditions => ["user_id = ?",current_user.id])
-      @setting.update_attributes("weak_line" => params[:weak_line].to_i)
+      @setting.update_attributes("weak_lv_1" => params[:weak_lv_1].to_i)
+      @setting.update_attributes("weak_lv_2" => params[:weak_lv_2].to_i)
+      @setting.update_attributes("weak_lv_3" => params[:weak_lv_3].to_i)
+      @setting.update_attributes("weak_lv_4" => params[:weak_lv_4].to_i)
+      @setting.update_attributes("weak_lv_5" => params[:weak_lv_5].to_i)
     else
       @setting = Setting.new
       @setting.user_id = current_user.id

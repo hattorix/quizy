@@ -29,12 +29,18 @@ class MypageController < ApplicationController
         break
       end
     end
+    
+    if params[:flg]
+      @flg = params[:flg]
+    end
   end
   
   def result
-    @graph = open_flash_chart_object(850,400, '/mypage/bar_chart', true, '/')     
+    @graph_a = open_flash_chart_object(850,400, '/mypage/bar_chart_answer', true, '/')
+    @graph_c = open_flash_chart_object(850,400, '/mypage/bar_chart_create', true, '/')
   end
-  def bar_chart
+
+  def bar_chart_answer
     bar1 = Bar.new(50, '#ff0033')
     bar1.key('正解数', 10)
 
@@ -74,7 +80,48 @@ class MypageController < ApplicationController
     g.set_x_labels(days)
     g.set_x_label_style(10, '#000000', 1, 1)
     g.set_x_axis_steps(7)
+    
     g.set_y_max(100)
+    g.set_y_label_steps(10)
+    g.set_x_axis_color('#818D9D', '#ccccff' )
+    g.set_y_axis_color( '#818D9D', '#ddddff' )
+    g.set_bg_color('#FFFFFF')
+    render :text => g.render
+  end
+  
+  def bar_chart_create
+    bar1 = Bar.new(50, '#00CC00')
+    bar1.key('作成数', 10)
+
+    days = Array.new
+
+    30.times do |t|
+      y = t.day.ago.strftime("%y")
+      m = t.day.ago.strftime("%m")
+      d = t.day.ago.strftime("%d")
+
+      first_time = Time.local(y, m, d, 00, 00, 00)
+      last_time = Time.local(y, m, d, 23, 59, 59)
+
+
+      bar1.data << Question.count(:conditions => ["created_at > ? and created_at < ? and user_id = ?",
+                                                  first_time,
+                                                  last_time,
+                                                  current_user.id])
+      days << last_time.strftime("%m/%d")
+    end
+
+    g = Graph.new
+    first = 29.day.ago.strftime("%m/%d")
+    last = Time.now.strftime("%m/%d")
+    g.title("#{first}～#{last}に作成した問題数", "{font-size: 26px;}")
+
+    g.data_sets << bar1
+
+    g.set_x_labels(days)
+    g.set_x_label_style(10, '#000000', 1, 1)
+    g.set_x_axis_steps(7)
+    g.set_y_max(20)
     g.set_y_label_steps(10)
     g.set_x_axis_color('#818D9D', '#ccccff' )
     g.set_y_axis_color( '#818D9D', '#ddddff' )

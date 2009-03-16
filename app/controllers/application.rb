@@ -17,4 +17,25 @@ class ApplicationController < ActionController::Base
   # Uncomment this to filter the contents of submitted sensitive data parameters
   # from your application log (in this case, all fields with names like "password"). 
   # filter_parameter_logging :password
+=begin
+  rescue_from ActionController::RoutingError do |exception|
+    render :xml => exception, :status => 404
+  end
+  # モデルオブジェクトが見つからない場合は404エラーを返す
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    render :xml => exception, :status => 404
+  end
+ 
+  protected
+ 
+  def deny_access(exception)
+  end
+ 
+  def show_errors(exception)
+  end
+=end
+  def rescue_action( excptn )
+    redirect_to :action => 'error', :controller => "/error"
+  end
+
 end

@@ -14,6 +14,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :selections
   map.resources :questions
   map.resource :session
+  map.resource :error
   map.resources :top
 
 

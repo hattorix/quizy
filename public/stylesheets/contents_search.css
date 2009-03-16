@@ -1,5 +1,9 @@
 /*contents layout*/
 
+img {
+behavior: url("pngbehavior.htc");
+}
+
 #main{
   margin-left: auto;
   margin-right: auto;
@@ -33,7 +37,9 @@ ul {
 #result_table ul li {
   margin: 5px; 
   list-style: none;
-  list-style-image: url(/images/quiz.png);
+  list-style-image: url(/images/quiz.png) !important; 
+  list-style-image: none; 
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src="/images/quiz.png", sizingMethod="scale"); 
   list-style-position: outside;
 }
 
