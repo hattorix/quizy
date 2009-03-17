@@ -1,4 +1,31 @@
 <%= javascript_include_tag "prototype" %>
+<script language="javascript">
+  function submit_disabled_check() {
+    document.getElementById("submit").disabled = false;
+  }
+
+  function submit_disabled_select() {
+    var flg = 0;
+    <% @selections.each do |s| %>
+      if(document.getElementById("answer[<%= s.id %>]").checked){
+        flg = 1;
+      }
+    <% end %>
+    if(flg == 0){
+      document.getElementById("submit").disabled = true;
+    } else {
+      document.getElementById("submit").disabled = false;
+    }
+  }
+
+  function submit_disabled_text() {
+    if(document.getElementById("answer").value == ""){
+      document.getElementById("submit").disabled = true;
+    } else {
+      document.getElementById("submit").disabled = false;
+    }
+  }
+</script>
 <div id="question">
   <div id="toolbar_box">
   </div>
@@ -30,7 +57,7 @@
                 <% selections.each do |s| %>
                   <div class="field">
                     <input type="radio" id="answer" name="answer"
-                           value="<%= s.id %>" /> <%= s.selection_text %>
+                           value="<%= s.id %>" onclick="submit_disabled_check()"/> <%= s.selection_text %>
                   </div>
                 <% end %>
               </div>
@@ -39,7 +66,7 @@
                 <% selections.each do |s| %>
                   <div class="field">
                     <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-                           value="<%= s.id %>" /> <%= s.selection_text %>
+                           value="<%= s.id %>" onclick="submit_disabled_select()"/> <%= s.selection_text %>
                   </div>
                 <% end %>
               </div>
@@ -74,7 +101,7 @@
               </div>
             <% else %>
               <div id="answer_box">
-                <input name="answer" type="text" size="30" />
+                <input id="answer" name="answer" type="text" size="30" onkeyup="submit_disabled_text()"/>
               </div>
             <% end %>
           </div>
@@ -82,7 +109,7 @@
           <div class="spacer_narrow">&nbsp;</div>
 
           <div id="submit_box" <%= "style='display:none;'" if @question.question_type == 3 %>>
-            <%= submit_tag("回答する", :class => 'button') %>
+            <%= submit_tag("回答する",:id => "submit", :class => 'button',:disabled => true) %>
           </div>
 
           <div class="spacer_narrow">&nbsp;</div>

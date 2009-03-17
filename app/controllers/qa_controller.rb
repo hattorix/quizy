@@ -97,7 +97,7 @@ class QaController < ApplicationController
        flash[:notice] = "登録しました！"
       if params[:name] == 'submit1'
         render :update do |page|
-          page.redirect_to :controller => "mypage",:flug => true
+          page.redirect_to :controller => "mypage",:message=>"登録"
         end
       else
         render :update do |page|
@@ -280,7 +280,7 @@ class QaController < ApplicationController
     #  TODO: QuestionType自体が変更になったときの処理
     quiz = Hash.new
     quiz[:is_public] = params[:is_public]
-    quiz[:question_text] = params[:question_ta]
+    quiz[:question_text] = params[:question_ta].gsub("\n", "<br />")
     quiz[:question_type] = params[:question_type].gsub("\n", "<br />")
     quiz[:category_id] = params[:category]
     quiz[:tag_list] = params[:tag]

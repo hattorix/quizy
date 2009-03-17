@@ -94,6 +94,7 @@ class SearchController < ApplicationController
 
       @result_text << @type
       @result_text.join("")
+#      @pages = Paginator.new(self, @result.size, 10, params[:page])
       render :action => :index
     else
       redirect_to :controller => :top
@@ -137,14 +138,33 @@ class SearchController < ApplicationController
     end
   end
 
-  def user
+  def users_question
     user = User.find(:first, :conditions => ["login = ?",params[:id]])
-    @results = Question.find(:all, :conditions => ["user_id = ?",user.id])
+    @results = Question.find(:all, :conditions => ["user_id = ? and is_public = 1",user.id])
     @result_text = "#{params[:id]}の問題"
     @flg = 0
+    @user_name = params[:id]
     render :action => :index
   end
-  
+
+  def users_book
+    user = User.find(:first, :conditions => ["login = ?",params[:id]])
+    @results = Book.find(:all, :conditions => ["user_id = ? and is_public = 1",user.id])
+    @result_text = "#{params[:id]}のブック"
+    @flg = 2
+    @user_name = params[:id]
+    render :action => :index
+  end
+
+  def users_exam
+    user = User.find(:first, :conditions => ["login = ?",params[:id]])
+    @results = Exam.find(:all, :conditions => ["user_id = ? and is_public = 1 ",user.id])
+    @result_text = "#{params[:id]}のテスト"
+    @flg = 3
+    @user_name = params[:id]
+    render :action => :index
+  end
+
   def new_book
     @book = Book.new
   end
@@ -288,6 +308,8 @@ class SearchController < ApplicationController
       end
     end
     @flg = 2
+    q = Question.find(params[:id])
+    @result_text = "『#{q.question_text}』を含むブック"
     render :action => :index
 
   end
@@ -301,6 +323,8 @@ class SearchController < ApplicationController
       end
     end
     @flg = 3
+    q = Question.find(params[:id])
+    @result_text = "『#{q.question_text}』を含むテスト"
     render :action => :index
 
   end

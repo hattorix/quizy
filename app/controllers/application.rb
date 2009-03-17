@@ -34,8 +34,5 @@ class ApplicationController < ActionController::Base
   def show_errors(exception)
   end
 =end
-  def rescue_action( excptn )
-    redirect_to :action => 'error', :controller => "/error"
-  end
 
 end

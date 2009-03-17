@@ -16,6 +16,13 @@
   }
 </script>
 <div id="screen_title">検索結果</div>
+<% if @user_name %>
+  <div id="user_searches">
+    <%= link_to("問題", { :controller => :search, :action => :users_question, :id => @user_name }) %> | 
+    <%= link_to("ブック", { :controller => :search, :action => :users_book, :id => @user_name }) %> | 
+    <%= link_to("テスト", { :controller => :search, :action => :users_exam, :id => @user_name }) %>
+  </div>
+<% end %>
 <% remote_form_for :question,:url=>{:action => 'add_book'} do -%>
 
   <% if @flg == 0 && @results.size >= 1 && logged_in? %>
@@ -27,7 +34,7 @@
                                                     :results => @results} %>
         </span>
         <div class="add_book_form">
-          選択した問題をマイブック
+          選択した問題をブックに追加
           <% books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1",
                                                  current_user.id])%>
           <select id="add_book_to" name="add_book_to" onchange='add_book()'>
@@ -62,7 +69,7 @@
             <% if @flg == 0 %>
               <div class="question_text">
                 <li><%= link_to(truncate(h(result.question_text), 30),
-                             "/quiz/#{result.id}", :title => result.question_text) %>
+                             "/quiz/#{result.id}", :title => h(result.question_text.gsub("<br />", "\n"))) %>
                   <% if logged_in? %>
                     <% @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
                                                                       result.id,
@@ -80,7 +87,7 @@
               <% if logged_in? %>
                 <div class="add_book">
                   <div class="add_book_form">
-                    マイブックに追加
+                    ブックに追加
                     <%= check_box_tag("to_add_book[]", result.id ) %>
                   </div>
                 </div>
@@ -97,7 +104,7 @@
               </div>
               <div class="user">
                 <% if user = User.find(:first, :conditions => ["id = ?",result.user_id]) %>
-                  <%= image_tag "user.png" %>：<%= link_to(user.login, { :controller => :search, :action => :user, :id => user.login }, :class => "tag") %>
+                  <%= image_tag "user.png" %>：<%= link_to(user.login, { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
                 <% else %>
                   <%= image_tag "user.png" %>：-
                 <% end %>
@@ -106,19 +113,76 @@
                 <%= link_to "この問題を含むブックを検索する", :action => 'search_book', :id => result.id %> - 
                 <%= link_to "この問題を含むテストを検索する", :action => 'search_exam', :id => result.id %>
               </div>
+                <div class="border"></div>
+
 
             <% elsif @flg == 1 %>
               <li>
                 <%= link_to(truncate(result.name, 30),
                          :action => 'tag',:id => result.name) %></li>
+
+
             <% elsif @flg == 2 %>
               <li>
                 <%= link_to(truncate(result.name, 30),
-                         "/books/#{result.id}") %></li>
+                         "/books/#{result.id}") %>
+                <% if result.is_smart == true %>
+                  <span class="smart">(スマートブック)</span>
+                <% end %>
+              </li>
+              <% if result.is_smart == true %>
+                <div class="tags">
+                  <%= image_tag "tag_blue.png" %>：
+                    <% tags = result.tags.split(",") %>
+                  <% if tags.size > 0 %>
+                    <% tags.map do |t| %>
+                      <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
+                    <% end %>
+                  <% else %>
+                    -
+                  <% end %>
+                </div>
+                <div class="tags">
+                  <%= image_tag "folder.png" %>：
+                  <% categories = result.categories.split(",") %>
+                  <% if categories.size > 0 %>
+                    <% categories.map do |c| %>
+                      <% c_id = Category.find(:first, :conditions => ["name = ?",c]).id %>
+                      <%= link_to(c, { :controller => :search, :action => :category, :id => c_id }, :class => "tag") %>
+                    <% end %>
+                  <% else %>
+                    -
+                  <% end %>
+                </div>
+              <% end %>
+              <div class="user">
+                <% if user = User.find(:first, :conditions => ["id = ?",result.user_id]) %>
+                  <%= image_tag "user.png" %>：<%= link_to(user.login, { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
+                <% else %>
+                  <%= image_tag "user.png" %>：-
+                <% end %>
+              </div>
+              <div class="outline_and_notes">
+                <%= result.outline %>
+              </div>
+              <div class="border"></div>
+
+
             <% elsif @flg == 3 %>
               <li>
                 <%= link_to(truncate(result.name, 30),
                          "/exams/#{result.id}") %></li>
+              <div class="user">
+                <% if user = User.find(:first, :conditions => ["id = ?",result.user_id]) %>
+                  <%= image_tag "user.png" %>：<%= link_to(user.login, { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
+                <% else %>
+                  <%= image_tag "user.png" %>：-
+                <% end %>
+              </div>
+              <div class="outline_and_notes">
+                <%= result.notes %>
+              </div>
+              <div class="border"></div>
             <% end %>
           <% end %>
         </ul>

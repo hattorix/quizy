@@ -3,17 +3,43 @@
 <%= javascript_include_tag "prototype" %>
 <script language="javascript">
   function add_book(){
-  var a = document.getElementById("add_book_to");
-  if (a.value == "new") {
-    ret = this.open("/qa/new_book/", "CtrlWindow"
-                   ,"toolbar=0, menubar=0, location=0, scrollbars=0, resize=0, width=800, height=470");
+    var a = document.getElementById("add_book_to");
+    if (a.value == "new") {
+      ret = this.open("/qa/new_book/", "CtrlWindow"
+                     ,"toolbar=0, menubar=0, location=0, scrollbars=0, resize=0, width=800, height=470");
+    }
   }
+
+  function submit_disabled_check() {
+    document.getElementById("submit").disabled = false;
+  }
+
+  function submit_disabled_select() {
+    var flg = 0;
+    <% @selections.each do |s| %>
+      if(document.getElementById("answer[<%= s.id %>]").checked){
+        flg = 1;
+      }
+    <% end %>
+    if(flg == 0){
+      document.getElementById("submit").disabled = true;
+    } else {
+      document.getElementById("submit").disabled = false;
+    }
+  }
+
+  function submit_disabled_text() {
+    if(document.getElementById("answer").value == ""){
+      document.getElementById("submit").disabled = true;
+    } else {
+      document.getElementById("submit").disabled = false;
+    }
   }
 </script>
 <div id="toolbar_box">
   <% if logged_in? %>
     <div id="add_book_form">
-      <% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id} do -%>
+      <% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id},:name=>"form[0]" do -%>
         <div id="add_book">
           マイブック
             <select id="add_book_to" name="add_book_to" onchange='add_book()'>
@@ -55,7 +81,7 @@
 <div id="question_text_box">
   <div class="subtitle">問題</div>
   <%= hidden_field_tag "question_id", @question.id %>
-  <div class="field"><%= h(@question.question_text).gsub("\n", "<br />") %></div>
+  <div class="field"><%= @question.question_text %></div>
 </div>
 
 <div class="spacer_narrow">&nbsp;</div>
@@ -73,7 +99,7 @@
     <% selections.each do |s| %>
     <div class="field">
         <input type="radio" id="answer" name="answer"
-               value="<%= s.id %>" /> <%= s.selection_text %>
+               value="<%= s.id %>" onclick="submit_disabled_check()"/> <%= s.selection_text %>
     </div>
     <% end %>
     </div>
@@ -82,7 +108,7 @@
     <% selections.each do |s| %>
     <div class="field">
       <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-             value="<%= s.id %>" /> <%= s.selection_text %>
+             value="<%= s.id %>" onclick="submit_disabled_select()"/> <%= s.selection_text %>
     </div>
     <% end %>
     </div>
@@ -111,7 +137,7 @@
     </div>
   <% else %>
     <div id="answer_box">
-      <input name="answer" type="text" size="30" />
+      <input id="answer" name="answer" type="text" size="30" autocomplete="off" onkeyup="submit_disabled_text()"/>
     </div>
   <% end %>
 </div>
@@ -119,7 +145,7 @@
 <div class="spacer_narrow">&nbsp;</div>
 
 <div id="submit_box" <%= "style='display:none;'" if @question.question_type == 3 %>>
-  <%= submit_tag("回答する", :class => 'button') %>
+  <%= submit_tag("回答する",:id => 'submit', :class => 'button',:disabled => true) %>
 </div>
 
 <div id="report">
@@ -150,7 +176,7 @@
     <div class="subsubtitle">作成者</div>
     <div class="field">
       <% if user = User.find(:first, :conditions=> ["id = ?",@question.user_id]) %>
-        <%= link_to(user.login, { :controller => :search, :action => :user, :id => user.login }, :class => "tag") %>
+        <%= link_to(user.login, { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
       <% else %>
         -
       <% end %>

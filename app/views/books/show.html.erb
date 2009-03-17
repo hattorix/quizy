@@ -90,7 +90,7 @@
           <li class="question_text">
             <%= image_tag('/images/quiz.png', :style => 'border: none') %>
             <%= link_to(truncate(erase_tag(question.question_text), 40),
-                     "/quiz/#{question.id}", :title => question.question_text ) %>
+                     "/quiz/#{question.id}", :title => h(question.question_text.gsub("<br />", "\n"))) %>
             <% if logged_in? %>
               <% if @book.user_id == current_user.id && @book.name != "自分で登録した問題"%>
                 <%= link_to(image_tag('/images/page_delete.png',

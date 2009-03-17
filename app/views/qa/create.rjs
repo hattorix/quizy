@@ -1,0 +1,2 @@
+page.redirect_to {:controller => "mypage"},{:message=>"登録"}
+page.hide("latest")

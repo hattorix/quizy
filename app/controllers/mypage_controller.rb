@@ -30,8 +30,8 @@ class MypageController < ApplicationController
       end
     end
     
-    if params[:flg]
-      @flg = params[:flg]
+    if params[:flug]
+      @flg = params[:flug]
     end
   end
   
