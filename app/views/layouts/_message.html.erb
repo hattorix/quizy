@@ -1,10 +1,10 @@
 <% if flug == true %>
-  <span style="color:blue"><%= flash[:notice] %></span>
+  <div style="color:blue"><%= flash[:notice] %></div>
 <% elsif flug == false %>
-  <span style="color:red"><%= flash[:notice] %></span>
+  <div style="color:red"><%= flash[:notice] %></div>
 <% else %>
   <ul id="msg" type="disc">
-    <% @msgs.each do |msg| %>
+    <% @msgs.reverse.each do |msg| %>
       <li style="color:red"><%= msg %></li>
     <% end %>
   <ul>

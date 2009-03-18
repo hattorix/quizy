@@ -15,6 +15,24 @@ class SearchController < ApplicationController
 #    render :partial => 'results', :collection => results
     @flg = 0
     @result_text = "『#{category.name}』カテゴリの問題"
+
+    result_ids = Array.new
+    @results.each do |result|
+      result_ids << result.id
+    end
+    @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+    # 付箋を調べる
+    bookmarks = Array.new
+    if logged_in?
+      @results.each do |result|
+        bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
+                                                            result.id,
+                                                            current_user.id])
+      end
+      bookmarks.compact!
+      @is_bookmark_all = true if bookmarks.size == @results.size
+    end
+
     render :action => :index
   end
 
@@ -22,11 +40,32 @@ class SearchController < ApplicationController
     @results = Question.find_tagged_with(params[:id])
     @flg = 0
     @result_text = "『#{params[:id]}』タグの問題"
+
+    result_ids = Array.new
+    @results.each do |result|
+      result_ids << result.id
+    end
+    @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+
+    # 付箋を調べる
+    bookmarks = Array.new
+    if logged_in?
+      @results.each do |result|
+        bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
+                                                            result.id,
+                                                            current_user.id])
+      end
+      bookmarks.compact!
+      @is_bookmark_all = true if bookmarks.size == @results.size
+    end
+
     render :action => :index
   end
 
   def text
-    keywords = params[:id].split(/\s|　/)
+    @conditions = params[:conditions]
+    @searchtype = params[:searchtype]
+    keywords = params[:conditions].split(/\s|　/)
     if keywords.size > 0
       @results_hash = Hash.new
       @results = Array.new
@@ -78,26 +117,48 @@ class SearchController < ApplicationController
         @result_text << "を含む"
       end
 
-      # 問題検索の場合、付箋を調べる
-      if @flg == 0
+      @result_text << @type
+      @result_text.join("")
+
+      result_ids = Array.new
+      @results.each do |result|
+        result_ids << result.id
+      end
+
+      #ページング
+      if @flg == 0            #問題検索
+        @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+        # 付箋を調べる
+        bookmarks = Array.new
         if logged_in?
-          bookmarks = Array.new
           @results.each do |result|
             bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
-                                                            result.id,
-                                                            current_user.id])
+                                                                result.id,
+                                                                current_user.id])
           end
           bookmarks.compact!
           @is_bookmark_all = true if bookmarks.size == @results.size
         end
+      elsif @flg == 1         #タグ検索
+        @results = Tag.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+      elsif @flg == 2         #ブック検索
+        @results = Book.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+      elsif @flg == 3         #テスト検索
+        @results = Exam.paginate_by_id result_ids, :page => params[:page], :per_page => 10
       end
 
-      @result_text << @type
-      @result_text.join("")
-#      @pages = Paginator.new(self, @result.size, 10, params[:page])
       render :action => :index
     else
-      redirect_to :controller => :top
+        flash[:notice] = "キーワードを入力してください。"
+        render :update do |page|
+          page.replace_html("message", :partial=>"message",:locals => {:flug => false})
+          page.visual_effect :Opacity,
+                             "message",
+                             :from => 1,
+                             :to => 0,
+                             :duration => 3
+        end
+#      redirect_to :controller => :top
     end
   end
   
@@ -144,6 +205,13 @@ class SearchController < ApplicationController
     @result_text = "#{params[:id]}の問題"
     @flg = 0
     @user_name = params[:id]
+
+    result_ids = Array.new
+    @results.each do |result|
+      result_ids << result.id
+    end
+    @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+
     render :action => :index
   end
 
@@ -153,6 +221,13 @@ class SearchController < ApplicationController
     @result_text = "#{params[:id]}のブック"
     @flg = 2
     @user_name = params[:id]
+
+    result_ids = Array.new
+    @results.each do |result|
+      result_ids << result.id
+    end
+    @results = Book.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+
     render :action => :index
   end
 
@@ -162,6 +237,13 @@ class SearchController < ApplicationController
     @result_text = "#{params[:id]}のテスト"
     @flg = 3
     @user_name = params[:id]
+
+    result_ids = Array.new
+    @results.each do |result|
+      result_ids << result.id
+    end
+    @results = Exam.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+
     render :action => :index
   end
 
@@ -310,6 +392,13 @@ class SearchController < ApplicationController
     @flg = 2
     q = Question.find(params[:id])
     @result_text = "『#{q.question_text}』を含むブック"
+
+    result_ids = Array.new
+    @results.each do |result|
+      result_ids << result.id
+    end
+    @results = Book.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+
     render :action => :index
 
   end
@@ -325,7 +414,87 @@ class SearchController < ApplicationController
     @flg = 3
     q = Question.find(params[:id])
     @result_text = "『#{q.question_text}』を含むテスト"
+
+    result_ids = Array.new
+    @results.each do |result|
+      result_ids << result.id
+    end
+    @results = Exam.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+
     render :action => :index
 
   end
+  
+  def search_smart_book
+    tag = Tag.find(params[:id])
+    @results = Book.find(:all, :conditions => ["tags like ? and is_public = 1 ","%#{tag.name}%"])
+    @flg = 2
+    @result_text = "『#{tag.name}』タグを含むスマートブック"
+
+    result_ids = Array.new
+    @results.each do |result|
+      result_ids << result.id
+    end
+    @results = Book.paginate_by_id result_ids, :page => params[:page], :per_page => 10
+
+    render :action => :index
+
+  end
+
+  def add_mybook
+    if MyBook.find(:all,:conditions=>["book_id = ? and user_id = ?",params[:id],current_user.id]).size == 0
+      mybook = MyBook.new
+      mybook.book_id = params[:id]
+      mybook.user_id = current_user.id
+      mybook.save
+      flash[:notice] = "登録しました！"
+      render :update do |page|
+        page.replace_html("add_mycontents_message#{params[:id]}", :partial=>"message",:locals => {:flug => true})
+        page.visual_effect :Opacity,
+                           "add_mycontents_message#{params[:id]}",
+                            :from => 1,
+                            :to => 0,
+                            :duration => 3
+      end
+    else
+      flash[:notice] = "登録済みです。"
+      render :update do |page|
+        page.replace_html("add_mycontents_message#{params[:id]}", :partial=>"message",:locals => {:flug => false})
+        page.visual_effect :Opacity,
+                            "add_mycontents_message#{params[:id]}",
+                            :from => 1,
+                            :to => 0,
+                            :duration => 3
+      end
+    end
+  end
+
+  def add_myexam
+    if MyExam.find(:all,:conditions=>["exam_id = ? and user_id = ?",params[:id],current_user.id]).size == 0
+      myexam = MyExam.new
+      myexam.exam_id = params[:id]
+      myexam.user_id = current_user.id
+      myexam.save
+      flash[:notice] = "登録しました！"
+      render :update do |page|
+        page.replace_html("add_mycontents_message#{params[:id]}", :partial=>"message",:locals => {:flug => true})
+        page.visual_effect :Opacity,
+                           "add_mycontents_message#{params[:id]}",
+                            :from => 1,
+                            :to => 0,
+                            :duration => 3
+      end
+    else
+      flash[:notice] = "登録済みです。"
+      render :update do |page|
+        page.replace_html("add_mycontents_message#{params[:id]}", :partial=>"message",:locals => {:flug => false})
+        page.visual_effect :Opacity,
+                            "add_mycontents_message#{params[:id]}",
+                            :from => 1,
+                            :to => 0,
+                            :duration => 3
+      end
+    end
+  end
+
 end

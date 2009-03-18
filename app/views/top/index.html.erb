@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag "style_import_top" %>
 <div id="search_box">
         <% form_tag(:controller => 'search', :action => 'text') do -%>
-        <div id="searchform"><%= text_field_tag("id") %>
+        <div id="searchform"><%= text_field_tag("conditions") %>
                              <%= select_tag("search_for",
                                        "<option value=0>問題文</option><option value=1>タグ</option><option value=2>ブック</option><option value=3>テスト</option>") %>
                        <%= image_submit_tag("kensaku.png", :style => 'border: none;height: 35px;width:150px;')%></div>

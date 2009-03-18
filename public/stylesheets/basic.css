@@ -67,6 +67,7 @@ a {
 #search {
   float:right;
   padding-right:10px;
+  clear:both;
 }
 
 #searchradio {

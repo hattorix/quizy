@@ -94,14 +94,14 @@ class QaController < ApplicationController
     if @q.save
        book = Book.find(:first,:conditions => ["name = '自分で登録した問題' and user_id =? ", current_user.id])
        book.questions << @q
-       flash[:notice] = "登録しました！"
       if params[:name] == 'submit1'
         render :update do |page|
-          page.redirect_to :controller => "mypage",:message=>"登録"
+          page.redirect_to :controller => "mypage",:action => "message"
         end
       else
         render :update do |page|
           page.alert "登録完了しました。"
+          page << 'clearFormAll()'
           page << 'reload()'
           page.visual_effect :ScrollTo,
                              'container',

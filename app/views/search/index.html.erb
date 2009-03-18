@@ -61,8 +61,13 @@
   <div id="main">
     <div id="result_box">
       <div id="result_header">
-      <%= @result_text %>：<%=  result_count = (@results == nil) ? 0 : @results.size %> 件の検索結果</div>
-      <% if result_count != 0 %>
+      <%= @result_text %>：
+      <% if @results.total_entries != 0 %>
+        <%= @results.total_entries %>件中<%= @results.offset + 1 %>～<%= [@results.offset + @results.per_page, @results.total_entries].min %> 件の検索結果</div>
+      <% else %>
+        0件の検索結果
+      <% end %>
+      <% if @results.total_entries != 0 %>
         <div id="result_table">
         <ul>
           <% @results.each do |result| %>
@@ -113,13 +118,18 @@
                 <%= link_to "この問題を含むブックを検索する", :action => 'search_book', :id => result.id %> - 
                 <%= link_to "この問題を含むテストを検索する", :action => 'search_exam', :id => result.id %>
               </div>
-                <div class="border"></div>
+              <div class="border"></div>
 
 
             <% elsif @flg == 1 %>
               <li>
                 <%= link_to(truncate(result.name, 30),
                          :action => 'tag',:id => result.name) %></li>
+
+              <div class="book_and_test">
+                <%= link_to "このタグを含むスマートブックを検索する", :action => 'search_smart_book', :id => result.id %>
+              </div>
+              <div class="border"></div>
 
 
             <% elsif @flg == 2 %>
@@ -129,7 +139,20 @@
                 <% if result.is_smart == true %>
                   <span class="smart">(スマートブック)</span>
                 <% end %>
+
+                <span class="add_mycontents">
+                  <div class="add_mycontents_form">
+                    <% if result.user_id != current_user.id %>
+                      <%= link_to_remote(image_tag('/images/book_play.png',
+                                              :style => 'border: none;',
+                                              :title => 'この問題集をマイブックに追加する'),
+                                     :url => {:action => 'add_mybook', :id => result.id})%>
+                    <% end %>
+                  </div>
+                  <span id="add_mycontents_message<%=result.id%>"></span>
+                </span>
               </li>
+
               <% if result.is_smart == true %>
                 <div class="tags">
                   <%= image_tag "tag_blue.png" %>：
@@ -171,7 +194,19 @@
             <% elsif @flg == 3 %>
               <li>
                 <%= link_to(truncate(result.name, 30),
-                         "/exams/#{result.id}") %></li>
+                         "/exams/#{result.id}") %>
+                <span class="add_mycontents">
+                  <div class="add_mycontents_form">
+                    <% if result.user_id != current_user.id %>
+                      <%= link_to_remote(image_tag('/images/book_play.png',
+                                              :style => 'border: none;',
+                                              :title => 'このテストをマイテストに追加する'),
+                                     :url => {:action => 'add_myexam', :id => result.id})%>
+                    <% end %>
+                  </div>
+                  <span id="add_mycontents_message<%=result.id%>"></span>
+                </span>
+              </li>
               <div class="user">
                 <% if user = User.find(:first, :conditions => ["id = ?",result.user_id]) %>
                   <%= image_tag "user.png" %>：<%= link_to(user.login, { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
@@ -185,6 +220,9 @@
               <div class="border"></div>
             <% end %>
           <% end %>
+          <div id="pagenate"><%= will_paginate(@results,
+                                         :prev_label=>'&#171;前', :next_label=>'次&#187;',
+                                         :params => {:conditions => @conditions,:search_for => @flg,:searchtype => @searchtype}) %></div>
         </ul>
       <% else %>
         <div id="result_table">

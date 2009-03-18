@@ -75,6 +75,9 @@ Rails::Initializer.run do |config|
   # config.active_record.observers = :cacher, :garbage_collector
 end
 
+gem 'mislav-will_paginate', '~> 2.2'
+require 'will_paginate'
+
 ActiveRecord::Errors.default_error_messages[:invalid]      = "" 
 
 $mail_server = MailServer.new('127.0.0.1', 10025) do |server|

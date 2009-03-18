@@ -15,6 +15,7 @@
         <ul>
           <% if logged_in? %>
             <li><div id="wellcome">ようこそ、<%= current_user.login %>さん</div></li>
+            <li><%= link_to("トップ", {:controller => 'top'})%>&nbsp;|&nbsp;</li>
             <li><%= link_to("マイページ", {:controller => 'mypage'})%>&nbsp;|&nbsp;</li>
             <li><%= link_to("設定", edit_path) %>&nbsp;|&nbsp;</li>
           <% else %>
@@ -36,8 +37,9 @@
       </div>
       <% if !%w(sessions top users).include?(controller.controller_name) %>
       <div id="search">
+        <div id="message_for_search"></div>
         <% form_tag(:controller => 'search', :action => 'text') do -%>
-        <div id="searchform"><%= text_field_tag("id") %>
+        <div id="searchform"><%= text_field_tag("conditions") %>
                              <%= select_tag("search_for",
                                        "<option value=0>問題文</option><option value=1>タグ</option><option value=2>ブック</option><option value=3>テスト</option>") %>
                        <%= submit_tag("検索") %></div>

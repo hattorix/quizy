@@ -35,6 +35,44 @@ class MypageController < ApplicationController
     end
   end
   
+  def message
+    # カテゴリ一覧
+    @categories = Category.find(:all, :order => 'id')
+
+    # マイブック一覧
+    @mybooks = MyBook.find(:all,
+                       :limit => 8,
+                       :conditions => ['user_id = ?', current_user.id],
+                       :order => "created_at desc")
+    # マイテスト一覧
+    @myexams = MyExam.find(:all,
+                       :limit => 8,
+                       :conditions => ['user_id = ?', current_user.id],
+                       :order => "created_at desc")
+    # 最近登録した問題
+    @questions = Question.find(:all, :limit => 10, :order => "created_at desc",
+                               :conditions => ['user_id = ?', current_user.id])
+    # 最近解答した問題
+    @histories = Array.new
+    all_histories = History.find(:all, :order => "created_at desc",
+                               :conditions => ['user_id = ?', current_user.id])
+    all_histories.each do |history|
+      if Question.find(:first,:conditions => ["id = ?",history.question_id])
+        @histories << history
+      end
+      if @histories.size == 10
+        break
+      end
+    end
+    
+    if params[:flug]
+      @flg = params[:flug]
+    end
+
+    flash[:notice] = "登録しました！"
+    redirect_to :action => "index"
+  end
+  
   def result
     @graph_a = open_flash_chart_object(850,400, '/mypage/bar_chart_answer', true, '/')
     @graph_c = open_flash_chart_object(850,400, '/mypage/bar_chart_create', true, '/')

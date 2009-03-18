@@ -140,8 +140,51 @@ ul {
   border: 2px dashed silver;
 }
 
+.add_mycontents_form {
+  display:inline;
+}
+
+.add_mycontents span {
+  font-size:11pt;
+  height:11pt;
+  font-weight: bold;
+}
+
+
 .border {
   margin:0px 0px 20px -20px; 
   border-bottom: 2px dotted silver;
 
+}
+#pagenate {
+  text-align:center;
+}
+.pagination {
+  padding: 3px;
+  margin: 3px;
+}
+.pagination a {
+  padding: 2px 5px 2px 5px;
+  margin: 2px;
+  border: 1px solid #aaaadd;
+  text-decoration: none;
+  color: #000099;
+}
+.pagination a:hover, .pagination a:active {
+  border: 1px solid #000099;
+  color: #000;
+}
+.pagination span.current {
+  padding: 2px 5px 2px 5px;
+  margin: 2px;
+  border: 1px solid #000099;
+  font-weight: bold;
+  background-color: #000099;
+  color: #FFF;
+}
+.pagination span.disabled {
+  padding: 2px 5px 2px 5px;
+  margin: 2px;
+  border: 1px solid #eee;
+  color: #ddd;
 }

@@ -1,11 +1,12 @@
 <% if is_bookmark %>
-  <% text = question_id.class == Array ? "全ての":""  %>
+  <% text = question_id.class == WillPaginate::Collection ||question_id.class == Array ? "全ての":""  %>
   <%= image_tag('/images/bookmark.gif', :style => 'vertical-align: middle;') %>
   <%= link_to_remote "#{text}付箋を剥がす", :url=>{:action => 'off_bookmark',
                                               :id => question_id,
                                               :results => results}%>
 <% else %>
-  <% text = question_id.class == Array ? "全てに":""  %>
+  <%= is_bookmark %>
+  <% text = question_id.class == WillPaginate::Collection ||question_id.class == Array ? "全てに":""  %>
   <%= image_tag('/images/bookmark_off.gif', :style => 'vertical-align: middle;') %>
   <%= link_to_remote "#{text}付箋を貼る", :url=>{:action => 'on_bookmark',
                                             :id => question_id,

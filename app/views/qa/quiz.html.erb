@@ -11,7 +11,17 @@
   }
 
   function submit_disabled_check() {
-    document.getElementById("submit").disabled = false;
+    var flg = 0;
+    <% @selections.each do |s| %>
+      if(document.getElementById("answer[<%= s.id %>]").checked){
+        flg = 1;
+      }
+    <% end %>
+    if(flg == 0){
+      document.getElementById("submit").disabled = true;
+    } else {
+      document.getElementById("submit").disabled = false;
+    }
   }
 
   function submit_disabled_select() {
@@ -98,20 +108,26 @@
     <div id="selection_box">
     <% selections.each do |s| %>
     <div class="field">
-        <input type="radio" id="answer" name="answer"
-               value="<%= s.id %>" onclick="submit_disabled_check()"/> <%= s.selection_text %>
+        <input type="radio" id="answer[<%= s.id %>]" name="answer"
+               value="<%= s.id %>"/> <%= s.selection_text %>
     </div>
     <% end %>
     </div>
+    <script language="javascript">
+      timeID = window.setInterval("submit_disabled_check();",1);
+    </script>
   <% elsif @question.question_type == 2 %>
     <div id="selection_box">
     <% selections.each do |s| %>
     <div class="field">
       <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-             value="<%= s.id %>" onclick="submit_disabled_select()"/> <%= s.selection_text %>
+             value="<%= s.id %>"/> <%= s.selection_text %>
     </div>
     <% end %>
     </div>
+    <script language="javascript">
+      timeID = window.setInterval("submit_disabled_select();",1);
+    </script>
   <% elsif @question.question_type == 3 %>
     <div id="selection_box">
       <div class="marufield">
@@ -137,8 +153,11 @@
     </div>
   <% else %>
     <div id="answer_box">
-      <input id="answer" name="answer" type="text" size="30" autocomplete="off" onkeyup="submit_disabled_text()"/>
+      <input id="answer" name="answer" type="text" size="30"/>
     </div>
+    <script language="javascript">
+      timeID = window.setInterval("submit_disabled_text();",1);
+    </script>
   <% end %>
 </div>
 

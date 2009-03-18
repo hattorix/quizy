@@ -193,9 +193,7 @@ function clearElement(element) {
 
 <div id="submit_box">
   <%= submit_to_remote "登録", "登録", :url => {:action => 'create', :name => 'submit1'} %>
-  <span onclick="clearFormAll()">
-  <%= submit_to_remote "登録後続けて登録する", "登録後続けて登録する", :url => {:action => 'create', :name => 'submit2'},:onclick => "clearFormAll()" %>
-  </span>
+  <%= submit_to_remote "登録後続けて登録する", "登録後続けて登録する", :url => {:action => 'create', :name => 'submit2'} %>
 </div>
 
 <% end -%>
