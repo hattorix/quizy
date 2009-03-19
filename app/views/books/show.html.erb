@@ -3,6 +3,26 @@
       ret = this.open(page, "CtrlWindow"
                ,"toolbar=0, menubar=0, location=0, scrollbars=1, resize=0, width=960, height=900");
   }
+  function disabled_traning() {
+    <% count = @book.questions.size > 0 ? true:false%>
+    if (<%= count %>) {
+      if(document.getElementById('training_type_qc').checked) {
+        if(document.getElementById('quiz_count').value.match(/\d/) && document.getElementById('select_count').value.match(/\d/)) {
+          document.getElementById('submit').disabled = false;
+        } else {
+          document.getElementById('submit').disabled = true;
+        }
+      } else {
+        if(document.getElementById('select_count').value.match(/\d/)) {
+          document.getElementById('submit').disabled = false;
+        } else {
+          document.getElementById('submit').disabled = true;
+        }
+      }
+    } else {
+      document.getElementById('submit').disabled = true;
+    }
+  }
   </script>
 <div id="main">
   <%= stylesheet_link_tag 'basic' %>
@@ -42,8 +62,12 @@
       問</td></tr>
       <tr><td>ブックの公開</td><td class="string"><%=h @book.is_public == 1 ? "公開" : "非公開" %></td></tr>
       <% if @book.is_smart == true %>
-        <tr><td>参照カテゴリ</td><td class="string"><%= @categories.map{|t| '<span class="tag">' + t + '</span>'} %></td></tr>
-        <tr><td>参照タグ</td><td class="string"><%= @tags.map{|t| '<span class="tag">' + t + '</span>'} %></td></tr>
+        <tr><td>参照カテゴリ</td><td class="string"><% @categories.map do |c| %>
+                                                      <span class="tag"><%=h c %></span>
+                                                    <% end %></td></tr>
+        <tr><td>参照タグ</td><td class="string"><% @tags.map do |t| %>
+                                                  <span class="tag"><%=h t %></span>
+                                                <% end %></td></tr>
       <% end %>
     </table>
     <h2 class="subtitle">概要</h2>
@@ -54,22 +78,33 @@
     <h2 class="subtitle">トレーニング</h2>
     <div id="traning_box">
       <% form_tag({:action => 'training_start', :id => @book.id},:target => ["_blank"]) do -%>
-      <div class="field">
-        <input type="radio" id="training_type" name="training_type"
+      <div class="traning_field">
+        <input type="radio" id="training_type_a" name="training_type"
                value="all" checked /> 全ての問題から
       </div>
-      <div class="field">
-        <input type="radio" id="training_type" name="training_type"
-               value="weak" /> 苦手な問題から
+      <div class="traning_field">
+        <input type="radio" id="training_type_w" name="training_type"
+               value="weak" />
+        <select name="weak_level" style="width:90%;">
+          <option value="lv_1">苦手レベル１以下の</option>
+          <option value="lv_2">苦手レベル２以下の</option>
+          <option value="lv_3">苦手レベル３以下の</option>
+          <option value="lv_4">苦手レベル４以下の</option>
+          <option value="lv_5">苦手レベル５以下または解いた事のない</option>
+        </select>
+        <div style="text-align:right;">問題から</div>
       </div>
-      <div class="field">
-        <input type="radio" id="training_type" name="training_type"
+      <div class="traning_field">
+        <input type="radio" id="training_type_qc" name="training_type"
                value="quiz_count" /> 解答数<%= text_field_tag "quiz_count", "",:style => 'width: 20pt;' %>回以下の問題から
       </div>
         <%= text_field_tag "select_count", "",:style => 'width: 20pt;' %>問選択し、
-        <%= submit_tag "トレーニング開始" %>
+        <%= submit_tag "トレーニング開始",:id => "submit",:disabled => true %>
       <% end %>
     </div>
+    <script language="javascript">
+      timeID = window.setInterval("disabled_traning();",1);
+    </script>
 
   <div class="spacer_narrow" style="clear:both">&nbsp;</div>
 
@@ -82,14 +117,14 @@
         <% @questions.each do |question| %>
           <li class="question_text">
             <%= image_tag('/images/quiz.png', :style => 'border: none') %>
-            <%= link_to(truncate(erase_tag(question.question_text), 40),
+            <%= link_to(truncate(h(question.question_text), 40),
                      "/quiz/#{question.id}") %>
         <% end %>
       <% else %>
         <% @book.questions.each do |question| %>
           <li class="question_text">
             <%= image_tag('/images/quiz.png', :style => 'border: none') %>
-            <%= link_to(truncate(erase_tag(question.question_text), 40),
+            <%= link_to(truncate(h(question.question_text), 40),
                      "/quiz/#{question.id}", :title => h(question.question_text.gsub("<br />", "\n"))) %>
             <% if logged_in? %>
               <% if @book.user_id == current_user.id && @book.name != "自分で登録した問題"%>
@@ -98,6 +133,16 @@
                                   :title => 'このブックから削除する'),
                         {:controller => 'books',
                          :action => 'rip',
+                         :id => @book.id,
+                         :question_id => question.id},
+                         :confirm => '本当に削除してよろしいですか?'
+                        ) %>
+              <% else %>
+                <%= link_to(image_tag('/images/page_delete.png',
+                                  :style => 'border: none;',
+                                  :title => 'この問題を削除する'),
+                        {:controller => 'books',
+                         :action => 'destroy_question',
                          :id => @book.id,
                          :question_id => question.id},
                          :confirm => '本当に削除してよろしいですか?'

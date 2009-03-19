@@ -34,7 +34,13 @@
       <table cellpadding="5" cellspacing="0" border="1">
         <tr><td>問題数</td><td class="number"><%=h count = QuestionExam.count(:conditions => ["exam_id = ? and enabled = 1",
                                                                              @exam.id]) %> 問</td></tr>
-        <tr><td>制限時間</td><td class="number"><%=h @exam.time_limit %> 秒</td></tr>
+        <tr><td>制限時間</td><td class="number">
+           <% if @exam.time_limit == 0 %>
+             なし
+           <% else %>
+             <%=h @exam.time_limit %> 秒
+           <% end %>
+           </td></tr>
         <tr><td>ボーダライン</td><td class="number"><%=h @exam.border_line %> %</td></tr>
         <tr><td>テストの公開</td><td class="string"><%=h @exam.is_public == 1 ? "公開" : "非公開" %></td></tr>
       </table>

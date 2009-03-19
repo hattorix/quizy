@@ -84,7 +84,7 @@
   <%# tag field%>
   <div class="subsubtitle">タグ(「自分で登録」タグが勝手につきます)</div>
   <div class="field">
-    <%= text_field_tag "tag", @question.tag_list,
+    <%= text_field_tag "tag", h(@question.tag_list),
         :style => 'width: 100%;' %>
   </div>
 </div>  
@@ -96,7 +96,7 @@
   <div class="subsubtitle">問題文</div>
   <div class="field">
     <%= hidden_field_tag "question_id", @question.id %>
-    <%= text_area_tag "question_ta", @question.question_text.gsub("<br />", "\n"),
+    <%= text_area_tag "question_ta", h(@question.question_text.gsub("<br />", "\n")),
                         :style => 'width: 100%; height: 10em;' %>
   </div>
 </div>
@@ -125,7 +125,7 @@
         <% @selections.each do |selection| %>
           <li class="selection">
             <input id="is_collect" name="is_collect" value="<%= i %>" type="radio" <%= "checked" if selection.is_collect == 1 %> />
-              <%= text_field_tag "selection[#{i}]", selection.selection_text, {:size => 50} %><br />
+              <%= text_field_tag "selection[#{i}]", h(selection.selection_text), {:size => 50} %><br />
           </li>
           <% i+=1 %>
         <% end %>
@@ -134,7 +134,7 @@
         <% @selections.each do |selection| %>
           <li class="selection">
             <input id="is_collect2" name="is_collect2[<%= i %>]" type="checkbox" <%= "checked" if selection.is_collect == 1 %> />
-              <%= text_field_tag "selection2[#{i}]", selection.selection_text, {:size => 50} %><br />
+              <%= text_field_tag "selection2[#{i}]", h(selection.selection_text), {:size => 50} %><br />
           </li>
           <% i+=1 %>
         <% end %>
@@ -156,7 +156,7 @@
     <div class="subsubtitle">解答</div>
     <div class="field">
       <% if @question.question_type == 4 %>
-      <%= text_area_tag "answer_ta", @answer.answer_text.gsub("<br />", "\n"),
+      <%= text_area_tag "answer_ta", h(@answer.answer_text.gsub("<br />", "\n")),
                         :style => 'width: 100%; height: 5em;' %>
       <% else %>
       <%= text_area_tag "answer_ta", "",:style => 'width: 100%; height: 5em;' %>
@@ -171,7 +171,7 @@
   <div class="subtitle">解説</div>
   <div class="subsubtitle">解説文</div>
   <div class="field">
-    <%= text_area_tag "description_ta", @description.description_text.gsub("<br />", "\n"),
+    <%= text_area_tag "description_ta", h(@description.description_text.gsub("<br />", "\n")),
                         :style => 'width: 100%; height: 10em;' %>
   </div>
 </div>

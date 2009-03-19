@@ -1,7 +1,7 @@
 <% if flug == true %>
-  <div style="color:blue"><%= flash[:notice] %></div>
+  <div id="msg" style="color:blue"><%= flash[:notice] %></div>
 <% elsif flug == false %>
-  <div style="color:red"><%= flash[:notice] %></div>
+  <div id="msg" style="color:red"><%= flash[:notice] %></div>
 <% else %>
   <ul id="msg" type="disc">
     <% @msgs.reverse.each do |msg| %>

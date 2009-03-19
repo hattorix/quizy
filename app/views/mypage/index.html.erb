@@ -15,7 +15,7 @@
 
 <div id="main">
   <div id="message">
-    <%= flash[:notice] %>
+    <%=h flash[:notice] %>
   </div>
 
 <div id="mybook">
@@ -32,7 +32,7 @@
         <% if book = Book.find(:first, :conditions => ['user_id = ? and name = "自分で登録した問題"', current_user.id]) %>
           <%= image_tag('/images/book.png',
                      :style => 'vertical-align: middle;') %>
-          <span style="font-weight: bold;"><%= link_to(truncate(erase_tag(book.name), 45), book) %></span>
+          <span style="font-weight: bold;"><%= link_to(truncate(h(book.name), 45), book) %></span>
           <span class="red">★</span>
           <span style="color: silver; font-size: 8pt;">
             <%= book.updated_at.strftime("%Y/%m/%d %H:%M:%S 更新") %>
@@ -44,7 +44,7 @@
       <li class="book_text">
         <%= image_tag('/images/book.png',
                         :style => 'vertical-align: middle;') %>
-        <span <%= "style='font-weight: bold;'" if book.name == "自分で登録した問題" %>><%= link_to(truncate(erase_tag(book.name), 45), book) %></span>
+        <span <%= "style='font-weight: bold;'" if book.name == "自分で登録した問題" %>><%= link_to(truncate(h(book.name), 45), book) %></span>
         <% if book.user_id == current_user.id %>
           <span class="red">★</span>
         <% end %>
@@ -66,7 +66,7 @@
         <% end %>
         <% if book.user_id != current_user.id %>
           <% if user = User.find(:first, :conditions =>["id = ?",book.user_id]) %>
-            <span style="margin-left:5px;color: black">(作成者：<%= user.login %>)</span>
+            <span style="margin-left:5px;color: black">(作成者：<%=h user.login %>)</span>
           <% else %>
             <span style="margin-left:5px;color: black">(作成者：-)</span>
           <% end %>
@@ -75,6 +75,10 @@
       </li>
       <% end %>
     </ul>
+  </div>
+  <div id="pagenate">
+    <%= will_paginate(@mybooks,
+                   :prev_label=>'&#171;前', :next_label=>'次&#187;', :param_name=>'book_page') %>
   </div>
 </div>
 
@@ -90,7 +94,7 @@
         <%= image_tag('/images/exam.png',
                         :style => 'vertical-align: middle;') %>
                         
-        <%= link_to(truncate(erase_tag(exam.name), 45), exam) %>
+        <%= link_to(truncate(h(exam.name), 45), exam) %>
         <% if exam.user_id == current_user.id %>
           <span class="red">★</span>
         <% end %>
@@ -110,7 +114,7 @@
                  :method => :delete) %>
         <% if exam.user_id != current_user.id %>
           <% if user = User.find(:first, :conditions =>["id = ?",exam.user_id]) %>
-            <span style="margin-left:5px;color: black">(作成者：<%= user.login %>)</span>
+            <span style="margin-left:5px;color: black">(作成者：<%=h user.login %>)</span>
           <% else %>
             <span style="margin-left:5px;color: black">(作成者：-)</span>
           <% end %>
@@ -119,6 +123,10 @@
       </li>
       <% end %>
     </ul>
+  </div>
+  <div id="pagenate">
+    <%= will_paginate(@myexams,
+                   :prev_label=>'&#171;前', :next_label=>'次&#187;', :param_name=>'exam_page') %>
   </div>
 </div>
 
@@ -135,10 +143,10 @@
       <ul>
         <% @questions.each do |q| %>
           <li class="question_text"><%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
-            <a href="/quiz/<%=q.id%>" title = "<%=h q.question_text.gsub("<br />", "\n") %>" ><%= truncate(erase_tag(q.question_text), 45)%></a>
+            <a href="/quiz/<%=q.id%>" title = "<%=h q.question_text.gsub("<br />", "\n") %>" ><%= truncate(h(q.question_text), 45)%></a>
             <div class="tags">
               <% q.tag_list.map do |t| %>
-                <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
+                <%= link_to(h(t), { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
               <% end %>
             </div>
           </li>
@@ -163,7 +171,7 @@
               <span class="blue">×</span>
             <% end %>
             <% q = Question.find(h.question_id) %>
-            <a href="/quiz/<%=q.id%>" title = "<%=h q.question_text %>"><%=truncate(erase_tag(q.question_text), 45)%></a>
+            <a href="/quiz/<%=q.id%>" title = "<%=h q.question_text %>"><%=truncate(h(q.question_text), 45)%></a>
             <% if h.answer_mode == 1 %>
               <span style="color: blue; font-size: 8pt;">(training)</span>
             <% elsif h.answer_mode == 2 %>

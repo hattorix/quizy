@@ -43,7 +43,7 @@
             <option value='new'>新規ブックを作成</option>
             <option value='' disabled>------------------------</option>
             <% books.each do |book| %>
-              <%= "<option value='#{book.id}'>#{book.name}</option>" %>
+              <%= "<option value='#{book.id}'>#{h(book.name)}</option>" %>
             <% end %>
           </select>
           <%= submit_tag '登録',
@@ -61,7 +61,7 @@
   <div id="main">
     <div id="result_box">
       <div id="result_header">
-      <%= @result_text %>：
+      <%=h @result_text %>：
       <% if @results.total_entries != 0 %>
         <%= @results.total_entries %>件中<%= @results.offset + 1 %>～<%= [@results.offset + @results.per_page, @results.total_entries].min %> 件の検索結果</div>
       <% else %>
@@ -101,7 +101,7 @@
                 <%= image_tag "tag_blue.png" %>：
                 <% if result.tag_list.size > 0 %>
                   <% result.tag_list.map do |t| %>
-                    <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
+                    <%= link_to(h(t), { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
                   <% end %>
                 <% else %>
                   -
@@ -109,7 +109,7 @@
               </div>
               <div class="user">
                 <% if user = User.find(:first, :conditions => ["id = ?",result.user_id]) %>
-                  <%= image_tag "user.png" %>：<%= link_to(user.login, { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
+                  <%= image_tag "user.png" %>：<%= link_to(h(user.login), { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
                 <% else %>
                   <%= image_tag "user.png" %>：-
                 <% end %>
@@ -123,7 +123,7 @@
 
             <% elsif @flg == 1 %>
               <li>
-                <%= link_to(truncate(result.name, 30),
+                <%= link_to(truncate(h(result.name), 30),
                          :action => 'tag',:id => result.name) %></li>
 
               <div class="book_and_test">
@@ -134,7 +134,7 @@
 
             <% elsif @flg == 2 %>
               <li>
-                <%= link_to(truncate(result.name, 30),
+                <%= link_to(truncate(h(result.name), 30),
                          "/books/#{result.id}") %>
                 <% if result.is_smart == true %>
                   <span class="smart">(スマートブック)</span>
@@ -159,7 +159,7 @@
                     <% tags = result.tags.split(",") %>
                   <% if tags.size > 0 %>
                     <% tags.map do |t| %>
-                      <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
+                      <%= link_to(h(t), { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
                     <% end %>
                   <% else %>
                     -
@@ -171,7 +171,7 @@
                   <% if categories.size > 0 %>
                     <% categories.map do |c| %>
                       <% c_id = Category.find(:first, :conditions => ["name = ?",c]).id %>
-                      <%= link_to(c, { :controller => :search, :action => :category, :id => c_id }, :class => "tag") %>
+                      <%= link_to(h(c), { :controller => :search, :action => :category, :id => c_id }, :class => "tag") %>
                     <% end %>
                   <% else %>
                     -
@@ -180,7 +180,7 @@
               <% end %>
               <div class="user">
                 <% if user = User.find(:first, :conditions => ["id = ?",result.user_id]) %>
-                  <%= image_tag "user.png" %>：<%= link_to(user.login, { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
+                  <%= image_tag "user.png" %>：<%= link_to(h(user.login), { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
                 <% else %>
                   <%= image_tag "user.png" %>：-
                 <% end %>
@@ -193,7 +193,7 @@
 
             <% elsif @flg == 3 %>
               <li>
-                <%= link_to(truncate(result.name, 30),
+                <%= link_to(truncate(h(result.name), 30),
                          "/exams/#{result.id}") %>
                 <span class="add_mycontents">
                   <div class="add_mycontents_form">
@@ -209,13 +209,13 @@
               </li>
               <div class="user">
                 <% if user = User.find(:first, :conditions => ["id = ?",result.user_id]) %>
-                  <%= image_tag "user.png" %>：<%= link_to(user.login, { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
+                  <%= image_tag "user.png" %>：<%= link_to(h(user.login), { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
                 <% else %>
                   <%= image_tag "user.png" %>：-
                 <% end %>
               </div>
               <div class="outline_and_notes">
-                <%= result.notes %>
+                <%=h result.notes %>
               </div>
               <div class="border"></div>
             <% end %>
@@ -226,7 +226,7 @@
         </ul>
       <% else %>
         <div id="result_table">
-          <div style="text-align: center;"><%= @result_text %>は見つかりませんでした。</div>
+          <div style="text-align: center;"><%=h @result_text %>は見つかりませんでした。</div>
         </div>
       <% end %>
     </div>

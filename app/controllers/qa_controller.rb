@@ -96,16 +96,20 @@ class QaController < ApplicationController
        book.questions << @q
       if params[:name] == 'submit1'
         render :update do |page|
-          page.redirect_to :controller => "mypage",:action => "message"
+          page.redirect_to :controller => "mypage",:action => "message",:message => "問題を登録しました。"
         end
       else
+        flash[:notice] = "問題を登録しました。"
         render :update do |page|
-          page.alert "登録完了しました。"
           page << 'clearFormAll()'
-          page << 'reload()'
           page.visual_effect :ScrollTo,
                              'container',
                              :duration => 0
+          page.replace_html("message", :partial=>"message",:locals => {:flug => true})
+          page[:msg].visual_effect :highlight,
+                                    :startcolor => "#66ffff",
+                                    :endcolor => "#ffffff",
+                                    :duration => 1.5
         end
       end
     else
@@ -379,7 +383,7 @@ class QaController < ApplicationController
 
       @question.destroy
       @title = ' - マイページ'
-      redirect_to :controller => 'mypage'
+      redirect_to :controller => "mypage",:action => "message",:message => "問題を削除しました。"
     end
   end
   

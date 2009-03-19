@@ -2,9 +2,11 @@
 <script language="javascript">
   function submit_disabled_check() {
     var flg = 0;
-    <% @selections.each do |s| %>
-      if(document.getElementById("answer[<%= s.id %>]").checked){
-        flg = 1;
+    <% 10.times do |i| %>
+      if(document.getElementById("answer[<%= i %>]")){
+        if(document.getElementById("answer[<%= i %>]").checked){
+          flg = 1;
+        }
       }
     <% end %>
     if(flg == 0){
@@ -16,10 +18,11 @@
 
   function submit_disabled_select() {
     var flg = 0;
-    <% @selections.each do |s| %>
-      if(document.getElementById("answer[<%= s.id %>]").checked){
-
-        flg = 1;
+    <% 10.times do |i| %>
+      if(document.getElementById("answer[<%= i %>]")){
+        if(document.getElementById("answer[<%= i %>]").checked){
+          flg = 1;
+        }
       }
     <% end %>
     if(flg == 0){
@@ -30,13 +33,21 @@
   }
 
   function submit_disabled_text() {
-    if(document.getElementById("answer").value == ""){
-      document.getElementById("submit").disabled = true;
-    } else {
-      document.getElementById("submit").disabled = false;
+    if(document.getElementById("answer")){
+      if(document.getElementById("answer").value == ""){
+        document.getElementById("submit").disabled = true;
+      } else {
+        document.getElementById("submit").disabled = false;
+      }
     }
   }
+
+  function timestop() {
+    clearInterval(timeID);
+  }
+
 </script>
+
 <div id="question">
   <div id="toolbar_box">
   </div>
@@ -50,7 +61,7 @@
           <div id="question_text_box">
             <div class="subtitle">問題</div>
             <%= hidden_field_tag "question_id", @question.id %>
-            <div class="field"><%= @question.question_text %></div>
+            <div class="field"><%=h @question.question_text %></div>
           </div>
 
           <div class="spacer_narrow">&nbsp;</div>
@@ -63,13 +74,15 @@
             <% else %>
               <% selections = @selections %>
             <% end %>
+            <% i = 0 %>
             <% if @question.question_type == 1 %>
               <div id="selection_box">
                 <% selections.each do |s| %>
                   <div class="field">
-                    <input type="radio" id="answer" name="answer"
-                           value="<%= s.id %>"/> <%= s.selection_text %>
+                    <input type="radio" id="answer[<%= i %>]" name="answer"
+                           value="<%= s.id %>"/> <%=h s.selection_text %>
                   </div>
+                  <% i+=1 %>
                 <% end %>
               </div>
               <script language="javascript">
@@ -79,9 +92,10 @@
               <div id="selection_box">
                 <% selections.each do |s| %>
                   <div class="field">
-                    <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-                           value="<%= s.id %>"/> <%= s.selection_text %>
+                    <input type="checkbox" id="answer[<%= i %>]" name="answer[<%= i %>]"
+                           value="<%= s.id %>"/> <%=h s.selection_text %>
                   </div>
+                  <% i+=1 %>
                 <% end %>
               </div>
               <script language="javascript">
@@ -139,10 +153,12 @@
         <div id="question_information_box_quiz">
           <div class="subtitle">分類</div>
           <div class="subsubtitle">カテゴリ</div>
-          <div class="field"><%= @question.category.name %></div>
+          <div class="field"><%=h @question.category.name %></div>
           <div class="subsubtitle">タグ</div>
-          <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
-          <%# あとでちゃんと書きましょう %>
+          <div class="field"><% @question.tag_list.map do |t| %>
+              <span class="tag"><%=h t %></span>
+             <% end %>
+          </div>
           <div class="subsubtitle">あなたの正答率</div>
           <div class="field">：<%= @my_reat %>％
           </div>
@@ -154,22 +170,24 @@
     </div>
     <div id="command_box">
       <% if @i != 0 %>
+        <span onclick = 'timestop();'>
           <%= submit_to_remote("前の問題へ",
                             "前の問題へ",
                            :url=>{:action => 'back',
                                   :questions => @questions,
                                   :i => @i,
                                   :id => @id},
-                           :update => 'contents') %>
+                           :update => 'contents') %></span>
       <% end %>
       <% if @questions.size > @i+1 %>
+        <span onclick = 'timestop();'>
           <%= submit_to_remote("次の問題へ",
                             "次の問題へ",
                            :url=>{:action => 'next',
                                   :questions => @questions,
                                   :i => @i,
                                   :id => @id},
-                           :update => 'contents') %>
+                           :update => 'contents') %></span>
       <% end %>
     <% end -%>
 

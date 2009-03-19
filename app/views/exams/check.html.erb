@@ -30,7 +30,7 @@
       <tr>
         <td><%= i += 1 %></td>
         <td>
-          <%= link_to_remote(question.question_text,
+          <%= link_to_remote(h(question.question_text),
                          :url=>{:action => 'back',
                                 :i => i,
                                 :id => @exam.id,},
@@ -62,7 +62,7 @@
           <% answer = "" %>
           <% status = "" %>
         <% end %>
-        <td>『<%= answer %>』</td>
+        <td>『<%=h answer %>』</td>
         <% if review_count > 0 %>
           <td nowrap>
             <% if status == "review" %>

@@ -2,7 +2,7 @@
 <div id="screen_title">解答</div>
 
 <div id="main">
-  <div class="result"><%= @result_text %></div>
+  <div class="result"><%=h @result_text %></div>
   <div id="description_box">
     <div id="descriptions" <%= "style='display:none;'" if @is_collect != "1"%>>
       <div class="subtitle">解説</div>
@@ -10,12 +10,12 @@
       <% if desc == ""  %>
         <% desc = "解説はありません" %>
       <% end %>
-      <div class="question"><%= desc %></div>
+      <div class="question"><%=h desc %></div>
 
       <div class="spacer_narrow">&nbsp;</div>
 
       <div class="subtitle">問題</div>
-      <div class="question"><%= @question.question_text %></div>
+      <div class="question"><%=h @question.question_text %></div>
 
       <div class="spacer_narrow">&nbsp;</div>
 
@@ -38,7 +38,7 @@
       <% end %>
 
       <div class="subtitle">正解</div>
-      <div class="question"><%= answer %></div>
+      <div class="question"><%=h answer %></div>
 
     </div>
     <% if @is_collect != "1" %>

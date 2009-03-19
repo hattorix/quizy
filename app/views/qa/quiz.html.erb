@@ -58,7 +58,7 @@
               <option value='new'>新規ブックを作成</option>
               <option value='' disabled>------------------------</option>
               <% @books.each do |book| %>
-                <%= "<option value='#{book.id}'>#{book.name}</option>" %>
+                <%= "<option value='#{book.id}'>#{h(book.name)}</option>" %>
               <% end %>
 
             </select>
@@ -91,7 +91,7 @@
 <div id="question_text_box">
   <div class="subtitle">問題</div>
   <%= hidden_field_tag "question_id", @question.id %>
-  <div class="field"><%= @question.question_text %></div>
+  <div class="field"><%=h @question.question_text %></div>
 </div>
 
 <div class="spacer_narrow">&nbsp;</div>
@@ -109,24 +109,24 @@
     <% selections.each do |s| %>
     <div class="field">
         <input type="radio" id="answer[<%= s.id %>]" name="answer"
-               value="<%= s.id %>"/> <%= s.selection_text %>
+               value="<%= s.id %>"/> <%=h s.selection_text %>
     </div>
     <% end %>
     </div>
     <script language="javascript">
-      timeID = window.setInterval("submit_disabled_check();",1);
+      time = window.setInterval("submit_disabled_check();",1);
     </script>
   <% elsif @question.question_type == 2 %>
     <div id="selection_box">
     <% selections.each do |s| %>
     <div class="field">
       <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-             value="<%= s.id %>"/> <%= s.selection_text %>
+             value="<%= s.id %>"/> <%=h s.selection_text %>
     </div>
     <% end %>
     </div>
     <script language="javascript">
-      timeID = window.setInterval("submit_disabled_select();",1);
+      time = window.setInterval("submit_disabled_select();",1);
     </script>
   <% elsif @question.question_type == 3 %>
     <div id="selection_box">
@@ -156,7 +156,7 @@
       <input id="answer" name="answer" type="text" size="30"/>
     </div>
     <script language="javascript">
-      timeID = window.setInterval("submit_disabled_text();",1);
+      time = window.setInterval("submit_disabled_text();",1);
     </script>
   <% end %>
 </div>
@@ -177,7 +177,7 @@
   <div id="question_information_box_quiz">
     <div class="subtitle">分類</div>
     <div class="subsubtitle">カテゴリ</div>
-    <div class="field"><%=link_to(@question.category.name,
+    <div class="field"><%=link_to(h(@question.category.name),
                               {:controller => 'search',
                                :action => 'category',
                                :id => @question.category.id},
@@ -186,7 +186,7 @@
     <div class="field">
       <% if @question.tag_list.size > 0 %>
         <% @question.tag_list.map do |t| %>
-          <%= link_to(t, { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
+          <%= link_to(h(t), { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
         <% end %>
       <% else %>
         -
@@ -195,7 +195,7 @@
     <div class="subsubtitle">作成者</div>
     <div class="field">
       <% if user = User.find(:first, :conditions=> ["id = ?",@question.user_id]) %>
-        <%= link_to(user.login, { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
+        <%= link_to(h(user.login), { :controller => :search, :action => :users_question, :id => user.login }, :class => "tag") %>
       <% else %>
         -
       <% end %>

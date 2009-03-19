@@ -108,7 +108,7 @@ class BooksController < ApplicationController
         my_book.user_id = current_user.id
         my_book.save
         render :update do |page|
-          page.redirect_to :controller => "mypage"
+          page.redirect_to :controller => "mypage",:action => "message",:message => "ブックを作成しました。"
         end
       else
         @msgs = @book.errors.full_messages
@@ -209,7 +209,19 @@ class BooksController < ApplicationController
               my_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ?",books_question.question_id,current_user.id])
               if my_questions.size != 0
                 my_true_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ? and correct_or_wrong = 1",books_question.question_id,current_user.id])
-                weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_line
+
+                case params[:weak_level]
+                  when "lv_1"
+                    weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_1
+                  when "lv_2"
+                    weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_2
+                  when "lv_3"
+                    weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_3
+                  when "lv_4"
+                    weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_4
+                  when "lv_5"
+                    weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_5
+                  end
                 if ((my_true_questions.size*100)/my_questions.size) < weak_line
                   weak_questions << books_question
                 end
@@ -295,7 +307,18 @@ class BooksController < ApplicationController
             my_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ?",smart_question.id,current_user.id])
             if my_questions.size != 0
               my_true_questions = History.find(:all, :conditions =>["question_id = ? and user_id = ? and correct_or_wrong = 1",smart_question.id,current_user.id])
-              weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_line
+              case params[:weak_level]
+                when "lv_1"
+                  weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_1
+                when "lv_2"
+                  weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_2
+                when "lv_3"
+                  weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_3
+                when "lv_4"
+                  weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_4
+                when "lv_5"
+                  weak_line = Setting.find(:first,:conditions => ["user_id = ?",current_user.id]).weak_lv_5
+              end
               if ((my_true_questions.size*100)/my_questions.size) < weak_line
                 weak_questions << smart_question
               end
@@ -473,11 +496,13 @@ class BooksController < ApplicationController
     book = Book.find(params[:id])
     mybook = MyBook.find(:first, :conditions =>["book_id = ? and user_id = ?",params[:id],current_user.id])
     mybook.destroy
+    message = "マイブックからブックを削除しました。"
     if book.user_id == current_user.id
       book.questions.delete_all()
       book.destroy
+      message = "ブックを削除しました。"
     end
-    redirect_to :controller => 'mypage'
+    redirect_to :controller => "mypage",:action => "message",:message => message
   end
 
   def rip
@@ -488,6 +513,25 @@ class BooksController < ApplicationController
       question.reload
 
       redirect_to :action => :show
+  end
+
+  def destroy_question
+    @question = Question.find(params[:question_id])
+    if @question.user_id != current_user.id
+      redirect_to :action => "show", :id => params[:id]
+    else
+      if @question.answer
+        @question.answer.destroy
+      end
+      @question.selections.delete_all()
+
+      QuestionExam.delete_all(["question_id = ?", params[:question_id].to_i])
+      QuestionBook.delete_all(["question_id = ?", params[:question_id].to_i])
+      Bookmark.delete_all(["question_id = ?", params[:question_id].to_i])
+
+      @question.destroy
+      redirect_to :action => "show", :id => params[:id]
+    end
   end
 
   def add_mybook

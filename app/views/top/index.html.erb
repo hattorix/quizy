@@ -24,10 +24,10 @@
   <div id="category_title">カテゴリ一覧</div>
     <div id="category_list">
       <% @categories.each do |category| %>
-      <span class="category"><%=link_to(category.name,
-                        :controller => 'search',
-                        :action => 'category',
-:id => category.id) %></span>
+        <span class="category"><%=link_to(h(category.name),
+                                     :controller => 'search',
+                                     :action => 'category',
+                                     :id => category.id) %></span>
       <% end %>
   </div>
   <div id="favorite_title">出題数ランキング</div>
@@ -45,7 +45,7 @@
         <% else %>
           <%= image_tag "bullet_yellow.png" %>
         <% end %>
-        <%= i %>位：<%= link_to(truncate(erase_tag(question.question_text), 35), "/quiz/#{question.id}") %>
+        <%= i %>位：<%= link_to(truncate(h(question.question_text), 35), "/quiz/#{question.id}") %>
         <span style="color: slategray; font-size: 8pt;">
           <%= question.question_count %>回出題
         </span>
@@ -59,7 +59,7 @@
     <ul style="list-style-type: decimal;">
     <% @new_questions.each do |question| %>
       <li style="font-size: 11pt;">
-        <%= link_to(truncate(erase_tag(question.question_text), 35), "/quiz/#{question.id}") %>
+        <%= link_to(truncate(h(question.question_text), 35), "/quiz/#{question.id}") %>
         <span style="color: slategray; font-size: 8pt;">
           <%= question.created_at.strftime("%Y/%m/%d %H:%M:%S 登録") %>
         </span>
@@ -72,7 +72,7 @@
     <ul style="list-style-type: decimal;">
     <% @new_books.each do |book| %>
       <li style="font-size: 11pt;">
-        <%= link_to(truncate(erase_tag(book.name), 35), "/books/#{book.id}") %>
+        <%= link_to(truncate(h(book.name), 35), "/books/#{book.id}") %>
         <span style="color: slategray; font-size: 8pt;">
           <%= book.created_at.strftime("%Y/%m/%d %H:%M:%S 登録") %>
         </span>
@@ -116,7 +116,7 @@
     <div class="subcontent">
     <% @tags = Question.tag_counts %>
       <% tag_cloud(@tags, ['tag-x-small', 'tag-small', 'tag-medium', 'tag-large', 'tag-x-large']) do |tag, css_class| %>
-      <%= link_to(tag.name, { :controller => :search, :action => :tag, :id => tag.name }, :class => css_class) %>
+      <%= link_to(h(tag.name), { :controller => :search, :action => :tag, :id => tag.name }, :class => css_class) %>
     <% end %>
     </div>
   </div>

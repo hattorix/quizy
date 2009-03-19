@@ -38,12 +38,13 @@
   }
 </script>
 </head>
-<body onLoad="start()">
+<body <%= "onLoad='start()'" if @exam.time_limit != 0 %>>
   <div id="container">
     <div id="contents">
     <div id="toolbar_box">
-
-    <div id="areaTimer">残り時間：<%= @exam.time_limit %>秒</div>
+    <% if @exam.time_limit != 0 %>
+      <div id="areaTimer">残り時間：<%= @exam.time_limit %>秒</div>
+    <% end %>
     </div>
 
     <div class="spacer_narrow">&nbsp;</div>

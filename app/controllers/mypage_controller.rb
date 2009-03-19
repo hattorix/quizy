@@ -5,15 +5,25 @@ class MypageController < ApplicationController
     @categories = Category.find(:all, :order => 'id')
 
     # マイブック一覧
-    @mybooks = MyBook.find(:all,
-                       :limit => 8,
+    mybooks = MyBook.find(:all,
                        :conditions => ['user_id = ?', current_user.id],
                        :order => "created_at desc")
+    mybook_ids = Array.new
+    mybooks.each do |b|
+      mybook_ids << b.id
+    end
+    @mybooks = MyBook.paginate_by_id mybook_ids, :page => params[:book_page], :per_page => 7
+
     # マイテスト一覧
-    @myexams = MyExam.find(:all,
-                       :limit => 8,
+    myexams = MyExam.find(:all,
                        :conditions => ['user_id = ?', current_user.id],
                        :order => "created_at desc")
+    myexam_ids = Array.new
+    myexams.each do |e|
+      myexam_ids << e.id
+    end
+    @myexams = MyExam.paginate_by_id myexam_ids, :page => params[:exam_page], :per_page => 8
+
     # 最近登録した問題
     @questions = Question.find(:all, :limit => 10, :order => "created_at desc",
                                :conditions => ['user_id = ?', current_user.id])
@@ -28,48 +38,11 @@ class MypageController < ApplicationController
       if @histories.size == 10
         break
       end
-    end
-    
-    if params[:flug]
-      @flg = params[:flug]
     end
   end
   
   def message
-    # カテゴリ一覧
-    @categories = Category.find(:all, :order => 'id')
-
-    # マイブック一覧
-    @mybooks = MyBook.find(:all,
-                       :limit => 8,
-                       :conditions => ['user_id = ?', current_user.id],
-                       :order => "created_at desc")
-    # マイテスト一覧
-    @myexams = MyExam.find(:all,
-                       :limit => 8,
-                       :conditions => ['user_id = ?', current_user.id],
-                       :order => "created_at desc")
-    # 最近登録した問題
-    @questions = Question.find(:all, :limit => 10, :order => "created_at desc",
-                               :conditions => ['user_id = ?', current_user.id])
-    # 最近解答した問題
-    @histories = Array.new
-    all_histories = History.find(:all, :order => "created_at desc",
-                               :conditions => ['user_id = ?', current_user.id])
-    all_histories.each do |history|
-      if Question.find(:first,:conditions => ["id = ?",history.question_id])
-        @histories << history
-      end
-      if @histories.size == 10
-        break
-      end
-    end
-    
-    if params[:flug]
-      @flg = params[:flug]
-    end
-
-    flash[:notice] = "登録しました！"
+    flash[:notice] = params[:message]
     redirect_to :action => "index"
   end
   

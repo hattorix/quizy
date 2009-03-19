@@ -35,8 +35,14 @@ class ApplicationController < ActionController::Base
   end
 =end
 =begin
-def rescue_action( excptn )
-　redirect_to :action => 'error', :controller => 'error'
-end
+  def rescue_action( excptn )
+    redirect_to :action => 'error', :controller => 'error'
+  end
 =end
+
+  rescue_from EOFError do |exception|
+    render :update do |page|
+      page.redirect_to :action => 'mail_error', :controller => 'error'
+    end
+  end
 end

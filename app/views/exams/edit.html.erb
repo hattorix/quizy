@@ -1,4 +1,13 @@
 <%= stylesheet_link_tag "style_exam_detail" %>
+<script language="javascript">
+  function time_limit_config() {
+    if(document.getElementById("time_limit_config").checked) {
+      document.getElementById("exam_time_limit").disabled = false;
+    } else {
+      document.getElementById("exam_time_limit").disabled = true;
+    }
+  }
+</script>
 <div id="screen_title">テストの編集</div>
 <div id="message"></div>
 <div id="main">
@@ -10,7 +19,8 @@
         <%= f.text_field :name %>
       </div>
       <div class="field">
-        <%= f.label "制限時間" %><br />
+      <input type="checkbox" id="time_limit_config" name="time_limit_config" value=1 <%= "checked" if @exam.time_limit %>/>
+        <%= f.label "制限時間を設ける"%><br />
         <%= f.text_field :time_limit %>秒
       </div>
       <div class="field">
@@ -49,3 +59,6 @@
     </div>
   <% end %>
 </div>
+<script language="javascript">
+  timeID = window.setInterval("time_limit_config();",1);
+</script>

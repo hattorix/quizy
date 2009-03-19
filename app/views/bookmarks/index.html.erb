@@ -13,10 +13,10 @@
             <li class="question_text">
               <!--<input id="is_collect[<= q.id %>]" name="is_collect[<= q.id %>]" type="checkbox"/>-->
               <%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
-              <a href="/quiz/<%=q.id%>"><%=truncate(erase_tag(q.question_text), 45)%></a>
+              <a href="/quiz/<%=q.id%>"><%=truncate(h(q.question_text), 45)%></a>
               <%= link_to("#{image_tag('/images/bookmark.gif',
-                         :title => '付箋を剥がす',
-                         :style => 'vertical-align: middle;border: none;')}付箋を剥がす",
+                                   :title => '付箋を剥がす',
+                                   :style => 'vertical-align: middle;border: none;')}付箋を剥がす",
                          :action => 'off_bookmark',
                          :id => q.id) %>
             </li>

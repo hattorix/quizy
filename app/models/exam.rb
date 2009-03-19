@@ -11,7 +11,7 @@ class Exam < ActiveRecord::Base
                          :message => 'を1から100で入力してください。'
   validates_inclusion_of :is_public,
                          :in => 1..2,
-                         :message => 'を1または2で入力してください。'
+                         :message => 'を選択してください。'
 
  class << self
     HUMANIZED_ATTRIBUTE_KEY_NAMES = {

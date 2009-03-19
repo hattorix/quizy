@@ -154,7 +154,7 @@
               <li class="question_text">
                 <input id="is_collect[<%= question.id %>]" name="is_collect[<%= question.id %>]" type="checkbox"/>
                 <%= image_tag('/images/quiz.png', :style => 'border: none') %>
-                <%= truncate(erase_tag(question.question_text), 40)%>
+                <%= truncate(h(question.question_text), 40)%>
               </li>
             <% end %>
           </ul>

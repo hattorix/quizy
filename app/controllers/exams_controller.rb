@@ -36,7 +36,9 @@ class ExamsController < ApplicationController
   def new
     @exam = Exam.new
     @book = Book.find(params[:id])
+    # スマートブックの場合
     if @book.is_smart == true
+      # タグが設定されている場合
       if @book.tags != ""
         questions_t = Array.new
         @tags = @book.tags.split(",")
@@ -45,7 +47,7 @@ class ExamsController < ApplicationController
         end
         questions_t.flatten!.uniq!
       end
-
+      # カテゴリが設定されている場合
       if @book.categories != ""
         questions_c = Array.new
         @categories = @book.categories.split(",")
@@ -55,7 +57,7 @@ class ExamsController < ApplicationController
         end
         questions_c.flatten!.uniq!
       end
-
+      # タグとカテゴリ両方が設定されている場合
       if questions_t && questions_c
         @questions = (questions_t & questions_c)
       elsif @questions = questions_c
@@ -70,6 +72,10 @@ class ExamsController < ApplicationController
 
   def edit
     @exam = Exam.find(params[:id])
+    if @exam.time_limit == 0
+      @exam.time_limit = ""
+    end
+
     if @exam.user_id != current_user.id
       redirect_to :action => "show", :id => params[:id]
     end
@@ -81,6 +87,10 @@ class ExamsController < ApplicationController
     @exam.user_id = current_user.id
     @exam.book_id = params[:id]
     @exam.questions.delete_all
+
+    unless params[:time_limit_config]
+      @exam.time_limit = 0
+    end
 
     book = Book.find(params[:id])
     book.questions.each do |question|
@@ -102,7 +112,7 @@ class ExamsController < ApplicationController
         i += 1
       end
       render :update do |page|
-        page.redirect_to :controller => "mypage"
+          page.redirect_to :controller => "mypage",:action => "message",:message => "テストを作成しました。"
       end
     else
       @msgs = @exam.errors.full_messages
@@ -132,8 +142,6 @@ class ExamsController < ApplicationController
     if @temp = ExamTemp.delete_all(["exam_id = ? and user_id = ?",
                                 params[:id],current_user.id])
     end
-
-    'start()'
 
     # statstics information
     right_answer_rate = @question.correct_count.to_f / @question.question_count.to_f
@@ -302,6 +310,10 @@ class ExamsController < ApplicationController
       end
     end
 
+    unless params[:time_limit_config]
+      @exam.time_limit = 0
+    end
+
     if @exam.update_attributes(params[:exam])
       render :update do |page|
         page.redirect_to :controller => "mypage"
@@ -324,11 +336,13 @@ class ExamsController < ApplicationController
     exam = Exam.find(params[:id])
     myexam = MyExam.find(:first, :conditions =>["exam_id = ? and user_id = ?",params[:id],current_user.id])
     myexam.destroy
+    message = "マイテストからテストを削除しました。"
     if exam.user_id == current_user.id
       exam.questions.delete_all()
       exam.destroy
+      message = "テストを削除しました。"
     end
-    redirect_to :controller => 'mypage'
+      redirect_to :controller => "mypage",:action => "message",:message => message
   end
 
   def rip

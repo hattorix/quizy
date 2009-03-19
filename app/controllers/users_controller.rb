@@ -55,7 +55,6 @@ class UsersController < ApplicationController
       render :update do |page|
         page.redirect_to :action => "send_mail"
       end
-      flash[:notice] = "Thanks for signing up!"
     else
       @msgs =  @user.errors.full_messages
       render :update do |page|
@@ -72,7 +71,6 @@ class UsersController < ApplicationController
     self.current_user = params[:activation_code].blank? ? false : User.find_by_activation_code(params[:activation_code])
     if logged_in? && !current_user.active?
       current_user.activate
-      flash[:notice] = "Signup complete!"
     end
     redirect_to :controller => "mypage"
   end

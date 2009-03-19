@@ -1,6 +1,8 @@
 <script language="javascript">
   function stop(){
-    timer.stop();
+    <% if @exam.time_limit != 0 %>
+      timer.stop();
+    <% end %>
   }
 </script>
 <div id="main">
@@ -20,10 +22,12 @@
     <div id="question_information_box">
       <div class="subtitle">分類</div>
       <div class="subsubtitle">カテゴリ</div>
-      <div class="field"><%= @question.category.name %></div>
+      <div class="field"><%=h @question.category.name %></div>
       <div class="subsubtitle">タグ</div>
-      <div class="field"><%= @question.tag_list.map{|t| '<span class="tag">' + t + '</span>'} %> </div>
-      <%# あとでちゃんと書きましょう %>
+      <div class="field"><% @question.tag_list.map do |t| %>
+          <span class="tag"><%=h t %></span>
+        <% end %>
+      </div>
     </div>
 
     <div class="spacer_narrow">&nbsp;</div>
@@ -31,7 +35,7 @@
     <div id="question_box">
       <div class="subtitle">問題</div>
       <%= hidden_field_tag "question_id", @question.id %>
-      <div class="field"><%= @question.question_text %></div>
+      <div class="field"><%=h @question.question_text %></div>
     </div>
 
     <div class="spacer_narrow">&nbsp;</div>
@@ -49,7 +53,7 @@
           <% selections.each do |s| %>
             <div class="field">
               <input type="radio" id="answer" name="answer"
-                     value="<%= s.id %>" <%= "checked" if ans == s.id.to_s %>/> <%= s.selection_text %>
+                     value="<%= s.id %>" <%= "checked" if ans == s.id.to_s %>/> <%=h s.selection_text %>
             </div>
           <% end %>
         </div>
@@ -58,7 +62,7 @@
           <% selections.each do |s| %>
             <div class="field">
               <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-                     value="<%= s.id %>" <%= "checked" if ans.split(",").include?(s.id.to_s) %> /> <%= s.selection_text %>
+                     value="<%= s.id %>" <%= "checked" if ans.split(",").include?(s.id.to_s) %> /> <%=h s.selection_text %>
             </div>
           <% end %>
         </div>
@@ -104,7 +108,7 @@
         </div>
       <% else %>
         <div id="answer_box">
-          <input name="answer" type="text" size="30" value = <%=ans%>>
+          <input name="answer" type="text" size="30" value=<%=h ans%>>
         </div>
       <% end %>
     </div>

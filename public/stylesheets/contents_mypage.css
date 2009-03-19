@@ -1,7 +1,7 @@
 /*contents layout*/
 
 #main{
-  margin: 0px 15px 0px 15px;
+  margin: -30px 15px 0px 15px;
   padding: 0px;
   width: 870px;
   background: #FFFFFF;
@@ -27,6 +27,15 @@
 
 #toolbar a:visited{
   color: #FFFFFF;
+}
+
+#message {
+  height:20px;
+  margin-left: 20px;
+  padding-top:10px;
+  font-size:11pt;
+  font-weight: bold;
+  color:blue;
 }
 
 #mybook{
@@ -80,6 +89,9 @@
   border: 1px solid silver;
 }
 
+#pagenate {
+  text-align:center;
+}
 
 .mybook_menu {
   float: right;
@@ -164,6 +176,36 @@
 .blue {
   color:blue;
   font-weight: bold;
+}
+
+.pagination {
+  padding: 3px;
+  margin: 3px;
+}
+.pagination a {
+  padding: 2px 5px 2px 5px;
+  margin: 2px;
+  border: 1px solid #aaaadd;
+  text-decoration: none;
+  color: #000099;
+}
+.pagination a:hover, .pagination a:active {
+  border: 1px solid #000099;
+  color: #000;
+}
+.pagination span.current {
+  padding: 2px 5px 2px 5px;
+  margin: 2px;
+  border: 1px solid #000099;
+  font-weight: bold;
+  background-color: #000099;
+  color: #FFF;
+}
+.pagination span.disabled {
+  padding: 2px 5px 2px 5px;
+  margin: 2px;
+  border: 1px solid #eee;
+  color: #ddd;
 }
 
 #settings li a {
