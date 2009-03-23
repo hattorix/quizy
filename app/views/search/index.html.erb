@@ -22,6 +22,16 @@
     <%= link_to("ブック", { :controller => :search, :action => :users_book, :id => @user_name }) %> | 
     <%= link_to("テスト", { :controller => :search, :action => :users_exam, :id => @user_name }) %>
   </div>
+<% elsif @type == "タグ" %>
+  <div id="user_searches">
+    <%= link_to("問題", { :controller => :search, :action => :tag, :id => @id }) %> | 
+    <%= link_to("スマートブック", { :controller => :search, :action => :search_smart_book, :type => 'tag', :id => @id }) %>
+  </div>
+<% elsif @type == "カテゴリ" %>
+  <div id="user_searches">
+    <%= link_to("問題", { :controller => :search, :action => :category, :id => @id }) %> | 
+    <%= link_to("スマートブック", { :controller => :search, :action => :search_smart_book, :type => 'category', :id => @id }) %>
+  </div>
 <% end %>
 <% remote_form_for :question,:url=>{:action => 'add_book'} do -%>
 
@@ -74,7 +84,7 @@
             <% if @flg == 0 %>
               <div class="question_text">
                 <li><%= link_to(truncate(h(result.question_text), 30),
-                             "/quiz/#{result.id}", :title => h(result.question_text.gsub("<br />", "\n"))) %>
+                             "/quiz/#{result.id}", :title => h(result.question_text)) %>
                   <% if logged_in? %>
                     <% @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
                                                                       result.id,
@@ -127,7 +137,7 @@
                          :action => 'tag',:id => result.name) %></li>
 
               <div class="book_and_test">
-                <%= link_to "このタグを含むスマートブックを検索する", :action => 'search_smart_book', :id => result.id %>
+                <%= link_to "このタグを含むスマートブックを検索する", :action => 'search_smart_book', :type => 'tag', :id => result.name %>
               </div>
               <div class="border"></div>
 
@@ -186,7 +196,7 @@
                 <% end %>
               </div>
               <div class="outline_and_notes">
-                <%= result.outline %>
+                <%=hbr result.outline %>
               </div>
               <div class="border"></div>
 
@@ -215,7 +225,7 @@
                 <% end %>
               </div>
               <div class="outline_and_notes">
-                <%=h result.notes %>
+                <%=hbr result.notes %>
               </div>
               <div class="border"></div>
             <% end %>

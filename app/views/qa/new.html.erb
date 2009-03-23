@@ -1,4 +1,6 @@
 <%= stylesheet_link_tag("contents_register") %>
+<script src="/javascripts/prototype.js" type="text/javascript"></script>
+<script src="/javascripts/ResizeTextBox.js" type="text/javascript"></script>
 <%# TODO: edit.html.erbにもあるよ。DRY! DRY! %>
 <script language="javascript">
   function toggleControl() {
@@ -145,7 +147,7 @@ function clearElement(element) {
         <ul>
           <% 10.times do |i| %>
             <li><div class="selection_box"><input id="is_collect[<%= i %>]" name="is_collect" value="[<%= i %>]" type="radio" />
-              <%= text_field_tag "selection[#{i}]", "", :style => 'width: 90%;' %><br /></div></li>
+              <%= text_area_tag "selection[#{i}]", "", :style => 'width: 90%;', :rows => 1, :onFocus => "new ResizingTextArea(this);" %><br /></div></li>
           <% end %>
         </ul>
       </div>
@@ -153,7 +155,7 @@ function clearElement(element) {
         <ul>
           <% 10.times do |i| %>
             <li><div class="selection_box"><input id="is_collect2[<%= i %>]" name="is_collect2[<%= i %>]" type="checkbox" />
-              <%= text_field_tag "selection2[#{i}]", "", :style => 'width: 90%;' %><br /></div></li>
+              <%= text_area_tag "selection2[#{i}]", "", :style => 'width: 90%;', :rows => 1, :onFocus => "new ResizingTextArea(this);" %><br /></div></li>
           <% end %>
         </ul>
       </div>

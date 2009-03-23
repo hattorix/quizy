@@ -4,7 +4,11 @@
                ,"toolbar=0, menubar=0, location=0, scrollbars=1, resize=0, width=960, height=900");
   }
   function disabled_traning() {
-    <% count = @book.questions.size > 0 ? true:false%>
+    <% if @book.is_smart == true %>
+      <% count = @questions.size > 0 ? true:false %>
+    <% else %>
+      <% count = @book.questions.size > 0 ? true:false %>
+    <% end %>
     if (<%= count %>) {
       if(document.getElementById('training_type_qc').checked) {
         if(document.getElementById('quiz_count').value.match(/\d/) && document.getElementById('select_count').value.match(/\d/)) {

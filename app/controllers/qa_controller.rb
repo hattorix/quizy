@@ -21,7 +21,7 @@ class QaController < ApplicationController
     # Question
     @q = Question.new
     @q.question_type = params[:question_type]
-    @q.question_text = params[:question_ta].gsub("\n", "<br />")
+    @q.question_text = params[:question_ta]
     @q.is_public = params[:is_public]
     @q.user_id = current_user.id
     @q.category_id = params[:category]
@@ -85,7 +85,7 @@ class QaController < ApplicationController
 
     # Description
     d = Description.new
-    d.description_text = params[:description_ta].gsub("\n", "<br />")
+    d.description_text = params[:description_ta]
     d.question_id = @q.id
     d.user_id = current_user.id
     @q.description = d
@@ -284,8 +284,8 @@ class QaController < ApplicationController
     #  TODO: QuestionType自体が変更になったときの処理
     quiz = Hash.new
     quiz[:is_public] = params[:is_public]
-    quiz[:question_text] = params[:question_ta].gsub("\n", "<br />")
-    quiz[:question_type] = params[:question_type].gsub("\n", "<br />")
+    quiz[:question_text] = params[:question_ta]
+    quiz[:question_type] = params[:question_type]
     quiz[:category_id] = params[:category]
     quiz[:tag_list] = params[:tag]
     selections = Selection.find(:all, :conditions => ["question_id = ?", params[:question_id]])
@@ -319,7 +319,7 @@ class QaController < ApplicationController
     elsif params[:question_type] == "4"
       old_answer = Answer.find(:first, :conditions => ["question_id = ?", params[:question_id]]).answer_text
       a = Answer.new
-      a.answer_text = params[:answer_ta].gsub("\n", "<br />")
+      a.answer_text = params[:answer_ta]
       a.user_id = current_user.id
       quiz[:answer] = a
     else
@@ -328,7 +328,7 @@ class QaController < ApplicationController
 
     old_desctiprion = Description.find(:first, :conditions => ["question_id = ?", params[:question_id]]).description_text
     d = Description.new
-    d.description_text = params[:description_ta].gsub("\n", "<br />")
+    d.description_text = params[:description_ta]
     quiz[:description] = d
 
     @question = Question.find(params[:question_id])

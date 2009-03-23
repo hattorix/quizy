@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
   layout "application" 
 
   helper :all # include all helpers, all the time
+  before_filter :set_charset
 
   # See ActionController::RequestForgeryProtection for details
   # Uncomment the :secret if you're not using the cookie session store
@@ -44,5 +45,12 @@ class ApplicationController < ActionController::Base
     render :update do |page|
       page.redirect_to :action => 'mail_error', :controller => 'error'
     end
+  end
+  
+protect_from_forgery
+
+  private
+  def set_charset
+    headers['Content-Type'] = "text/html; charset=utf-8"
   end
 end

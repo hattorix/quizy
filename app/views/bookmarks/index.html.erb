@@ -1,27 +1,48 @@
 
 <%= stylesheet_link_tag "style_import_mypage" %>
+
+<script language="javascript">
+  function submit_disabled() {
+    var flg = 0;
+    <% @questions.each do |q| %>
+      if(document.getElementById("is_delete[<%= q.id %>]").checked){
+        flg = 1;
+      }
+    <% end %>
+    if(flg == 0){
+      document.getElementById("submit").disabled = true;
+    } else {
+      document.getElementById("submit").disabled = false;
+    }
+  }
+</script>
+
 <div id="screen_title">
   付箋を貼った問題一覧
 </div>
 
 <div id="main">
+<% form_tag :action => 'off_bookmark' do |f| -%>
   <div class="subcontent">
     <div id="question_list">
       <% if @questions.size >= 1 %>
         <ul>
           <% @questions.each do |q| %>
             <li class="question_text">
-              <!--<input id="is_collect[<= q.id %>]" name="is_collect[<= q.id %>]" type="checkbox"/>-->
+              <input id="is_delete[<%= q.id %>]" name="is_delete[<%= q.id %>]" type="checkbox"/>
               <%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
               <a href="/quiz/<%=q.id%>"><%=truncate(h(q.question_text), 45)%></a>
-              <%= link_to("#{image_tag('/images/bookmark.gif',
-                                   :title => '付箋を剥がす',
-                                   :style => 'vertical-align: middle;border: none;')}付箋を剥がす",
-                         :action => 'off_bookmark',
-                         :id => q.id) %>
+              <%# link_to("#{image_tag('/images/bookmark.gif',
+#                                   :title => '付箋を剥がす',
+#                                   :style => 'vertical-align: middle;border: none;')}付箋を剥がす",
+#                         :action => 'off_bookmark',
+#                         :id => q.id) %>
             </li>
           <% end %>
         </ul>
+        <script language="javascript">
+         time = window.setInterval("submit_disabled();",1);
+       </script>
       <% else %>
         <div style="text-align:center;">付箋はありません。</div>
       <% end %>
@@ -32,9 +53,9 @@
 
 <div id="submit_box">
   <% if @questions.size >= 1 %>
-    <%= button_to "全ての付箋を剥がす", :action => 'off_bookmark', :id => @questions %>
+    <%= button_to "チェックした付箋を剥がす", {:action => 'off_bookmark', :id => @questions},:id => "submit" %>
   <% else %>
-    <%= button_to "全ての付箋を剥がす", {:action => 'off_bookmark', :id => @questions}, {:disabled => true} %>
+    <%= button_to "チェックした付箋を剥がす", {:action => 'off_bookmark', :id => @questions}, {:disabled => true} %>
   <% end %>
   <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
 
@@ -50,6 +71,6 @@
 </div>
 
 <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
-
+<% end %>
 </div>
 

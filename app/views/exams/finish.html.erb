@@ -18,7 +18,7 @@
       <tr>
         <td><%= question_exam.seq+1 %></td>
         <td>
-          <%=h question.question_text %>
+          <%=hbr question.question_text %>
         </td>
         <% if examtemp = @examtemps.find {|i| i.question_id == question.id} %>
           <% your_answer = examtemp.answer %>
@@ -43,7 +43,7 @@
         <% else %>
           <% your_answer = "" %>
         <% end %>
-        <td>『<%=h your_answer %>』</td>
+        <td>『<%=hbr your_answer %>』</td>
         <% if question.question_type == 1 %>
           <% t_answer = Selection.find(:first,:conditions => ["question_id = ? and is_collect = 1",
                                                       question.id]).selection_text %>
@@ -62,7 +62,7 @@
           <% t_answer = Answer.find(:first,:conditions => ["question_id = ?",
                                                       question.id]).answer_text %>
         <% end %>
-        <td>『<%=h t_answer %>』</td>
+        <td>『<%=hbr t_answer %>』</td>
         <td>
           <% if examtemp = @examtemps.find {|i| i.question_id == question.id} %>
             <% if examtemp.t_or_f == true %>

@@ -80,6 +80,10 @@ class BookmarksController < ApplicationController
     @exam.book_id = params[:id]
     @exam.questions.delete_all
 
+    unless params[:time_limit_config]
+      @exam.time_limit = 0
+    end
+
     bookmarks = Bookmark.find(:all, :conditions => ["user_id = ?",current_user.id])
     bookmarks.each do |bookmark|
       question = Question.find(bookmark.question_id)
@@ -123,16 +127,10 @@ class BookmarksController < ApplicationController
 
 
   def off_bookmark
-    ids = params[:id].split("/")
-    if ids.size == 1
-      if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",params[:id],current_user.id])
+    ids = params[:is_delete].keys
+    ids.each do |id|
+      if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",id,current_user.id])
         bookmark.destroy
-      end
-    else
-      ids.each do |id|
-        if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",id,current_user.id])
-          bookmark.destroy
-        end
       end
     end
     redirect_to :action => :index

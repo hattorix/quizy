@@ -7,12 +7,12 @@
       <% if desc == ""  %>
         <% desc = "解説はありません" %>
       <% end %>
-      <div class="question"><%=h desc %></div>
+      <div class="question"><%=hbr desc %></div>
 
       <div class="spacer_narrow">&nbsp;</div>
 
       <div class="subtitle">問題</div>
-      <div class="question"><%=h @question.question_text %></div>
+      <div class="question"><%=hbr @question.question_text %></div>
 
       <div class="spacer_narrow">&nbsp;</div>
 
@@ -35,7 +35,7 @@
       <% end %>
 
       <div class="subtitle">正解</div>
-      <div class="question"><%=h answer %></div>
+      <div class="question"><%=hbr answer %></div>
 
     </div>
     <% if @is_collect != "1" %>

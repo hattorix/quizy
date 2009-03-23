@@ -91,7 +91,7 @@
 <div id="question_text_box">
   <div class="subtitle">問題</div>
   <%= hidden_field_tag "question_id", @question.id %>
-  <div class="field"><%=h @question.question_text %></div>
+  <div class="field"><%=hbr @question.question_text %></div>
 </div>
 
 <div class="spacer_narrow">&nbsp;</div>
@@ -106,24 +106,24 @@
   <% end %>
   <% if @question.question_type == 1 %>
     <div id="selection_box">
-    <% selections.each do |s| %>
-    <div class="field">
-        <input type="radio" id="answer[<%= s.id %>]" name="answer"
-               value="<%= s.id %>"/> <%=h s.selection_text %>
-    </div>
-    <% end %>
+      <% selections.each do |s| %>
+        <div class="field">
+          <input type="radio" id="answer[<%= s.id %>]" name="answer"
+                 value="<%= s.id %>" style="margin-left:-13px;"/><%=hbr s.selection_text %>
+        </div>
+      <% end %>
     </div>
     <script language="javascript">
       time = window.setInterval("submit_disabled_check();",1);
     </script>
   <% elsif @question.question_type == 2 %>
     <div id="selection_box">
-    <% selections.each do |s| %>
-    <div class="field">
-      <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-             value="<%= s.id %>"/> <%=h s.selection_text %>
-    </div>
-    <% end %>
+      <% selections.each do |s| %>
+        <div class="field">
+          <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
+                 value="<%= s.id %>"/> <%=hbr s.selection_text %>
+        </div>
+      <% end %>
     </div>
     <script language="javascript">
       time = window.setInterval("submit_disabled_select();",1);

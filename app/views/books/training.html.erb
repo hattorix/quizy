@@ -61,7 +61,7 @@
           <div id="question_text_box">
             <div class="subtitle">問題</div>
             <%= hidden_field_tag "question_id", @question.id %>
-            <div class="field"><%=h @question.question_text %></div>
+            <div class="field"><%=hbr @question.question_text %></div>
           </div>
 
           <div class="spacer_narrow">&nbsp;</div>
@@ -80,7 +80,7 @@
                 <% selections.each do |s| %>
                   <div class="field">
                     <input type="radio" id="answer[<%= i %>]" name="answer"
-                           value="<%= s.id %>"/> <%=h s.selection_text %>
+                           value="<%= s.id %>" style="margin-left:-13px;"/> <%=hbr s.selection_text %>
                   </div>
                   <% i+=1 %>
                 <% end %>
@@ -93,7 +93,7 @@
                 <% selections.each do |s| %>
                   <div class="field">
                     <input type="checkbox" id="answer[<%= i %>]" name="answer[<%= i %>]"
-                           value="<%= s.id %>"/> <%=h s.selection_text %>
+                           value="<%= s.id %>" style="margin-left:-13px;"/> <%=hbr s.selection_text %>
                   </div>
                   <% i+=1 %>
                 <% end %>
@@ -155,9 +155,14 @@
           <div class="subsubtitle">カテゴリ</div>
           <div class="field"><%=h @question.category.name %></div>
           <div class="subsubtitle">タグ</div>
-          <div class="field"><% @question.tag_list.map do |t| %>
-              <span class="tag"><%=h t %></span>
-             <% end %>
+          <div class="field">
+            <% if @question.tag_list.size > 0 %>
+              <% @question.tag_list.map do |t| %>
+                <%= link_to(h(t), { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
+              <% end %>
+            <% else %>
+              -
+            <% end %>
           </div>
           <div class="subsubtitle">あなたの正答率</div>
           <div class="field">：<%= @my_reat %>％

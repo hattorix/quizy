@@ -143,7 +143,7 @@
       <ul>
         <% @questions.each do |q| %>
           <li class="question_text"><%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
-            <a href="/quiz/<%=q.id%>" title = "<%=h q.question_text.gsub("<br />", "\n") %>" ><%= truncate(h(q.question_text), 45)%></a>
+            <a href="/quiz/<%=q.id%>" title = "<%=h q.question_text %>" ><%= truncate(h(q.question_text), 45)%></a>
             <div class="tags">
               <% q.tag_list.map do |t| %>
                 <%= link_to(h(t), { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>

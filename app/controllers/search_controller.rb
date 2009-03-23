@@ -10,10 +10,12 @@ class SearchController < ApplicationController
   end
 
   def category
+    @id = params[:id]
     @results = Question.find(:all, :conditions => ['category_id = ? and is_public = 1', params[:id]])
     category = Category.find(params[:id])
 #    render :partial => 'results', :collection => results
     @flg = 0
+    @type = "カテゴリ"
     @result_text = "『#{category.name}』カテゴリの問題"
 
     result_ids = Array.new
@@ -37,8 +39,10 @@ class SearchController < ApplicationController
   end
 
   def tag
+    @id = params[:id]
     @results = Question.find_tagged_with(params[:id])
     @flg = 0
+    @type = "タグ"
     @result_text = "『#{params[:id]}』タグの問題"
 
     result_ids = Array.new
@@ -426,10 +430,19 @@ class SearchController < ApplicationController
   end
   
   def search_smart_book
-    tag = Tag.find(params[:id])
-    @results = Book.find(:all, :conditions => ["tags like ? and is_public = 1 ","%#{tag.name}%"])
-    @flg = 2
-    @result_text = "『#{tag.name}』タグを含むスマートブック"
+    @id = params[:id]
+    if params[:type] == "tag"
+      @results = Book.find(:all, :conditions => ["tags like ? and is_public = 1 ","%#{params[:id]}%"])
+      @flg = 2
+      @type = "タグ"
+      @result_text = "『#{params[:id]}』タグを含むスマートブック"
+    elsif params[:type] == "category"
+      category = Category.find(params[:id])
+      @results = Book.find(:all, :conditions => ["categories like ? and is_public = 1 ","%#{category.name}%"])
+      @flg = 2
+      @type = "カテゴリ"
+      @result_text = "『#{category.name}』カテゴリを含むスマートブック"
+    end
 
     result_ids = Array.new
     @results.each do |result|
