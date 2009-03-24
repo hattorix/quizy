@@ -18,11 +18,11 @@ ResizingTextArea.prototype = {
         var lines = t.value.split('\n');
         var newRows = lines.length + 1;
         var oldRows = t.rows;
-        for (var i = 1; i < lines.length; i++)
-        {
-            var line = lines[i];
-            if (line.length >= t.cols) newRows += Math.floor(line.length / t.cols);
-        }
+//        for (var i = 1; i < lines.length; i++)
+//        {
+//            var line = lines[i];
+//            if (line.length >= t.cols) newRows += Math.floor(line.length / t.cols);
+//        }
         if (newRows > t.rows) t.rows = newRows;
         if (newRows < t.rows) t.rows = Math.max(this.defaultRows, newRows);
     }

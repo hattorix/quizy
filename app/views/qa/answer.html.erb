@@ -19,26 +19,8 @@
 
       <div class="spacer_narrow">&nbsp;</div>
 
-      <% if @question.question_type == 1 %>
-        <% answer = Selection.find(:first,:conditions => ["question_id = ? and is_collect = 1",
-                                                      @question.id]).selection_text %>
-      <% elsif @question.question_type == 2 %>
-        <% selections = Selection.find(:all,:conditions => ["question_id = ? and is_collect = 1",
-                                                      @question.id]) %>
-        <% answers= Array.new %>
-        <% selections.each do |selection| %>
-            <% answers << selection.selection_text %>
-        <% end %>
-        <% answer = answers.join(',') %>
-      <% elsif @question.question_type == 3 %>
-        <% answer = @question.y_or_n == true ? "○" : "×" %>
-      <% else %>
-        <% answer = Answer.find(:first,:conditions => ["question_id = ?",
-                                                    @question.id]).answer_text %>
-      <% end %>
-
       <div class="subtitle">正解</div>
-      <div class="question"><%=hbr answer %></div>
+      <div class="question"><%=hbr @answer %></div>
 
     </div>
     <% if @is_collect != "1" %>

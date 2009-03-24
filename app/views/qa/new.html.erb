@@ -40,20 +40,27 @@
       }
     }
   }
+
+  function resizeReset(event) {
+    var t = Event.element(event);
+    t.rows = 1;
+  }
+
   function reload() {
     location.reload()
   }
-function clearFormAll() {
+
+  function clearFormAll() {
     for (var i=0; i<document.forms.length; ++i) {
         clearForm(document.forms[i]);
     }
-}
-function clearForm(form) {
+  }
+  function clearForm(form) {
     for(var i=0; i<form.elements.length; ++i) {
         clearElement(form.elements[i]);
     }
-}
-function clearElement(element) {
+  }
+  function clearElement(element) {
     switch(element.type) {
         case "hidden":
         case "submit":
@@ -78,7 +85,7 @@ function clearElement(element) {
             return;
         default:
     }
-}
+  }
 </script>
 <div id="screen_title">問題の登録</div>
   <div id="message"></div>
@@ -147,7 +154,12 @@ function clearElement(element) {
         <ul>
           <% 10.times do |i| %>
             <li><div class="selection_box"><input id="is_collect[<%= i %>]" name="is_collect" value="[<%= i %>]" type="radio" />
-              <%= text_area_tag "selection[#{i}]", "", :style => 'width: 90%;', :rows => 1, :onFocus => "new ResizingTextArea(this);" %><br /></div></li>
+              <%= text_area_tag "selection[#{i}]",
+                            "",
+                            :style => 'width: 90%;',
+                            :rows => 1,
+                            :onFocus => "new ResizingTextArea(this);",
+                            :onblur => "resizeReset(event)" %><br /></div></li>
           <% end %>
         </ul>
       </div>
@@ -155,7 +167,12 @@ function clearElement(element) {
         <ul>
           <% 10.times do |i| %>
             <li><div class="selection_box"><input id="is_collect2[<%= i %>]" name="is_collect2[<%= i %>]" type="checkbox" />
-              <%= text_area_tag "selection2[#{i}]", "", :style => 'width: 90%;', :rows => 1, :onFocus => "new ResizingTextArea(this);" %><br /></div></li>
+              <%= text_area_tag "selection2[#{i}]",
+                            "",
+                            :style => 'width: 90%;',
+                            :rows => 1,
+                            :onFocus => "new ResizingTextArea(this);",
+                            :onblur => "resizeReset(event)" %><br /></div></li>
           <% end %>
         </ul>
       </div>

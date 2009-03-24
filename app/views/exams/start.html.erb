@@ -46,7 +46,7 @@
     <div class="spacer_narrow">&nbsp;</div>
 
     <div id="response_box" <%= "style='height:250px;'" if @question.question_type == 3 %>>
-      <div class="subtitle">回答</div>
+      <div class="subtitle" style="margin-left:-10px;">回答</div>
       <%= hidden_field_tag "question_type", @question.question_type %>
       <% if @question.is_random == true %>
         <% selections = @selections.sort_by{rand} %>
@@ -67,7 +67,7 @@
           <% selections.each do |s| %>
             <div class="field">
               <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-                     value="<%= s.id %>" style="margin-left:-13px;" <%= "checked" if ans.split(",").include?(s.id.to_s) %> /> <%=hbr s.selection_text %>
+                     value="<%= s.id %>" style="margin-left:-17px;" <%= "checked" if ans.split(",").include?(s.id.to_s) %> /> <%=hbr s.selection_text %>
             </div>
           <% end %>
         </div>

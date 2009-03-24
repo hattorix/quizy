@@ -5,6 +5,13 @@
     for(count = 0; count < document.getElementsByName("to_add_book[]").length; count++){
       document.getElementsByName("to_add_book[]")[count].checked = check;
     }
+    if (check == false) {
+      document.getElementById("to_add_book_all").value = "false"
+    }
+  }
+
+  function all_check_all_page(){
+    document.getElementById("to_add_book_all").value = "true";
   }
 
   function add_book(){
@@ -12,6 +19,30 @@
     if (a.value == "new") {
       ret = this.open("/search/new_book/", "CtrlWindow"
                      ,"toolbar=0, menubar=0, location=0, scrollbars=0, resize=0, width=800, height=470");
+    }
+  }
+  function check_check(){
+    var count;
+    var flug = 0;
+    for(count = 0; count < document.getElementsByName("to_add_book[]").length; count++){
+      if(document.getElementsByName("to_add_book[]")[count].checked) {
+        flug++;
+      }
+    }
+    if(flug == document.getElementsByName("to_add_book[]").length) {
+      if(document.getElementById("to_add_book_all").value == "true"){
+        document.getElementById("all_check").style.display = "none";
+        document.getElementById("all_check_all_page").style.display = "none";
+        document.getElementById("all_checked").style.display = "block";
+      } else {
+        document.getElementById("all_check").style.display = "none";
+        document.getElementById("all_check_all_page").style.display = "block";
+        document.getElementById("all_checked").style.display = "none";
+      }
+    } else {
+      document.getElementById("all_check").style.display = "block";
+      document.getElementById("all_check_all_page").style.display = "none";
+      document.getElementById("all_checked").style.display = "none";
     }
   }
 </script>
@@ -33,15 +64,26 @@
     <%= link_to("スマートブック", { :controller => :search, :action => :search_smart_book, :type => 'category', :id => @id }) %>
   </div>
 <% end %>
-<% remote_form_for :question,:url=>{:action => 'add_book'} do -%>
-
+<% remote_form_for :question,:url=>{:action => 'add_book',:results_all => @results_all} do -%>
+<%= hidden_field_tag("to_add_book_all",@add_book_all) %>
   <% if @flg == 0 && @results.size >= 1 && logged_in? %>
     <div class="add_book">
       <div style="float:right;">
         <span id="bookmark">
-          <%= render :partial => "bookmark", :locals => {:question_id => @results,
-                                                    :is_bookmark => @is_bookmark_all,
-                                                    :results => @results} %>
+          <div id="bookmark_all">
+            <%= render :partial => "bookmark", :locals => {:question_id => @results,
+                                                      :is_bookmark => @is_bookmark_all,
+                                                      :questions => @results,
+                                                      :all_questions => @results_all,
+                                                      :type => "all"} %>
+          </div>
+          <div id="bookmark_all_page">
+            <%= render :partial => "bookmark", :locals => {:question_id => @results_all,
+                                                      :is_bookmark => @is_bookmark_all_page,
+                                                      :questions => @results,
+                                                      :all_questions => @results_all,
+                                                      :type => "all_page"} %>
+          </div>
         </span>
         <div class="add_book_form">
           選択した問題をブックに追加
@@ -61,9 +103,16 @@
         </div>
         <span id="add_book_message_all"></span>
       </div>
+
       <div class="to_add_book_controller">
-        <%= button_to_function '全て選択','all_check(true);' %>
-        <%= button_to_function '全て解除','all_check(false);' %>
+        <% if @results.total_entries >= 11 %>
+          <div id="all_check"><%= button_to_function "このページの全てを選択",'all_check(true);' %></div>
+          <div id="all_check_all_page" style="display:none;"><%= button_to_function "検索結果#{@results.total_entries}件全てを選択",'all_check_all_page()' %></div>
+          <div id="all_checked" style="display:none;"><%= button_to "検索結果#{@results.total_entries}件全てを選択済","",:disabled => true %></div>
+        <% else %>
+          <div id="all_check"><%= button_to_function "全てを選択",'all_check(true);' %></div>
+        <% end %>
+        <%= button_to_function "全て解除",'all_check(false)' %>
       </div>
     </div>
   <% end %>
@@ -93,7 +142,9 @@
                     <span id="bookmark<%= @question_id %>">
                       <%= render :partial => "bookmark", :locals=>{:question_id => @question_id,
                                                              :is_bookmark => @is_bookmark,
-                                                             :results => @results} %>
+                                                             :questions => @results,
+                                                             :all_questions => @results_all,
+                                                             :type => "single"} %>
                     </span>
                   <% end %>
                 </li>
@@ -232,7 +283,7 @@
           <% end %>
           <div id="pagenate"><%= will_paginate(@results,
                                          :prev_label=>'&#171;前', :next_label=>'次&#187;',
-                                         :params => {:conditions => @conditions,:search_for => @flg,:searchtype => @searchtype}) %></div>
+                                         :params => {:conditions => @conditions,:search_for => @flg,:searchtype => @searchtype,:add_book_all => params[:to_add_book_all]}) %></div>
         </ul>
       <% else %>
         <div id="result_table">
@@ -242,3 +293,8 @@
     </div>
   </div>
 <% end -%>
+<% if @results.total_entries >= 11 %>
+  <script language="javascript">
+    time = window.setInterval("check_check();",1);
+  </script>
+<% end %>

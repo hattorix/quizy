@@ -96,7 +96,7 @@ a {
 }
 
 #response_box {
-  padding: 10px;
+  padding: 10px 10px 10px 20px;
   border: 1px solid silver;
 }
 

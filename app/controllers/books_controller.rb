@@ -412,6 +412,10 @@ class BooksController < ApplicationController
         @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
         @question.save
       end
+
+      @answer = "『#{Selection.find(:first,:conditions => ["question_id = ? and is_collect = 1",
+                                                      @question.id]).selection_text}』"
+
     elsif question_type == "2"
       if params[:answer]
         user_answers = params[:answer].values
@@ -441,6 +445,18 @@ class BooksController < ApplicationController
         @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
         @question.save
       end
+
+      selections = Selection.find(:all,:conditions => ["question_id = ? and is_collect = 1",
+                                                      @question.id])
+      answers= Array.new
+      selections.each do |selection|
+          answers << "『#{selection.selection_text}』"
+      end
+      @answer = answers.join
+      if @answer["\n"]
+        @answer = answers.join("\n")
+      end
+
     elsif question_type == "3"
       result = Question.count(:conditions => ["id = ? and y_or_n = ?",
                                               question_id,answer])
@@ -459,6 +475,9 @@ class BooksController < ApplicationController
         @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
         @question.save
       end
+
+      @answer = @question.y_or_n == true ? "『○』" : "『×』"
+
     elsif question_type == "4"
       answer = params[:answer]
       p answer
@@ -476,7 +495,11 @@ class BooksController < ApplicationController
         @is_collect = "0"
         @question.update_attribute("wrong_count", @question.wrong_count.to_i + 1)
         @question.save
-     end
+      end
+
+      @answer = "『#{Answer.find(:first,:conditions => ["question_id = ?",
+                                                    @question.id]).answer_text}』"
+
     else
       raise("must not happend")
     end

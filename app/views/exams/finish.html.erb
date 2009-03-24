@@ -24,45 +24,51 @@
           <% your_answer = examtemp.answer %>
           <% if question.question_type == 1 %>
             <% if your_answer.to_i != 0 %>
-              <% your_answer = Selection.find(your_answer.to_i).selection_text %>
+              <% your_answer = "『#{Selection.find(your_answer.to_i).selection_text}』" %>
             <% end %>
           <% elsif question.question_type == 2 %>
             <% answers = Array.new %>
             <% your_answer.split(",").each do |i| %>
               <% a = Selection.find(i.to_i).selection_text %>
-              <% answers << a %>
+              <% answers << "『#{a}』" %>
             <% end %>
-            <% your_answer = answers.join(",") %>
+            <% your_answer = answers.join %>
+            <% if your_answer["\n"] %>
+              <% your_answer = answers.join("\n") %>
+            <% end %>
           <% elsif question.question_type == 3 %>
             <% if your_answer == "1" %>
-              <% your_answer = "○" %>
+              <% your_answer = "『○』" %>
             <% elsif your_answer == "0" %>
-              <% your_answer = "×" %>
+              <% your_answer = "『×』" %>
             <% end %>
+          <% else %>
+            <% your_answer = "『#{your_answer}』" %>
           <% end %>
         <% else %>
-          <% your_answer = "" %>
+          <% your_answer = "『』" %>
         <% end %>
-        <td>『<%=hbr your_answer %>』</td>
+        <td><%=hbr your_answer %></td>
         <% if question.question_type == 1 %>
-          <% t_answer = Selection.find(:first,:conditions => ["question_id = ? and is_collect = 1",
-                                                      question.id]).selection_text %>
+          <% t_answer = "『#{Selection.find(:first,:conditions => ['question_id = ? and is_collect = 1',question.id]).selection_text}』" %>
         <% elsif question.question_type == 2 %>
           <% selections = Selection.find(:all,:conditions => ["question_id = ? and is_collect = 1",
                                                       question.id]) %>
           <% t_answers= Array.new %>
           <% selections.each do |selection| %>
-            <% t_answers << selection.selection_text %>
+            <% t_answers << "『#{selection.selection_text}』" %>
           <% end %>
-          <% t_answer = t_answers.join(',') %>
+          <% t_answer = t_answers.join %>
+          <% if t_answer["\n"] %>
+            <% t_answer = answers.join("\n") %>
+          <% end %>
         <% elsif question.question_type == 3 %>
           <% t_answer = Question.find(question.id).y_or_n %>
-          <% t_answer = t_answer == true ? "○" : "×" %>
+          <% t_answer = t_answer == true ? "『○』" : "『×』" %>
         <% else %>
-          <% t_answer = Answer.find(:first,:conditions => ["question_id = ?",
-                                                      question.id]).answer_text %>
+          <% t_answer = "『#{Answer.find(:first,:conditions => ['question_id = ?',question.id]).answer_text}』" %>
         <% end %>
-        <td>『<%=hbr t_answer %>』</td>
+        <td><%=hbr t_answer %></td>
         <td>
           <% if examtemp = @examtemps.find {|i| i.question_id == question.id} %>
             <% if examtemp.t_or_f == true %>

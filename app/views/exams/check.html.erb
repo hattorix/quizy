@@ -19,14 +19,6 @@
     <% i = 0 %>
     <% @question_exams.each do |question_exam| %>
       <% question = Question.find(question_exam.question_id) %>
-<!--      < if @narrowing == true %>
-        < if temp = ExamTemp.find(:first,:conditions => ["exam_id = ? and question_id = ? and user_id = ?",
-                                                    @exam.id,question.id,current_user.id]) %>
-          < next if temp.status != 'review' %>
-        < else %>
-          < next %>
-        < end %>
-      < end %>-->
       <tr>
         <td><%= i += 1 %></td>
         <td>
@@ -41,28 +33,33 @@
           <% answer = examtemp.answer %>
           <% if question.question_type == 1 %>
             <% if answer.to_i != 0 %>
-              <% answer = Selection.find(answer.to_i).selection_text %>
+              <% answer = "『#{Selection.find(answer.to_i).selection_text}』" %>
             <% end %>
           <% elsif question.question_type == 2 %>
             <% answers = Array.new %>
             <% answer.split(",").each do |j| %>
               <% a = Selection.find(j.to_i).selection_text %>
-              <% answers << a %>
+              <% answers << "『#{a}』" %>
             <% end %>
-            <% answer = answers.join(",") %>
+            <% answer = answers.join %>
+            <% if answer["\n"] %>
+              <% answer = answers.join("\n") %>
+            <% end %>
           <% elsif question.question_type == 3 %>
             <% if answer == "1" %>
-              <% answer = "○" %>
+              <% answer = "『○』" %>
             <% elsif answer == "0" %>
-              <% answer = "×" %>
+              <% answer = "『×』" %>
             <% end %>
+          <% else %>
+            <% answer = "『#{answer}』" %>
           <% end %>
           <% status = examtemp.status %>
         <% else %>
           <% answer = "" %>
           <% status = "" %>
         <% end %>
-        <td>『<%=hbr answer %>』</td>
+        <td><%=hbr answer %></td>
         <% if review_count > 0 %>
           <td nowrap>
             <% if status == "review" %>

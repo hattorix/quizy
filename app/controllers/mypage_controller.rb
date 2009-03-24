@@ -12,7 +12,7 @@ class MypageController < ApplicationController
     mybooks.each do |b|
       mybook_ids << b.id
     end
-    @mybooks = MyBook.paginate_by_id mybook_ids, :page => params[:book_page], :per_page => 7
+    @mybooks = MyBook.paginate_by_id mybook_ids, :page => params[:book_page], :per_page => 7,:order => "created_at desc"
 
     # マイテスト一覧
     myexams = MyExam.find(:all,
@@ -22,7 +22,7 @@ class MypageController < ApplicationController
     myexams.each do |e|
       myexam_ids << e.id
     end
-    @myexams = MyExam.paginate_by_id myexam_ids, :page => params[:exam_page], :per_page => 8
+    @myexams = MyExam.paginate_by_id myexam_ids, :page => params[:exam_page], :per_page => 8,:order => "created_at desc"
 
     # 最近登録した問題
     @questions = Question.find(:all, :limit => 10, :order => "created_at desc",
