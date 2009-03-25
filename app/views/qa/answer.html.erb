@@ -15,7 +15,7 @@
       <div class="spacer_narrow">&nbsp;</div>
 
       <div class="subtitle">問題</div>
-      <div class="question"><%=hbr @question.question_text %></div>
+      <div class="question"><%=qa_to_html qa(@question.question_text) %></div>
 
       <div class="spacer_narrow">&nbsp;</div>
 

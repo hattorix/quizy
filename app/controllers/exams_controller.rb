@@ -153,10 +153,7 @@ class ExamsController < ApplicationController
   
   def next
 
-    self.quiz(:id => params[:id],
-               :question_id => params[:question_id],
-               :answer => params[:answer],
-               :review => params["review"])
+    quiz()
 
     @exam = Exam.find(params[:id])
     @question_exams = QuestionExam.find(:all, :conditions => ["exam_id = ? and enabled = 1",@exam.id], :order => "seq")
@@ -203,10 +200,7 @@ class ExamsController < ApplicationController
   
   def check
 
-    self.quiz(:id => params[:id],
-               :question_id => params[:question_id],
-               :answer => params[:answer],
-               :review => params["review"])
+    quiz()
 
     @exam = Exam.find(params[:id])
     question_exam = QuestionExam.find(:first, :conditions => ["exam_id = ? and question_id = ?",
@@ -235,10 +229,7 @@ class ExamsController < ApplicationController
 
   def finish
     if params[:question_id]
-      self.quiz(:id => params[:id],
-                 :question_id => params[:question_id],
-                 :answer => params[:answer],
-                 :review => params["review"])
+      quiz()
     end
 
     @count = ExamTemp.count(:conditions => ["exam_id = ? and user_id = ? and t_or_f = ?",
@@ -389,7 +380,11 @@ class ExamsController < ApplicationController
     end
   end
 
-  def quiz(params)
+
+
+private
+
+  def quiz()
       if @temp = ExamTemp.find(:first, :conditions => ["exam_id = ? and question_id = ? and user_id = ?",
                                                        params[:id], params[:question_id], current_user.id])
       else

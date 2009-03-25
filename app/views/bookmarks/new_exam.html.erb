@@ -12,7 +12,7 @@
 <div id="message"></div>
 <div style="fontcolor:red"><%= flash[:notice] %></div>
 <div id="main">
-  <% remote_form_for @exam,:url => {:action => 'create_exam'} do |f| %>
+  <% remote_form_for @exam,:url => {:action => 'create_exam',:is_collect => @is_collect} do |f| %>
     <div id="form">
       <%= f.error_messages %>
       <div class="field">
@@ -41,9 +41,10 @@
     <div id="this_exam_questions">
       <h2 class="subtitle">問題一覧</h2>
       <ul class="question_list">
-      <% @questions.each do |question| %>
+      <% @is_collect.each do |id| %>
         <li class="question_text">
           <%= image_tag('/images/quiz.png', :style => 'border: none') %>
+          <% question = Question.find(id) %>
           <%= truncate(h(question.question_text), 40) %>
         </li>
       <% end %>

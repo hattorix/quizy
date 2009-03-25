@@ -25,31 +25,12 @@ class SearchController < ApplicationController
     @results.each do |result|
       result_ids << result.id
     end
-    @results_all = @results
-    # 全ての付箋を調べる
-    all_bookmarks = Array.new
-    @results.each do |result|
-      all_bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
-                                                              result.id,
-                                                              current_user.id])
-    end
-    all_bookmarks.compact!
-    @is_bookmark_all_page = true if all_bookmarks.size == @results_all.size
+
+    all_bookmarks()
 
     @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
 
-    # ページ内付箋を調べる
-    bookmarks = Array.new
-    if logged_in?
-      @results.each do |result|
-        bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
-                                                            result.id,
-                                                            current_user.id])
-      end
-      bookmarks.compact!
-      @is_bookmark_all = true if bookmarks.size == @results.size
-
-    end
+    bookmarks()
 
     render :action => :index
   end
@@ -70,30 +51,11 @@ class SearchController < ApplicationController
     end
     @results_all = @results
 
-    # 全ての付箋を調べる
-    all_bookmarks = Array.new
-    @results.each do |result|
-      all_bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
-                                                              result.id,
-                                                              current_user.id])
-    end
-    all_bookmarks.compact!
-    @is_bookmark_all_page = true if all_bookmarks.size == @results_all.size
+    all_bookmarks()
 
     @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
 
-    # ページ内付箋を調べる
-    bookmarks = Array.new
-    if logged_in?
-      @results.each do |result|
-        bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
-                                                            result.id,
-                                                            current_user.id])
-      end
-      bookmarks.compact!
-      @is_bookmark_all = true if bookmarks.size == @results.size
-
-    end
+    bookmarks()
 
     render :action => :index
   end
@@ -172,30 +134,12 @@ class SearchController < ApplicationController
       if @flg == 0            #問題検索
         @results_all = @results
 
-        # 全ての付箋を調べる
-        all_bookmarks = Array.new
-        @results.each do |result|
-          all_bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
-                                                              result.id,
-                                                              current_user.id])
-        end
-        all_bookmarks.compact!
-        @is_bookmark_all_page = true if all_bookmarks.size == @results_all.size
+        all_bookmarks()
 
         @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
 
-        # ページ内付箋を調べる
-        bookmarks = Array.new
-        if logged_in?
-          @results.each do |result|
-            bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
-                                                                result.id,
-                                                                current_user.id])
-          end
-          bookmarks.compact!
-          @is_bookmark_all = true if bookmarks.size == @results.size
+        bookmarks()
 
-        end
       elsif @flg == 1         #タグ検索
         @results_all = @results
         @results = Tag.paginate_by_id result_ids, :page => params[:page], :per_page => 10
@@ -209,67 +153,19 @@ class SearchController < ApplicationController
 
       render :action => :index
     else
-        flash.now[:notice] = "キーワードを入力してください。"
-        render :update do |page|
-          page.replace_html("message", :partial=>"message",:locals => {:flug => false})
-          page.visual_effect :Opacity,
-                             "message",
-                             :from => 1,
-                             :to => 0,
-                             :duration => 3
-        end
-#      redirect_to :controller => :top
-    end
-  end
-  
-  def add_book
-    if params[:add_book_to] != "" and params[:add_book_to] != "new"
-      if params[:to_add_book]
-        book = Book.find(params[:add_book_to])
-        i = 0
-        if params[:to_add_book_all] == "true"
-          params[:results_all].each do |question_id|
-            question = Question.find(question_id.to_i)
-            unless book.questions.include?(question)
-              book.questions << question
-              i += 1
-            end
-          end
-        else
-          params[:to_add_book].each do |question_id|
-            question = Question.find(question_id.to_i)
-            unless book.questions.include?(question)
-              book.questions << question
-              i += 1
-            end
-          end
-        end
-        if i == 0
-          flash.now[:notice] = "全て登録済みです。"
-          flug = false
-        else
-          flash.now[:notice] = "#{i}件登録しました！"
-          flug = true
-        end
-      else
-        flash.now[:notice] = "問題を選択してください。"
-        flug = false
+      flash.now[:notice] = "キーワードを入力してください。"
+      render :update do |page|
+        page.replace_html("message", :partial=>"message",:locals => {:flug => false})
+        page.visual_effect :Opacity,
+                            "message",
+                            :from => 1,
+                            :to => 0,
+                            :duration => 3
       end
-    else
-      flash.now[:notice] = "ブックを選択してください。"
-      flash.keep(:notice)
-      flug = false
-    end
-    render :update do |page|
-      page.replace_html("add_book_message_all", :partial=>"message",:locals => {:flug => flug})
-      page.visual_effect :Opacity,
-                          "add_book_message_all",
-                          :from => 1,
-                          :to => 0,
-                          :duration => 3
     end
   end
 
+  #問題検索（ユーザー）
   def users_question
     user = User.find(:first, :conditions => ["login = ?",params[:id]])
     @results = Question.find(:all, :conditions => ["user_id = ? and is_public = 1",user.id])
@@ -290,6 +186,7 @@ class SearchController < ApplicationController
     render :action => :index
   end
 
+  #ブック検索（ユーザー）
   def users_book
     user = User.find(:first, :conditions => ["login = ?",params[:id]])
     @results = Book.find(:all, :conditions => ["user_id = ? and is_public = 1",user.id])
@@ -310,6 +207,7 @@ class SearchController < ApplicationController
     render :action => :index
   end
 
+  #テスト検索（ユーザー）
   def users_exam
     user = User.find(:first, :conditions => ["login = ?",params[:id]])
     @results = Exam.find(:all, :conditions => ["user_id = ? and is_public = 1 ",user.id])
@@ -330,6 +228,7 @@ class SearchController < ApplicationController
     render :action => :index
   end
 
+  #ブック検索（問題）
   def search_book
     @results = Array.new
     book_questions = QuestionBook.find(:all, :conditions => ["question_id = ?",params[:id]])
@@ -353,9 +252,9 @@ class SearchController < ApplicationController
     @results = Book.paginate_by_id result_ids, :page => params[:page], :per_page => 10
 
     render :action => :index
-
   end
 
+  #テスト検索（問題）
   def search_exam
     @results = Array.new
     exam_questions = QuestionExam.find(:all, :conditions => ["question_id = ?",params[:id]])
@@ -379,9 +278,9 @@ class SearchController < ApplicationController
     @results = Exam.paginate_by_id result_ids, :page => params[:page], :per_page => 10
 
     render :action => :index
-
   end
-  
+
+  #スマートブック検索
   def search_smart_book
     @id = params[:id]
     if params[:type] == "tag"
@@ -408,8 +307,9 @@ class SearchController < ApplicationController
     @results = Book.paginate_by_id result_ids, :page => params[:page], :per_page => 10
 
     render :action => :index
-
   end
+
+
 
   def on_bookmark
     # 問題単の場合
@@ -458,32 +358,44 @@ class SearchController < ApplicationController
                                                                                  :all_questions => params[:all_questions],
                                                                                  :type => "all_page"})
       end
+    else
 
-    # ページ内全問題の場合
-    elsif params[:type] == "all"
-      params[:questions].each do |question|
-        unless Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",question.to_i,current_user.id])
-          bookmark = Bookmark.new
-          bookmark.question_id = question.to_i
-          bookmark.user_id = current_user.id
-          bookmark.save
+      # ページ内全問題の場合
+      if params[:type] == "all"
+        params[:questions].each do |question|
+          unless Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",question.to_i,current_user.id])
+            bookmark = Bookmark.new
+            bookmark.question_id = question.to_i
+            bookmark.user_id = current_user.id
+            bookmark.save
+          end
         end
-      end
 
-      #全ページの全ブックマークを確認
-      bookmark_all = Array.new
-      params[:all_questions].each do |question|
-        bookmark_all << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
-                                                             question.to_i,
-                                                             current_user.id])
+        #全ページの全ブックマークを確認
+        bookmark_all = Array.new
+        params[:all_questions].each do |question|
+          bookmark_all << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
+                                                               question.to_i,
+                                                               current_user.id])
+        end
+        bookmark_all.compact!
+        @is_bookmark_all_page = true if bookmark_all.size == params[:all_questions].size
+      # 全ページの問題の場合
+      elsif params[:type] == "all_page"
+        params[:all_questions].each do |question|
+          unless Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",question.to_i,current_user.id])
+            bookmark = Bookmark.new
+            bookmark.question_id = question.to_i
+            bookmark.user_id = current_user.id
+            bookmark.save
+          end
+        end
+        @is_bookmark_all_page = true
       end
-      bookmark_all.compact!
-      @is_bookmark_all_page = true if bookmark_all.size == params[:all_questions].size
-
       render :update do |page|
         params[:questions].each do |question|
           page.replace_html("bookmark#{question.to_i}", :partial=>"bookmark", :locals =>{:is_bookmark => true,
-                                                                                           :question_id => params[:id],
+                                                                                           :question_id => question.to_i,
                                                                                            :questions => params[:questions],
                                                                                            :all_questions => params[:all_questions],
                                                                                            :type => "single"})
@@ -499,39 +411,7 @@ class SearchController < ApplicationController
                                                                                  :all_questions => params[:all_questions],
                                                                                  :type => "all_page"})
       end
-
-    # 全ページの問題の場合
-    elsif params[:type] == "all_page"
-      params[:all_questions].each do |question|
-        unless Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",question.to_i,current_user.id])
-          bookmark = Bookmark.new
-          bookmark.question_id = question.to_i
-          bookmark.user_id = current_user.id
-          bookmark.save
-        end
-      end
-
-      render :update do |page|
-        params[:questions].each do |question|
-          page.replace_html("bookmark#{question.to_i}", :partial=>"bookmark", :locals =>{:is_bookmark => true,
-                                                                                           :question_id => params[:id],
-                                                                                           :questions => params[:questions],
-                                                                                           :all_questions => params[:all_questions],
-                                                                                           :type => "single"})
-        end
-        page.replace_html("bookmark_all", :partial=>"bookmark", :locals =>{:is_bookmark => true,
-                                                                            :question_id => params[:questions],
-                                                                            :questions => params[:questions],
-                                                                            :all_questions => params[:all_questions],
-                                                                            :type => "all"})
-        page.replace_html("bookmark_all_page", :partial=>"bookmark", :locals =>{:is_bookmark => true,
-                                                                                 :question_id => params[:all_questions],
-                                                                                 :questions => params[:questions],
-                                                                                 :all_questions => params[:all_questions],
-                                                                                 :type => "all_page"})
-      end
     end
-
   end
 
   def off_bookmark
@@ -540,7 +420,6 @@ class SearchController < ApplicationController
       if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",params[:id],current_user.id])
         bookmark.destroy
       end
-
       render :update do |page|
         page.replace_html("bookmark#{params[:id]}", :partial=>"bookmark", :locals =>{:is_bookmark => false,
                                                                                        :question_id => params[:id],
@@ -558,47 +437,26 @@ class SearchController < ApplicationController
                                                                                  :all_questions => params[:all_questions],
                                                                                  :type => "all_page"})
       end
-
-    # ページ内全問題の場合
-    elsif params[:type] == "all"
-      params[:questions].each do |question|
-        if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",question.to_i,current_user.id])
-          bookmark.destroy
+    else
+      # ページ内全問題の場合
+      if params[:type] == "all"
+        params[:questions].each do |question|
+          if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",question.to_i,current_user.id])
+            bookmark.destroy
+          end
+        end
+      # 全ページの問題の場合
+      elsif params[:type] == "all_page"
+        params[:all_questions].each do |question|
+          if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",question.to_i,current_user.id])
+            bookmark.destroy
+          end
         end
       end
-
       render :update do |page|
         params[:questions].each do |question|
           page.replace_html("bookmark#{question.to_i}", :partial=>"bookmark", :locals =>{:is_bookmark => false,
-                                                                                           :question_id => params[:id],
-                                                                                           :questions => params[:questions],
-                                                                                           :all_questions => params[:all_questions],
-                                                                                           :type => "single"})
-        end
-        page.replace_html("bookmark_all", :partial=>"bookmark", :locals =>{:is_bookmark => false,
-                                                                            :question_id => params[:questions],
-                                                                            :questions => params[:questions],
-                                                                            :all_questions => params[:all_questions],
-                                                                            :type => "all"})
-        page.replace_html("bookmark_all_page", :partial=>"bookmark", :locals =>{:is_bookmark => false,
-                                                                                 :question_id => params[:all_questions],
-                                                                                 :questions => params[:questions],
-                                                                                 :all_questions => params[:all_questions],
-                                                                                 :type => "all_page"})
-      end
-
-    # 全ページの問題の場合
-    elsif params[:type] == "all_page"
-      params[:all_questions].each do |question|
-        if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",question.to_i,current_user.id])
-          bookmark.destroy
-        end
-      end
-
-      render :update do |page|
-        params[:questions].each do |question|
-          page.replace_html("bookmark#{question.to_i}", :partial=>"bookmark", :locals =>{:is_bookmark => false,
-                                                                                           :question_id => params[:id],
+                                                                                           :question_id => question.to_i,
                                                                                            :questions => params[:questions],
                                                                                            :all_questions => params[:all_questions],
                                                                                            :type => "single"})
@@ -617,11 +475,57 @@ class SearchController < ApplicationController
     end
   end
 
+  def add_book
+    if params[:add_book_to] != "" and params[:add_book_to] != "new"
+      if params[:to_add_book]
+        book = Book.find(params[:add_book_to])
+        i = 0
+        if params[:to_add_book_all] == "true"
+          params[:results_all].each do |question_id|
+            question = Question.find(question_id.to_i)
+            unless book.questions.include?(question)
+              book.questions << question
+              i += 1
+            end
+          end
+        else
+          params[:to_add_book].each do |question_id|
+            question = Question.find(question_id.to_i)
+            unless book.questions.include?(question)
+              book.questions << question
+              i += 1
+            end
+          end
+        end
+        if i == 0
+          flash.now[:notice] = "全て登録済みです。"
+          flug = false
+        else
+          flash.now[:notice] = "#{i}件登録しました！"
+          flug = true
+        end
+      else
+        flash.now[:notice] = "問題を選択してください。"
+        flug = false
+      end
+    else
+      flash.now[:notice] = "ブックを選択してください。"
+      flash.keep(:notice)
+      flug = false
+    end
+    render :update do |page|
+      page.replace_html("add_book_message_all", :partial=>"message",:locals => {:flug => flug})
+      page.visual_effect :Opacity,
+                          "add_book_message_all",
+                          :from => 1,
+                          :to => 0,
+                          :duration => 3
+    end
+  end
 
   def new_book
     @book = Book.new
   end
-  
 
   def create_book
     @book = Book.new(params[:book])
@@ -722,4 +626,35 @@ class SearchController < ApplicationController
     end
   end
 
+
+
+  private
+
+  # 全ての付箋を調べる
+  def all_bookmarks()
+    @results_all = @results
+
+    all_bookmarks = Array.new
+    @results.each do |result|
+      all_bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
+                                                              result.id,
+                                                              current_user.id])
+    end
+    all_bookmarks.compact!
+    @is_bookmark_all_page = true if all_bookmarks.size == @results_all.size
+  end
+
+  # ページ内付箋を調べる
+  def bookmarks()
+    bookmarks = Array.new
+    if logged_in?
+      @results.each do |result|
+        bookmarks << Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
+                                                            result.id,
+                                                            current_user.id])
+      end
+      bookmarks.compact!
+      @is_bookmark_all = true if bookmarks.size == @results.size
+    end
+  end
 end

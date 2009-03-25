@@ -21,6 +21,17 @@ class QaController < ApplicationController
     # Question
     @q = Question.new
     @q.question_type = params[:question_type]
+
+    texts = params[:question_ta].split("''")
+    new_texts = Array.new
+    texts.each_with_index do |text, idx|
+      if idx % 2 != 0
+        new_texts << "<span class=\"strong\">#{text}</span>"
+      else
+        new_texts << text
+      end
+    end
+
     @q.question_text = params[:question_ta]
     @q.is_public = params[:is_public]
     @q.user_id = current_user.id

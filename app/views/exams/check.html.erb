@@ -8,11 +8,11 @@
       <% review_count = ExamTemp.count(:conditions => ["exam_id = ? and user_id = ? and status = 'review'",
                                     @exam.id,current_user.id])%>
       <% if review_count > 0 %>
-        <th><%=  link_to_remote("絞込み",
+        <th><!--<= link_to_remote("絞込み",
                             :url=>{:action => 'check',
                                    :i => @i,
                                    :id => @exam.id},
-                            :update => 'main') %></th>
+                            :update => 'main') %>--></th>
       <% end %>
     </tr>
     <% @question_exams = QuestionExam.find(:all, :conditions => ["exam_id = ? and enabled = 1 ",@exam.id], :order => "seq") %>

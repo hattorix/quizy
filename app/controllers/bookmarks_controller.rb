@@ -9,17 +9,31 @@ class BookmarksController < ApplicationController
     end
   end
 
-  def new_book
-    @book = Book.new
+  def bookmark_actions
+    if params[:commit] == "選択した付箋を剥がす"
+      params[:is_collect].each do |id|
+        if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",id,current_user.id])
+          bookmark.destroy
+        end
+      end
+      redirect_to :action => :index
+    elsif params[:commit] == "選択した付箋からブックを作成する"
+      @book = Book.new
+      @is_collect = params[:is_collect]
+      render :action => "new_book"
+    else
+      @exam = Exam.new
+      @is_collect = params[:is_collect]
+      render :action => "new_exam"
+    end
   end
 
   def create_book
     @book = Book.new(params[:book])
     @book.user_id = current_user.id
 
-    bookmarks = Bookmark.find(:all, :conditions => ["user_id = ?",current_user.id])
-    bookmarks.each do |bookmark|
-      question = Question.find(bookmark.question_id)
+    params[:is_collect].each do |id|
+      question = Question.find(id)
       @book.questions << question
     end
 
@@ -32,7 +46,8 @@ class BookmarksController < ApplicationController
         my_book.save
 
         if params[:off_bookmark] == "on"
-          bookmarks.each do |bookmark|
+          params[:is_collect].each do |id|
+            bookmark = Bookmark.find(:first, :conditions => ["user_id = ? and question_id = ?",current_user.id,id])
             bookmark.destroy
           end
         end
@@ -64,16 +79,6 @@ class BookmarksController < ApplicationController
     end
   end
 
-  def new_exam
-    @exam = Exam.new
-    @questions = Array.new
-    bookmarks = Bookmark.find(:all, :conditions => ["user_id = ?",current_user.id])
-    bookmarks.each do |bookmark|
-      question = Question.find(bookmark.question_id)
-      @questions << question
-    end
-  end
-
   def create_exam
     @exam = Exam.new(params[:exam])
     @exam.user_id = current_user.id
@@ -84,9 +89,8 @@ class BookmarksController < ApplicationController
       @exam.time_limit = 0
     end
 
-    bookmarks = Bookmark.find(:all, :conditions => ["user_id = ?",current_user.id])
-    bookmarks.each do |bookmark|
-      question = Question.find(bookmark.question_id)
+    params[:is_collect].each do |id|
+      question = Question.find(id)
       @exam.questions << question
     end
 
@@ -96,11 +100,12 @@ class BookmarksController < ApplicationController
       my_exam.user_id = current_user.id
       my_exam.save
 
-      if params[:off_bookmark] == "on"
-        bookmarks.each do |bookmark|
-          bookmark.destroy
-        end
+    if params[:off_bookmark] == "on"
+      params[:is_collect].each do |id|
+        bookmark = Bookmark.find(:first, :conditions => ["user_id = ? and question_id = ?",current_user.id,id])
+        bookmark.destroy
       end
+    end
 
       @question_exams = QuestionExam.find(:all, :conditions => "exam_id = #{@exam.id}")
       i = 0
@@ -125,14 +130,4 @@ class BookmarksController < ApplicationController
     end
   end
 
-
-  def off_bookmark
-    ids = params[:is_delete].keys
-    ids.each do |id|
-      if bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",id,current_user.id])
-        bookmark.destroy
-      end
-    end
-    redirect_to :action => :index
-  end
 end

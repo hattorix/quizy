@@ -76,8 +76,8 @@
                                                       :questions => @results,
                                                       :all_questions => @results_all,
                                                       :type => "all"} %>
-          </div>
-          <div id="bookmark_all_page">
+            </div>
+          <div id="bookmark_all_page" <%= "style='display:none;'" if @results.total_entries <= 10 %>>
             <%= render :partial => "bookmark", :locals => {:question_id => @results_all,
                                                       :is_bookmark => @is_bookmark_all_page,
                                                       :questions => @results,

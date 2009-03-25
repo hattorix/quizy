@@ -76,21 +76,23 @@
           <% if @question_exams[@i+1] == nil %>
             <div class="marufield">
               <%= link_to_remote(image_tag("maru.jpg", :style => 'border: none;',
-                                                 :onmouseover=>"this.src='../images/maru_on.jpg'",
-                                                 :onmouseout=>"this.src='../images/maru.jpg'"),
+                                                 :onmouseover=>"this.src='../../images/maru_on.jpg'",
+                                                 :onmouseout=>"this.src='../../images/maru.jpg'"),
                              :url=>{:action => 'check',
-                                    :i => @i,
                                     :id => @exam.id,
+                                    :question_id => @question.id,
+                                    :i => @i,
                                     :answer => 1},
                              :update => 'main') %>
             </div>
             <div class="batufield">
               <%= link_to_remote(image_tag("batu.jpg", :style => 'border: none;',
-                                                 :onmouseover=>"this.src='../images/batu_on.jpg'",
-                                                 :onmouseout=>"this.src='../images/batu.jpg'"),
+                                                 :onmouseover=>"this.src='../../images/batu_on.jpg'",
+                                                 :onmouseout=>"this.src='../../images/batu.jpg'"),
                              :url=>{:action => 'check',
-                                    :i => @i,
                                     :id => @exam.id,
+                                    :question_id => @question.id,
+                                    :i => @i,
                                     :answer => 0},
                              :update => 'main') %>
             </div>
@@ -99,14 +101,22 @@
               <%= link_to_remote(image_tag("maru.jpg", :style => 'border: none;',
                                                  :onmouseover=>"this.src='../../images/maru_on.jpg'",
                                                  :onmouseout=>"this.src='../../images/maru.jpg'"),
-                             :url => {:action => 'next', :id => @exam.id ,:question_id => @question.id, :i => @i, :answer => 1},
+                             :url => {:action => 'next',
+                                      :id => @exam.id,
+                                      :question_id => @question.id,
+                                      :i => @i,
+                                      :answer => 1},
                              :update => 'main') %>
             </div>
             <div class="batufield">
               <%= link_to_remote(image_tag("batu.jpg", :style => 'border: none;',
                                                  :onmouseover=>"this.src='../../images/batu_on.jpg'",
                                                  :onmouseout=>"this.src='../../images/batu.jpg'"),
-                             :url => {:action => 'next', :id => @exam.id ,:question_id => @question.id, :i => @i, :answer => 0},
+                             :url => {:action => 'next',
+                                      :id => @exam.id,
+                                      :question_id => @question.id,
+                                      :i => @i,
+                                      :answer => 0},
                              :update => 'main') %>
             </div>
           <% end %>

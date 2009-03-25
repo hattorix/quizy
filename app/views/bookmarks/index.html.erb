@@ -2,17 +2,28 @@
 <%= stylesheet_link_tag "style_import_mypage" %>
 
 <script language="javascript">
+  function all_check(check){
+    var count;
+    for(count = 0; count < document.getElementsByName("is_collect[]").length; count++){
+      document.getElementsByName("is_collect[]")[count].checked = check;
+    }
+  }
+
   function submit_disabled() {
     var flg = 0;
-    <% @questions.each do |q| %>
-      if(document.getElementById("is_delete[<%= q.id %>]").checked){
-        flg = 1;
+      for(count = 0; count < document.getElementsByName("is_collect[]").length; count++){
+        if(document.getElementsByName("is_collect[]")[count].checked){
+          flg = 1;
+        }
       }
-    <% end %>
     if(flg == 0){
-      document.getElementById("submit").disabled = true;
+      document.getElementById("delete").disabled = true;
+      document.getElementById("book").disabled = true;
+      document.getElementById("exam").disabled = true;
     } else {
-      document.getElementById("submit").disabled = false;
+      document.getElementById("delete").disabled = false;
+      document.getElementById("book").disabled = false;
+      document.getElementById("exam").disabled = false;
     }
   }
 </script>
@@ -22,55 +33,48 @@
 </div>
 
 <div id="main">
-<% form_tag :action => 'off_bookmark' do |f| -%>
-  <div class="subcontent">
-    <div id="question_list">
-      <% if @questions.size >= 1 %>
-        <ul>
-          <% @questions.each do |q| %>
-            <li class="question_text">
-              <input id="is_delete[<%= q.id %>]" name="is_delete[<%= q.id %>]" type="checkbox"/>
-              <%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
-              <a href="/quiz/<%=q.id%>"><%=truncate(h(q.question_text), 45)%></a>
-              <%# link_to("#{image_tag('/images/bookmark.gif',
-#                                   :title => '付箋を剥がす',
-#                                   :style => 'vertical-align: middle;border: none;')}付箋を剥がす",
-#                         :action => 'off_bookmark',
-#                         :id => q.id) %>
-            </li>
-          <% end %>
-        </ul>
-        <script language="javascript">
-         time = window.setInterval("submit_disabled();",1);
-       </script>
-      <% else %>
-        <div style="text-align:center;">付箋はありません。</div>
-      <% end %>
+  <% form_tag :action => 'bookmark_actions' do |f| -%>
+    <div class="subcontent">
+      <div id="question_list">
+        <% if @questions.size >= 1 %>
+
+          <%= button_to_function "全て選択",'all_check(true);' %>
+          <%= button_to_function "全て解除",'all_check(false);' %>
+          <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
+
+          <ul>
+            <% @questions.each do |q| %>
+              <li class="question_text">
+                <%= check_box_tag("is_collect[]", q.id ) %>
+                <%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
+                <a href="/quiz/<%=q.id%>"><%=truncate(h(q.question_text), 45)%></a>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <div style="text-align:center;">付箋はありません。</div>
+        <% end %>
+      </div>
     </div>
-</div>
 
-<div class="spacer_narrow" style="clear: both;">&nbsp;</div>
+    <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
 
-<div id="submit_box">
-  <% if @questions.size >= 1 %>
-    <%= button_to "チェックした付箋を剥がす", {:action => 'off_bookmark', :id => @questions},:id => "submit" %>
-  <% else %>
-    <%= button_to "チェックした付箋を剥がす", {:action => 'off_bookmark', :id => @questions}, {:disabled => true} %>
+    <div id="submit_box">
+      <%= submit_tag "選択した付箋を剥がす",{:id => "delete",:disabled => true} %>
+
+      <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
+
+      <ul class="book_and_test">
+        <li><%= submit_tag "選択した付箋からブックを作成する",{:id => "book",:disabled => true} %></li>
+        <li><%= submit_tag "選択した付箋からテストを作成する",{:id => "exam",:disabled => true} %></li>
+      </ul>
+    </div>
+
+    <script language="javascript">
+      time = window.setInterval("submit_disabled();",1);
+    </script>
+
+    <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
   <% end %>
-  <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
-
-  <ul class="book_and_test">
-    <% if @questions.size >= 1 %>
-      <li><%= button_to "この一覧からブックを作成する", :action => 'new_book' %></li>
-      <li><%= button_to "この一覧からテストを作成する", :action => 'new_exam' %></li>
-    <% else %>
-      <li><%= button_to "この一覧からブックを作成する", {:action => 'new_book'}, {:disabled => true} %></li>
-      <li><%= button_to "この一覧からテストを作成する", {:action => 'new_exam'}, {:disabled => true} %></li>
-    <% end %>
-  </ul>
-</div>
-
-<div class="spacer_narrow" style="clear: both;">&nbsp;</div>
-<% end %>
 </div>
 

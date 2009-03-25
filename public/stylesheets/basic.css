@@ -1,5 +1,7 @@
 /*basic layout*/
 
+img { behavior: url("/pngbehavior/pngbehavior.htc"); }
+
 * {
   margin: 0px;
   padding: 0px;

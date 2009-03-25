@@ -91,7 +91,7 @@
 <div id="question_text_box">
   <div class="subtitle">問題</div>
   <%= hidden_field_tag "question_id", @question.id %>
-  <div class="field"><%=hbr @question.question_text %></div>
+  <div class="field"><%=qa_to_html qa(@question.question_text) %></div>
 </div>
 
 <div class="spacer_narrow">&nbsp;</div>
