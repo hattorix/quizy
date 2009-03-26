@@ -22,7 +22,7 @@
       <tr>
         <td><%= i += 1 %></td>
         <td>
-          <%= link_to_remote(hbr(question.question_text),
+          <%= link_to_remote(qa(question.question_text),
                          :url=>{:action => 'back',
                                 :i => i,
                                 :id => @exam.id,},
@@ -33,13 +33,13 @@
           <% answer = examtemp.answer %>
           <% if question.question_type == 1 %>
             <% if answer.to_i != 0 %>
-              <% answer = "『#{Selection.find(answer.to_i).selection_text}』" %>
+              <% answer = "『#{qa(Selection.find(answer.to_i).selection_text)}』" %>
             <% end %>
           <% elsif question.question_type == 2 %>
             <% answers = Array.new %>
             <% answer.split(",").each do |j| %>
               <% a = Selection.find(j.to_i).selection_text %>
-              <% answers << "『#{a}』" %>
+              <% answers << "『#{qa(a)}』" %>
             <% end %>
             <% answer = answers.join %>
             <% if answer["\n"] %>

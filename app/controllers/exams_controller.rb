@@ -111,8 +111,9 @@ class ExamsController < ApplicationController
         question_exam.save
         i += 1
       end
+      flash[:notice] = "テストを作成しました。"
       render :update do |page|
-          page.redirect_to :controller => "mypage",:action => "message",:message => "テストを作成しました。"
+          page.redirect_to :controller => "mypage"
       end
     else
       @msgs = @exam.errors.full_messages
@@ -327,13 +328,13 @@ class ExamsController < ApplicationController
     exam = Exam.find(params[:id])
     myexam = MyExam.find(:first, :conditions =>["exam_id = ? and user_id = ?",params[:id],current_user.id])
     myexam.destroy
-    message = "マイテストからテストを削除しました。"
+    flash[:notice] = "マイテストからテストを削除しました。"
     if exam.user_id == current_user.id
       exam.questions.delete_all()
       exam.destroy
-      message = "テストを削除しました。"
+      flash[:notice] = "テストを削除しました。"
     end
-      redirect_to :controller => "mypage",:action => "message",:message => message
+      redirect_to :controller => "mypage"
   end
 
   def rip

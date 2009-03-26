@@ -18,19 +18,19 @@
       <tr>
         <td><%= question_exam.seq+1 %></td>
         <td>
-          <%=hbr question.question_text %>
+          <%=qa question.question_text %>
         </td>
         <% if examtemp = @examtemps.find {|i| i.question_id == question.id} %>
           <% your_answer = examtemp.answer %>
           <% if question.question_type == 1 %>
             <% if your_answer.to_i != 0 %>
-              <% your_answer = "『#{Selection.find(your_answer.to_i).selection_text}』" %>
+              <% your_answer = "『#{qa(Selection.find(your_answer.to_i).selection_text)}』" %>
             <% end %>
           <% elsif question.question_type == 2 %>
             <% answers = Array.new %>
             <% your_answer.split(",").each do |i| %>
               <% a = Selection.find(i.to_i).selection_text %>
-              <% answers << "『#{a}』" %>
+              <% answers << "『#{qa(a)}』" %>
             <% end %>
             <% your_answer = answers.join %>
             <% if your_answer["\n"] %>
@@ -48,15 +48,15 @@
         <% else %>
           <% your_answer = "『』" %>
         <% end %>
-        <td><%=hbr your_answer %></td>
+        <td><%= your_answer %></td>
         <% if question.question_type == 1 %>
-          <% t_answer = "『#{Selection.find(:first,:conditions => ['question_id = ? and is_collect = 1',question.id]).selection_text}』" %>
+          <% t_answer = "『#{qa(Selection.find(:first,:conditions => ['question_id = ? and is_collect = 1',question.id]).selection_text)}』" %>
         <% elsif question.question_type == 2 %>
           <% selections = Selection.find(:all,:conditions => ["question_id = ? and is_collect = 1",
                                                       question.id]) %>
           <% t_answers= Array.new %>
           <% selections.each do |selection| %>
-            <% t_answers << "『#{selection.selection_text}』" %>
+            <% t_answers << "『#{qa(selection.selection_text)}』" %>
           <% end %>
           <% t_answer = t_answers.join %>
           <% if t_answer["\n"] %>

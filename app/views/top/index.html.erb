@@ -45,7 +45,7 @@
         <% else %>
           <%= image_tag "bullet_yellow.png" %>
         <% end %>
-        <%= i %>位：<%= link_to(truncate(h(question.question_text), 35), "/quiz/#{question.id}") %>
+        <%= i %>位：<%= link_to(truncate(erase_br(qa_erase(question.question_text)), 35), "/quiz/#{question.id}") %>
         <span style="color: slategray; font-size: 8pt;">
           <%= question.question_count %>回出題
         </span>
@@ -59,7 +59,7 @@
     <ul style="list-style-type: decimal;">
     <% @new_questions.each do |question| %>
       <li style="font-size: 11pt;">
-        <%= link_to(truncate(h(question.question_text), 35), "/quiz/#{question.id}") %>
+        <%= link_to(truncate(erase_br(qa_erase(question.question_text)), 35), "/quiz/#{question.id}") %>
         <span style="color: slategray; font-size: 8pt;">
           <%= question.created_at.strftime("%Y/%m/%d %H:%M:%S 登録") %>
         </span>

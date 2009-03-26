@@ -106,8 +106,9 @@ class QaController < ApplicationController
        book = Book.find(:first,:conditions => ["name = '自分で登録した問題' and user_id =? ", current_user.id])
        book.questions << @q
       if params[:name] == 'submit1'
+        flash[:notice] = "問題を登録しました。"
         render :update do |page|
-          page.redirect_to :controller => "mypage",:action => "message",:message => "問題を登録しました。"
+          page.redirect_to :controller => "mypage"
         end
       else
         flash[:notice] = "問題を登録しました。"
@@ -144,7 +145,7 @@ class QaController < ApplicationController
     @answer = Answer.find(:all, :conditions => "question_id = #{@question.id}")
     @description = Description.find(:all, :conditions => "question_id = #{@question.id}")
     if logged_in?
-      @books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and is_smart != 1", current_user.id])
+      @books = Book.find(:all, :conditions => ["user_id = ? and name != '自分で登録した問題' and (is_smart != 1 or is_smart is null)", current_user.id])
       @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?", @question.id,current_user.id])
     end
 
@@ -227,10 +228,7 @@ class QaController < ApplicationController
       selections.each do |selection| 
         answers << "『#{selection.selection_text}』" 
       end 
-      @answer = answers.join
-      if @answer["\n"]
-        @answer = answers.join("\n")
-      end
+      @answer = answers.join("\n")
     elsif question_type == "3"
       result = Question.count(:conditions => ["id = ? and y_or_n = ?",
                                               question_id,answer])
@@ -420,7 +418,8 @@ class QaController < ApplicationController
 
       @question.destroy
       @title = ' - マイページ'
-      redirect_to :controller => "mypage",:action => "message",:message => "問題を削除しました。"
+      flash[:notice] = "問題を削除しました。"
+      redirect_to :controller => "mypage"
     end
   end
   

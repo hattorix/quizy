@@ -40,7 +40,7 @@
     <div id="question_box">
       <div class="subtitle">問題</div>
       <%= hidden_field_tag "question_id", @question.id %>
-      <div class="field"><%=hbr @question.question_text %></div>
+      <div class="field"><%=qa @question.question_text %></div>
     </div>
 
     <div class="spacer_narrow">&nbsp;</div>
@@ -58,7 +58,7 @@
           <% selections.each do |s| %>
             <div class="field">
               <input type="radio" id="answer" name="answer"
-                     value="<%= s.id %>" style="margin-left:-13px;" <%= "checked" if ans == s.id.to_s %>/> <%=hbr s.selection_text %>
+                     value="<%= s.id %>" style="margin-left:-13px;" <%= "checked" if ans == s.id.to_s %>/> <%=qa s.selection_text %>
             </div>
           <% end %>
         </div>
@@ -67,7 +67,7 @@
           <% selections.each do |s| %>
             <div class="field">
               <input type="checkbox" id="answer[<%= s.id %>]" name="answer[<%= s.id %>]"
-                     value="<%= s.id %>" style="margin-left:-17px;" <%= "checked" if ans.split(",").include?(s.id.to_s) %> /> <%=hbr s.selection_text %>
+                     value="<%= s.id %>" style="margin-left:-17px;" <%= "checked" if ans.split(",").include?(s.id.to_s) %> /> <%=qa s.selection_text %>
             </div>
           <% end %>
         </div>
@@ -155,7 +155,6 @@
         <% end %>
       <% end %>
     </div>
-
     <div id="end_box">
       <div id="escape">
         <%= submit_to_remote("テストを中断する",

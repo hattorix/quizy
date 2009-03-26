@@ -132,8 +132,8 @@
           <% @results.each do |result| %>
             <% if @flg == 0 %>
               <div class="question_text">
-                <li><%= link_to(truncate(h(result.question_text), 30),
-                             "/quiz/#{result.id}", :title => h(result.question_text)) %>
+                <li><%= link_to(truncate(erase_br(qa_erase(result.question_text)), 30),
+                             "/quiz/#{result.id}", :title => qa_erase(result.question_text)) %>
                   <% if logged_in? %>
                     <% @is_bookmark = Bookmark.find(:first, :conditions => ["question_id = ? and user_id = ?",
                                                                       result.id,

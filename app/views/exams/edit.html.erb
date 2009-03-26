@@ -48,7 +48,7 @@
               <% @enabled = question_exam.enabled %>
           <input id="is_collect[<%= question.id %>]" name="is_collect[<%= question.id %>]" type="checkbox" <%= "checked" if @enabled == true %> />
           <%= image_tag('/images/quiz.png', :style => 'border: none') %>
-          <%= truncate(h(question.question_text), 40) %>
+          <%= truncate(erase_br(qa_erase(question.question_text)), 40) %>
         </li>
       <% end %>
       </ul>

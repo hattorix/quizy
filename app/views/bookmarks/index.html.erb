@@ -43,11 +43,11 @@
           <div class="spacer_narrow" style="clear: both;">&nbsp;</div>
 
           <ul>
-            <% @questions.each do |q| %>
+            <% @questions.each do |question| %>
               <li class="question_text">
-                <%= check_box_tag("is_collect[]", q.id ) %>
+                <%= check_box_tag("is_collect[]", question.id ) %>
                 <%= image_tag('/images/quiz.png', :style => 'vertical-align: middle;') %>
-                <a href="/quiz/<%=q.id%>"><%=truncate(h(q.question_text), 45)%></a>
+                <a href="/quiz/<%=question.id%>" title="<%= qa_erase(question.question_text)%>"><%=truncate(erase_br(qa_erase(question.question_text)), 45)%></a>
               </li>
             <% end %>
           </ul>

@@ -3,6 +3,7 @@ class Question < ActiveRecord::Base
 
   belongs_to :category
   has_many :question_books
+  has_many :histories
   has_many :categories, :through => :question_books
   has_many :selections, :dependent => :destroy
   has_one :answer,      :dependent => :destroy

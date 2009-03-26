@@ -55,8 +55,8 @@ Rails::Initializer.run do |config|
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     :address => 'localhost',
-    :port => 25,               # or 587 SMTP 設定に依存
-    :domain => 'quizy.co.jp',  # 分かるなら FQDN を設定
+    :port => 25,
+    :domain => 'quizy.co.jp',
   }
 
   config.active_record.observers = :user_observer
@@ -75,7 +75,6 @@ Rails::Initializer.run do |config|
   # config.active_record.observers = :cacher, :garbage_collector
 end
 
-gem 'mislav-will_paginate', '~> 2.2'
 require 'will_paginate'
 
 ActiveRecord::Errors.default_error_messages[:invalid]      = "" 

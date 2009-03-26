@@ -107,8 +107,9 @@ class BooksController < ApplicationController
         my_book.book_id = @book.id
         my_book.user_id = current_user.id
         my_book.save
+        flash[:notice] = "ブックを作成しました。"
         render :update do |page|
-          page.redirect_to :controller => "mypage",:action => "message",:message => "ブックを作成しました。"
+          page.redirect_to :controller => "mypage"
         end
       else
         @msgs = @book.errors.full_messages
@@ -519,13 +520,13 @@ class BooksController < ApplicationController
     book = Book.find(params[:id])
     mybook = MyBook.find(:first, :conditions =>["book_id = ? and user_id = ?",params[:id],current_user.id])
     mybook.destroy
-    message = "マイブックからブックを削除しました。"
+    flash[:notice] = "マイブックからブックを削除しました。"
     if book.user_id == current_user.id
       book.questions.delete_all()
       book.destroy
-      message = "ブックを削除しました。"
+      flash[:notice] = "ブックを削除しました。"
     end
-    redirect_to :controller => "mypage",:action => "message",:message => message
+    redirect_to :controller => "mypage"
   end
 
   def rip

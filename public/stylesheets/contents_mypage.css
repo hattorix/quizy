@@ -218,6 +218,19 @@ padding: 10px 10px 0px 10px;
   margin:20px;
 }
 
+#histories_by_tags {
+}
+
+#histories_by_tags li {
+  font-size:20px;
+  margin: 10px;
+}
+
+#histories_by_tags li .count {
+  font-size:12px;
+  margin-left: 2px;
+}
+
 #navi {
   text-align: center;
 }

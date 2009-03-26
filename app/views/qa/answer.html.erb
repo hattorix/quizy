@@ -1,4 +1,6 @@
 <%= stylesheet_link_tag("contents_register") %>
+
+
 <div id="screen_title">解答</div>
 
 <div id="main">
@@ -10,17 +12,17 @@
       <% if desc == ""  %>
         <% desc = "解説はありません" %>
       <% end %>
-      <div class="question"><%=hbr desc %></div>
+      <div class="question"><pre class="brush:java;tab-size:1;toolbar:false;"><%=qa desc %></pre></div>
 
       <div class="spacer_narrow">&nbsp;</div>
 
       <div class="subtitle">問題</div>
-      <div class="question"><%=qa_to_html qa(@question.question_text) %></div>
+      <div class="question"><%=qa @question.question_text %></div>
 
       <div class="spacer_narrow">&nbsp;</div>
 
       <div class="subtitle">正解</div>
-      <div class="question"><%=hbr @answer %></div>
+      <div class="question"><%=qa @answer %></div>
 
     </div>
     <% if @is_collect != "1" %>
@@ -55,4 +57,28 @@
     <%= link_to 'マイページへ', :controller => 'mypage' %> | 
     <%= link_to('ランダムQuizy', "/quiz/#{@random}")%>
   </div>
+
+<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shCore.css" />
+<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shThemeDefault.css" />
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCss.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushDelphi.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushDiff.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushGroovy.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushJava.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushPhp.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushPython.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushRuby.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushSql.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushVb.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushXml.js"></script>
+<script type="text/javascript">
+  SyntaxHighlighter.all();
+</script>
+
+
 </div>

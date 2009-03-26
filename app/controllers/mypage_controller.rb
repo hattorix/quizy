@@ -40,15 +40,36 @@ class MypageController < ApplicationController
       end
     end
   end
-  
-  def message
-    flash[:notice] = params[:message]
-    redirect_to :action => "index"
-  end
-  
+
   def result
     @graph_a = open_flash_chart_object(850,400, '/mypage/bar_chart_answer', true, '/')
     @graph_c = open_flash_chart_object(850,400, '/mypage/bar_chart_create', true, '/')
+    @histories = Array.new
+    all_histories = History.find(:all, :conditions => ["user_id = ?",current_user.id])
+    all_histories.each do |history|
+      if q = Question.find(:first,:conditions => ["id = ?",history.question_id])
+        @histories << q.tag_list
+      end
+    end
+    @histories_tags = @histories.flatten.uniq
+    @histories_by_tags = Array.new
+    @histories_tags.each do |tag|
+      questions = Question.find_tagged_with(tag)
+      count = [tag,0,0]
+      questions.each do |question|
+        histories = History.find(:all,:conditions => ["question_id = ? and user_id = ?",question.id,current_user.id])
+        histories.each do |h|
+          count[1]+=1
+          if h.correct_or_wrong
+            count[2]+=1
+          end
+        end
+      end
+      @histories_by_tags << count
+    end
+    @histories_by_tags.sort! do |a,b|
+      b[1] <=> a[1]
+    end
   end
 
   def bar_chart_answer

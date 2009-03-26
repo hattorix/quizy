@@ -1,4 +1,23 @@
 <%= javascript_include_tag "prototype" %>
+<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shCore.css" />
+<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shThemeDefault.css" />
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shCore.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCpp.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCSharp.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCss.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushDelphi.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushDiff.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushGroovy.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushJava.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushJScript.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushPhp.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushPlain.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushPython.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushRuby.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushSql.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushVb.js"></script>
+<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushXml.js"></script>
+
 <script language="javascript">
   function submit_disabled_check() {
     var flg = 0;
@@ -61,7 +80,7 @@
           <div id="question_text_box">
             <div class="subtitle">問題</div>
             <%= hidden_field_tag "question_id", @question.id %>
-            <div class="field"><%=hbr @question.question_text %></div>
+            <div class="field"><%=qa @question.question_text %></div>
           </div>
 
           <div class="spacer_narrow">&nbsp;</div>
@@ -80,7 +99,7 @@
                 <% selections.each do |s| %>
                   <div class="field">
                     <input type="radio" id="answer[<%= i %>]" name="answer"
-                           value="<%= s.id %>" style="margin-left:-13px;"/> <%=hbr s.selection_text %>
+                           value="<%= s.id %>" style="margin-left:-13px;"/> <%=qa s.selection_text %>
                   </div>
                   <% i+=1 %>
                 <% end %>
@@ -93,7 +112,7 @@
                 <% selections.each do |s| %>
                   <div class="field">
                     <input type="checkbox" id="answer[<%= i %>]" name="answer[<%= i %>]"
-                           value="<%= s.id %>" style="margin-left:-17px;"/> <%=hbr s.selection_text %>
+                           value="<%= s.id %>" style="margin-left:-17px;"/> <%=qa s.selection_text %>
                   </div>
                   <% i+=1 %>
                 <% end %>
@@ -194,6 +213,10 @@
                                   :id => @id},
                            :update => 'contents') %></span>
       <% end %>
+<script type="text/javascript">
+  SyntaxHighlighter.all();
+</script>
+
     <% end -%>
 
       <div id="escape">

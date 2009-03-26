@@ -33,6 +33,7 @@ padding:5px;
   <ul class="yui-nav">
     <li class="selected"><a href="#tab1">問題回答数</a></li>
     <li><a href="#tab2">問題作成数</a></li>
+    <li><a href="#tab3">タグ毎の成績</a></li>
   </ul>
   <div class="yui-content">
     <div id="tab1">
@@ -44,6 +45,17 @@ padding:5px;
       <div id="bar_chart">
         <%= @graph_c %>
       </div>
+    </div>
+    <div id="tab3" class="subcontent">
+      <ul id="histories_by_tags">
+        <% @histories_by_tags.each do |h| %>
+        <li>
+          <%= image_tag "tag_blue.png" %><%=h h[0] %>
+          <span class="count">正解数：<font color="#ff0033"><%= h[2] %></font>
+                              回答数：<font color="#0066CC"><%= h[1] %></font></span>
+        </li>
+        <% end %>
+      </ul>
     </div>
   </div>
 </div>

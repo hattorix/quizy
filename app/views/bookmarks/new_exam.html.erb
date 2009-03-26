@@ -45,7 +45,7 @@
         <li class="question_text">
           <%= image_tag('/images/quiz.png', :style => 'border: none') %>
           <% question = Question.find(id) %>
-          <%= truncate(h(question.question_text), 40) %>
+          <%= truncate(erase_br(qa_erase(question.question_text)), 40) %>
         </li>
       <% end %>
       </ul>
@@ -53,7 +53,7 @@
     <div id="submit_box">
       <%= f.submit "作成する"  %>
       <input id="off_bookmark" name="off_bookmark" type="checkbox" checked />
-      作成後全ての付箋を剥がす
+      作成後選択した付箋を剥がす
     </div>
   <% end %>
 </div>

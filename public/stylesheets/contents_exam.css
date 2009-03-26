@@ -321,3 +321,45 @@ li {
 .spacer_narrow {
     margin: 5px;
 }
+
+/*QA記法*/
+
+.code {
+  font-size: 10pt;
+  font-family: monospace;
+  border: dotted 1px black;
+  padding: 5px;
+  margin:0px 20px 0px 20px;
+}
+
+.prompt {
+  font-family: monospace;
+  background-color: black;
+  color: white;
+  padding: 5px;
+  margin:0px 20px 0px 20px;
+}
+
+blockquote {
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 5px;
+  border: dotted 1px #CCC;
+}
+
+.strong {
+  font-weight: bold;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+.worm {
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 3px;
+  border: 1px solid black;
+  line-height: 30px;
+
+}
