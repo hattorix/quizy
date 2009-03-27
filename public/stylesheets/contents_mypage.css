@@ -222,13 +222,19 @@ padding: 10px 10px 0px 10px;
 }
 
 #histories_by_tags li {
-  font-size:20px;
+  font-size:18px;
   margin: 10px;
 }
 
 #histories_by_tags li .count {
   font-size:12px;
   margin-left: 2px;
+}
+
+.subsubtitle {
+  font-size: 14pt;
+  font-family: Arial,Helvetica,sans-serif;
+  margin-bottom: 5px;
 }
 
 #navi {

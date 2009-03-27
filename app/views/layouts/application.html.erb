@@ -8,8 +8,6 @@
 
   <%= stylesheet_link_tag "basic" %>
 
-<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shCore.css" />
-<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shThemeDefault.css" />
 <script type="text/javascript" src="/syntaxhighlighter/scripts/shCore.js"></script>
 <script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCpp.js"></script>
 <script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCSharp.js"></script>
@@ -26,8 +24,12 @@
 <script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushSql.js"></script>
 <script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushVb.js"></script>
 <script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushXml.js"></script>
+<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shCore.css" />
+<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shThemeDefault.css" />
+
 <script type="text/javascript">
   SyntaxHighlighter.all();
+  SyntaxHighlighter.config.clipboardSwf = "/syntaxhighlighter/scripts/clipboard.swf";
 </script>
 
 </head>

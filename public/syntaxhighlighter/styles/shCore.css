@@ -48,15 +48,16 @@
 	height: auto !important;
 	width: auto !important;
 	line-height: 1.1em !important;
-	font-family: "Consolas", "Monaco", "Bitstream Vera Sans Mono", "Courier New", Courier, monospace !important;
+	font-family: monospace !important;
 	font-weight: normal !important;
 	font-style: normal !important;
-	font-size: 1em !important;
+	font-size: 12px !important;
 }
 
 .syntaxhighlighter
 {
-	margin: 1em 20px 1em 20px !important;
+	width: 90% !important;
+	margin: 25px 20px 1em 20px !important;
 	padding: 1px !important; /* adds a little border on top and bottom */
 	position: relative !important;
 }
@@ -146,9 +147,9 @@
 {
 	position: absolute !important;
 	left: 0px !important;
-	top: -35px !important;
+	top: -22px !important;
 	font-size: 1px !important;
-	padding: 8px 8px 8px 0 !important; /* in px because images don't scale with ems */
+	padding: 1px 1px 1px 0 !important; /* in px because images don't scale with ems */
 }
 
 .syntaxhighlighter.collapsed .toolbar

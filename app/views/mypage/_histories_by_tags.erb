@@ -1,0 +1,15 @@
+<% link_to_remote "タグ", :url => {:action => 'histories_sort',
+                                 :histories_by_tags => @histories_by_tags,
+                                 :i => 0} %>
+<ul id="histories_by_tags">
+  <% @histories_by_tags.each do |h| %>
+    <li>
+      <%= image_tag "tag_blue.png" %>
+      <%= link_to_remote h(h[0]), :url => {:action => 'questions_by_tag',
+                                        :id => h[0]}%>
+      <span class="count">正解数：<font color="#ff0033"><%= h[2] %></font>
+                          回答数：<font color="#0066CC"><%= h[1] %></font>
+                          正解率：<font color="orange"><%= h[3] %>％</font></span>
+    </li>
+  <% end %>
+</ul>

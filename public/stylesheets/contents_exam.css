@@ -324,14 +324,6 @@ li {
 
 /*QA記法*/
 
-.code {
-  font-size: 10pt;
-  font-family: monospace;
-  border: dotted 1px black;
-  padding: 5px;
-  margin:0px 20px 0px 20px;
-}
-
 .prompt {
   font-family: monospace;
   background-color: black;
@@ -358,8 +350,17 @@ blockquote {
 .worm {
   margin-left: 5px;
   margin-right: 5px;
-  padding: 3px;
-  border: 1px solid black;
-  line-height: 30px;
+  padding: 5px 10px 5px 10px;
+  border: 2px solid black;
+  line-height: 35px;
+
+}
+
+.prompt .worm {
+  margin-left: 5px;
+  margin-right: 5px;
+  padding: 5px 10px 5px 10px;
+  border: 2px solid white;
+  line-height: 35px;
 
 }

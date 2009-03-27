@@ -44,14 +44,14 @@ module ApplicationHelper
             if language == ""
               language = "text"
             end
-            code.gsub!(/^[\r\n|\r|\n]/, "")
-            code.gsub!("\n", "\r")
-            "<pre class=\"brush:#{language};tab-size:1;toolbar:false;\">#{code}</pre>"
+            code.gsub!(/^\r\n+?|^\r+?|^\n+?/, "")
+            code.gsub!(/\r\n|\n/, "\r")
+            "<pre class=\"brush:#{language}\">#{code}</pre>"
           when prompt = $3
-            prompt.gsub!(/^[\r\n|\r|\n]/, "")
+            prompt.gsub!(/^\r\n+?|^\r+?|^\n+?/, "")
             "<div class='prompt'>#{prompt}</div>"
           when blockquote = $4
-            blockquote.gsub!(/^[\r\n|\r|\n]/, "")
+            blockquote.gsub!(/^\r\n+?|^\r+?|^\n+?/, "")
             "<blockquote>#{blockquote}</blockquote>"
           when strong = $5
             "<span class='strong'>#{strong}</span>"

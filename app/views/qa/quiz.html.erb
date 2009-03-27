@@ -50,7 +50,7 @@
 <div id="toolbar_box">
   <% if logged_in? %>
     <div id="add_book_form">
-      <% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id},:name=>"form[0]" do -%>
+      <% remote_form_for :question,:url=>{:controller => 'qa', :action => 'add_book', :id => @question.id} do -%>
         <div id="add_book">
           マイブック
             <select id="add_book_to" name="add_book_to" onchange='add_book()'>

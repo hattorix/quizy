@@ -1,22 +1,4 @@
 <%= javascript_include_tag "prototype" %>
-<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shCore.css" />
-<link type="text/css" rel="stylesheet" href="/syntaxhighlighter/styles/shThemeDefault.css" />
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shCore.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCpp.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCSharp.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushCss.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushDelphi.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushDiff.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushGroovy.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushJava.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushJScript.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushPhp.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushPlain.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushPython.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushRuby.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushSql.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushVb.js"></script>
-<script type="text/javascript" src="/syntaxhighlighter/scripts/shBrushXml.js"></script>
 
 <script language="javascript">
   function submit_disabled_check() {
@@ -78,7 +60,7 @@
       <div id="main_quiz">
         <div id="question_box_quiz">
           <div id="question_text_box">
-            <div class="subtitle">問題</div>
+            <div class="subtitle">問題<pre class="brush:html">#{code}</pre></div>
             <%= hidden_field_tag "question_id", @question.id %>
             <div class="field"><%=qa @question.question_text %></div>
           </div>
@@ -118,7 +100,7 @@
                 <% end %>
               </div>
               <script language="javascript">
-              timeID = window.setInterval("submit_disabled_select();",1);
+              timeID = window.setInterval("submit_disabled_select();SyntaxHighlighter.all();",1);
             </script>
             <% elsif @question.question_type == 3 %>
               <div id="selection_box">
@@ -213,9 +195,6 @@
                                   :id => @id},
                            :update => 'contents') %></span>
       <% end %>
-<script type="text/javascript">
-  SyntaxHighlighter.all();
-</script>
 
     <% end -%>
 

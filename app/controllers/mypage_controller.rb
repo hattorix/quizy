@@ -55,7 +55,7 @@ class MypageController < ApplicationController
     @histories_by_tags = Array.new
     @histories_tags.each do |tag|
       questions = Question.find_tagged_with(tag)
-      count = [tag,0,0]
+      count = [tag,0,0,0]
       questions.each do |question|
         histories = History.find(:all,:conditions => ["question_id = ? and user_id = ?",question.id,current_user.id])
         histories.each do |h|
@@ -65,12 +65,50 @@ class MypageController < ApplicationController
           end
         end
       end
+      count[3] = (count[2]*100)/(count[1])
       @histories_by_tags << count
     end
     @histories_by_tags.sort! do |a,b|
-      b[1] <=> a[1]
+      b[3] <=> a[3]
     end
   end
+
+  def histories_sort
+    @histories_by_tags = params[:histories_by_tags]
+    @histories_by_tags.sort! do |a,b|
+      b[params[:i].to_i] <=> a[params[:i].to_i]
+    end
+    render :update do |page|
+      page.replace_html("tab3", :partial=>"histories_by_tags", :object => @histories_by_tags)
+    end
+  end
+
+  def questions_by_tag
+    @questions_by_tags = Array.new
+    questions = Question.find_tagged_with(params[:id])
+    questions.each do |question|
+      count = [question,0,0,0]
+      histories = History.find(:all,:conditions => ["question_id = ? and user_id = ?",question.id,current_user.id])
+      histories.each do |h|
+        count[1]+=1
+        if h.correct_or_wrong
+          count[2]+=1
+        end
+      end
+      count[3] = (count[2]*100)/(count[1])
+      @questions_by_tags << count
+    end
+    render :update do |page|
+      page["tag_list"].hide
+      page.replace_html("question_list", :partial=>"questions_by_tags", :object => [@questions_by_tags,params[:id]])
+      page["question_list"].show
+    end
+  end
+
+
+
+
+
 
   def bar_chart_answer
     bar1 = Bar.new(50, '#ff0033')

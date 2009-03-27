@@ -189,3 +189,7 @@
 { 
 	color: red !important; 
 }
+
+.syntaxhighlighter .line .content .block {
+background: none !important;
+}

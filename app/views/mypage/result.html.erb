@@ -47,15 +47,11 @@ padding:5px;
       </div>
     </div>
     <div id="tab3" class="subcontent">
-      <ul id="histories_by_tags">
-        <% @histories_by_tags.each do |h| %>
-        <li>
-          <%= image_tag "tag_blue.png" %><%=h h[0] %>
-          <span class="count">正解数：<font color="#ff0033"><%= h[2] %></font>
-                              回答数：<font color="#0066CC"><%= h[1] %></font></span>
-        </li>
-        <% end %>
-      </ul>
+       <div id="tag_list">
+         <%= render :partial => "histories_by_tags", :object => @histories_by_tags %>
+       </div>
+       <div id="question_list">
+       </div>
     </div>
   </div>
 </div>

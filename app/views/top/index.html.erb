@@ -11,9 +11,19 @@
         </div>
         <% end -%>
 </div>
+<div id="category_title">カテゴリ一覧</div>
+  <div id="category_list">
+    <% @categories.each do |category| %>
+      <span class="category"><%=link_to(h(category.name),
+                                   :controller => 'search',
+                                   :action => 'category',
+                                   :id => category.id) %></span>
+    <% end %>
+</div>
+
 <div id="main">
   <% if !logged_in? %>
-    <div id="this_site_title">このサイトについて</div>
+    <div id="box_title">このサイトについて</div>
     <div id="this_site">
       <ul>
         <li><%= link_to 'いますぐ会員登録する！', signup_path %></li>
@@ -21,16 +31,7 @@
       </ul>
     </div>
   <% end %>
-  <div id="category_title">カテゴリ一覧</div>
-    <div id="category_list">
-      <% @categories.each do |category| %>
-        <span class="category"><%=link_to(h(category.name),
-                                     :controller => 'search',
-                                     :action => 'category',
-                                     :id => category.id) %></span>
-      <% end %>
-  </div>
-  <div id="favorite_title">出題数ランキング</div>
+  <div id="box_title">週間出題数ランキング</div>
   <div id="favorite">
     <ul style="list-style-type: decimal;">
     <% i = 1 %>
@@ -45,21 +46,30 @@
         <% else %>
           <%= image_tag "bullet_yellow.png" %>
         <% end %>
-        <%= i %>位：<%= link_to(truncate(erase_br(qa_erase(question.question_text)), 35), "/quiz/#{question.id}") %>
+        <%= i %>位：<%= link_to(truncate(erase_br(qa_erase(question[0].question_text)), 35),
+                             "/quiz/#{question[0].id}",
+                             :title => qa_erase(question[0].question_text)) %>
         <span style="color: slategray; font-size: 8pt;">
-          <%= question.question_count %>回出題
+          <%= question[1] %>回出題
         </span>
+        <div class="tags">
+          <% question[0].tag_list.map do |t| %>
+            <%= link_to(h(t), { :controller => :search, :action => :tag, :id => t }, :class => "tag") %>
+          <% end %>
+        </div>
       </li>
     <% i+=1 %>
     <% end %>
     </ul>
   </div>
-  <div id="favorite_title">新着問題</div>
-  <div id="favorite">
+  <div id="box_title">新着問題</div>
+  <div id="new">
     <ul style="list-style-type: decimal;">
     <% @new_questions.each do |question| %>
       <li style="font-size: 11pt;">
-        <%= link_to(truncate(erase_br(qa_erase(question.question_text)), 35), "/quiz/#{question.id}") %>
+        <%= link_to(truncate(erase_br(qa_erase(question.question_text)), 35),
+                  "/quiz/#{question.id}",
+                  :title => qa_erase(question.question_text) ) %>
         <span style="color: slategray; font-size: 8pt;">
           <%= question.created_at.strftime("%Y/%m/%d %H:%M:%S 登録") %>
         </span>
@@ -67,20 +77,20 @@
     <% end %>
     </ul>
   </div>
-  <div id="favorite_title">新着ブック</div>
+  <!--<div id="favorite_title">新着ブック</div>
   <div id="favorite">
     <ul style="list-style-type: decimal;">
-    <% @new_books.each do |book| %>
+    < @new_books.each do |book| %>
       <li style="font-size: 11pt;">
-        <%= link_to(truncate(h(book.name), 35), "/books/#{book.id}") %>
+        <= link_to(truncate(h(book.name), 35), "/books/#{book.id}") %>
         <span style="color: slategray; font-size: 8pt;">
-          <%= book.created_at.strftime("%Y/%m/%d %H:%M:%S 登録") %>
+          <= book.created_at.strftime("%Y/%m/%d %H:%M:%S 登録") %>
         </span>
       </li>
-    <% end %>
+    < end %>
     </ul>
   </div>
-  <!--<div id="favorite_title">最近の解答</div>
+  <div id="favorite_title">最近の解答</div>
   <div id="favorite">
     <ul style="list-style-type: decimal;">
     < @rank_questions.each do |question| %>
@@ -93,7 +103,7 @@
     < end %>
     </ul>
   </div>-->
-  <div id="update_title">更新情報</div>
+  <div id="box_title">更新情報</div>
   <div id="update">
     <ul>
       <li style="font-size: 11pt;">[2009/02/23] ポータルサイトっぽくしてみました。</li>
