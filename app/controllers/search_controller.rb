@@ -26,12 +26,16 @@ class SearchController < ApplicationController
       result_ids << result.id
     end
 
-    all_bookmarks()
+    if logged_in?
+      all_bookmarks()
+    end
 
     @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
 
-    bookmarks()
-
+    if logged_in?
+      bookmarks()
+    end
+  
     render :action => :index
   end
 
@@ -51,11 +55,15 @@ class SearchController < ApplicationController
     end
     @results_all = @results
 
-    all_bookmarks()
+    if logged_in?
+      all_bookmarks()
+    end
 
     @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
 
-    bookmarks()
+    if logged_in?
+      bookmarks()
+    end
 
     render :action => :index
   end
@@ -134,11 +142,15 @@ class SearchController < ApplicationController
       if @flg == 0            #問題検索
         @results_all = @results
 
+      if logged_in?
         all_bookmarks()
+      end
 
         @results = Question.paginate_by_id result_ids, :page => params[:page], :per_page => 10
 
+      if logged_in?
         bookmarks()
+      end
 
       elsif @flg == 1         #タグ検索
         @results_all = @results

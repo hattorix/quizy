@@ -46,7 +46,7 @@ module ApplicationHelper
             end
             code.gsub!(/^\r\n+?|^\r+?|^\n+?/, "")
             code.gsub!(/\r\n|\n/, "\r")
-            "<pre class=\"brush:#{language}\">#{code}</pre>"
+            "<pre class=\"brush:#{language} toolbar:false\">#{code}</pre>"
           when prompt = $3
             prompt.gsub!(/^\r\n+?|^\r+?|^\n+?/, "")
             "<div class='prompt'>#{prompt}</div>"

@@ -1,4 +1,5 @@
 <%= stylesheet_link_tag "style_book_detail" %>
+<script type="text/javascript" src="/javascripts/kana.js"></script>
 <script type="text/javascript" src="/javascripts/suggest.js"></script>
 <script language="javascript">
   function add_conditions(str){
@@ -50,15 +51,22 @@
     <% end -%>
    ""
   ];
-  new Suggest.LocalMulti(
+  new Suggest.Local(
         "text",    // 入力のエレメントID
         "suggest", // 補完候補を表示するエリアのID
         tag_list,      // 補完候補の検索対象となる配列
-        {dispMax: 10, interval: 100}); // オプション
+        {dispMax: 10, interval: 100, prefix: true, highlight: true}); // オプション
 }
     window.addEventListener ?
     window.addEventListener('load', startSuggest, false) :
     window.attachEvent('onload', startSuggest);
+
+  function submitStop(e){
+    if (!e) var e = window.event;
+
+    if(e.keyCode == 13)
+      return false;
+}
 </script>
 <div id="screen_title">ブックの新規作成</div>
 <div id="message"></div>
@@ -68,7 +76,7 @@
     <div id="name_public_field">
       <div class="field">
         <%= f.label "ブック名" %><br />
-        <%= f.text_field :name %>
+        <%= f.text_field :name,:onKeyPress => "return submitStop(event);" %>
       </div>
       <div class="field">
         <%= f.label "公開可否" %><br />
@@ -94,39 +102,39 @@
           <%= select_tag('category',
                        options_from_collection_for_select(@categories, :name, :name),
                        :size => 4,
-                       :onDblClick => 'add_conditions("categories");return false;') %>
+                       :onDblClick => 'add_conditions("categories");') %>
         </div>
         <div class="search_button">
           <div>&nbsp;</div>
           <%= button_to_function("追加",
                       "追加",
-                      :onclick => 'add_conditions("categories");return false;') %>
+                      :onclick => 'add_conditions("categories");') %>
         </div>
         <div class="search_field">
           <div>&nbsp;</div>
           <%= f.hidden_field :categories, :id => "categories" %>
-          <select id="select_categories" size="4" style="width:150px;" onDblClick='del_conditions("categories");return false;'>
+          <select id="select_categories" size="4" style="width:150px;" onDblClick='del_conditions("categories");'>
           </select>
         </div>
         <div class="search_button">
           <div>&nbsp;</div>
           <%= button_to_function("削除",
                       "削除",
-                      :onclick => 'del_conditions("categories");return false;') %>
+                      :onclick => 'del_conditions("categories");') %>
         </div>
       </div>
 
       <div id="tags_box">
         <div class="search_field">
           <%= f.label "タグ名" %><br />
-          <input id="text" type="text" size="20" />
+          <input id="text" type="text" size="20" onKeyPress="return submitStop(event);"/>
           <div id="suggest"></div>
         </div>
         <div class="search_button">
           <div>&nbsp;</div>
           <%= button_to_function("追加",
                       "追加",
-                      :onclick => 'add_conditions("tags");return false;') %>
+                      :onclick => 'add_conditions("tags");') %>
         </div>
         <div class="search_field">
           <div>&nbsp;</div>
@@ -138,7 +146,7 @@
           <div>&nbsp;</div>
           <%= button_to_function("削除",
                       "削除",
-                      :onclick => 'del_conditions("tags");return false;') %>
+                      :onclick => 'del_conditions("tags");') %>
         </div>
       </div>
     </div>

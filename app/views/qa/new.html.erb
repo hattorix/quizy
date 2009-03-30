@@ -1,6 +1,8 @@
 <%= stylesheet_link_tag("contents_register") %>
-<script src="/javascripts/prototype.js" type="text/javascript"></script>
-<script src="/javascripts/ResizeTextBox.js" type="text/javascript"></script>
+<script type="text/javascript" src="/javascripts/prototype.js"></script>
+<script type="text/javascript" src="/javascripts/ResizeTextBox.js"></script>
+<script type="text/javascript" src="/javascripts/kana.js"></script>
+<script type="text/javascript" src="/javascripts/suggest.js"></script>
 <%# TODO: edit.html.erbにもあるよ。DRY! DRY! %>
 <script language="javascript">
   function toggleControl() {
@@ -86,6 +88,30 @@
         default:
     }
   }
+  function startSuggest() {
+  var tag_list = [
+    <% @tags.each do |tag| -%>
+      "<%= tag.name %>",
+    <% end -%>
+   ""
+  ];
+  new Suggest.LocalMulti(
+        "tag",    // 入力のエレメントID
+        "suggest", // 補完候補を表示するエリアのID
+        tag_list,      // 補完候補の検索対象となる配列
+        {dispMax: 10, interval: 100, prefix: true, highlight: true, delim: ','}); // オプション
+}
+    window.addEventListener ?
+    window.addEventListener('load', startSuggest, false) :
+    window.attachEvent('onload', startSuggest);
+
+  function submitStop(e){
+    if (!e) var e = window.event;
+
+    if(e.keyCode == 13)
+      return false;
+}
+
 </script>
 <div id="screen_title">問題の登録</div>
   <div id="message"></div>
@@ -113,7 +139,8 @@
   <div class="field">
     <%= text_field_tag("tag",
                          "",
-                         :style => 'width: 100%;') %>
+                         :style => 'width: 100%;', :onKeyPress => 'return submitStop(event);') %>
+    <div id="suggest"></div>
   </div>
 </div>
 

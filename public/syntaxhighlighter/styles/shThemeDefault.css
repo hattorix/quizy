@@ -193,3 +193,11 @@
 .syntaxhighlighter .line .content .block {
 background: none !important;
 }
+
+.syntaxhighlighter .worm {
+  margin-left: 5px  !important;
+  margin-right: 5px !important;
+  padding: 5px 10px 5px 10px !important;
+  border: 2px solid black !important;
+  line-height: 35px !important;
+}

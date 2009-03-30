@@ -1,4 +1,5 @@
 <%= stylesheet_link_tag "style_book_detail" %>
+<script type="text/javascript" src="/javascripts/kana.js"></script>
 <script type="text/javascript" src="/javascripts/suggest.js"></script>
 <script language="javascript">
   function add_conditions(str){
@@ -54,11 +55,18 @@
         "text",    // 入力のエレメントID
         "suggest", // 補完候補を表示するエリアのID
         tag_list,      // 補完候補の検索対象となる配列
-        {dispMax: 10, interval: 100}); // オプション
+        {dispMax: 10, interval: 100, prefix: true,highlight:true}); // オプション
 }
     window.addEventListener ?
     window.addEventListener('load', startSuggest, false) :
     window.attachEvent('onload', startSuggest);
+
+  function submitStop(e){
+    if (!e) var e = window.event;
+
+    if(e.keyCode == 13)
+      return false;
+}
 </script>
 <div id="screen_title">ブックの編集</div>
 <div id="message"></div>

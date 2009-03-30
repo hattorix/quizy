@@ -203,7 +203,7 @@
 
                 <span class="add_mycontents">
                   <div class="add_mycontents_form">
-                    <% if result.user_id != current_user.id %>
+                    <% if logged_in? && result.user_id != current_user.id %>
                       <%= link_to_remote(image_tag('/images/book_play.png',
                                               :style => 'border: none;',
                                               :title => 'この問題集をマイブックに追加する'),

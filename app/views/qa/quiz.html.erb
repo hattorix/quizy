@@ -86,7 +86,7 @@
 <div class="spacer_narrow">&nbsp;</div>
 
 <div id="main_quiz">
-<% remote_form_for :question, :update => 'container', :url => {:action => 'answer'} do |f| -%>
+<% form_for :question, :url => {:action => 'answer'} do |f| -%>
 
 <div id="question_box_quiz">
 <div id="question_text_box">

@@ -14,6 +14,7 @@ class QaController < ApplicationController
   def new
     # プルダウンの初期化
     @categories = Category.find(:all, :order => 'id')
+    @tags = Tag.find(:all)
     @question_types = QuestionType.find(:all, :order => 'id')
   end
 
@@ -304,6 +305,7 @@ class QaController < ApplicationController
     if @question.user_id != current_user.id
       redirect_to :action => "quiz", :question_id => params[:id]
     end
+    @tags = Tag.find(:all)
     @selections = Selection.find(:all, :conditions => "question_id = #{@question.id}", :order => "question_id")
     @answer = Answer.find(:first, :conditions => "question_id = #{@question.id}")
 

@@ -119,12 +119,17 @@ Suggest.Local.prototype = {
     this.suggestIndexList = [];
 
     for (var i = 0, length = this.candidateList.length; i < length; i++) {
-      if ((temp = this.isMatch(this.candidateList[i], text)) != null) {
-        resultList.push(temp);
+      if ((this.isMatch(this.candidateList[i], text))                 != null ||  //そのまま
+            this.isMatch(this.candidateList[i], text.toKatakanaCase()) != null ||  //かな→カナ
+            this.isMatch(this.candidateList[i], text.toHiraganaCase()) != null ||  //カナ→かな
+            this.isMatch(this.candidateList[i], text.toZenkakuCase())  != null ||  //半角→全角
+            this.isMatch(this.candidateList[i], text.toHankakuCase())  != null ||  //全角→半角
+            this.isMatch(this.candidateList[i], text.toHankanaCase()) != null  ||  //カナ→ｶﾅ
+            this.isMatch(this.candidateList[i], text.toZenkanaCase()) != null  ) { //ｶﾅ→カナ
+        resultList.push(this.candidateList[i]);
         this.suggestIndexList.push(i);
-
         if (this.dispMax != 0 && resultList.length >= this.dispMax) break;
-      }
+      } 
     }
     return resultList;
   },
@@ -208,8 +213,7 @@ Suggest.Local.prototype = {
     } else if (event.keyCode == Suggest.Key.RETURN) {
       // fix
       if (this.suggestList && this.suggestList.length != 0) {
-        this._stopEvent(event);
-        this.keyEventReturn();
+        add_conditions("tags");
       }
     } else if (event.keyCode == Suggest.Key.ESC) {
       // cancel
@@ -424,7 +428,7 @@ Suggest.LocalMulti.prototype.keyEventOther = function(event) {
       }
 
       this.clearSuggestArea();
-      this.input.value += this.delim;
+      this.input.value;
       if (window.opera) {
         setTimeout(this._bind(this.moveEnd), 5);
       } else {
@@ -440,7 +444,7 @@ Suggest.LocalMulti.prototype.listClick = function(event, index) {
   this.activePosition = index;
   this.changeActive(index);
 
-  this.input.value += this.delim;
+  this.input.value;
   this.moveEnd();
 };
 

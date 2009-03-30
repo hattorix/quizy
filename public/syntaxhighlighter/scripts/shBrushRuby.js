@@ -47,7 +47,8 @@ SyntaxHighlighter.brushes.Ruby = function()
 		{ regex: /:[a-z][A-Za-z0-9_]*/g,							css: 'color2' },		// symbols
 		{ regex: /(\$|@@|@)\w+/g,									css: 'variable bold' },	// $global, @instance, and @@class variables
 		{ regex: new RegExp(this.getKeywords(keywords), 'gm'),		css: 'keyword' },		// keywords
-		{ regex: new RegExp(this.getKeywords(builtins), 'gm'),		css: 'color1' }			// builtins
+		{ regex: new RegExp(this.getKeywords(builtins), 'gm'),		css: 'color1' },		// builtins
+		{ regex: /\<span class\="worm"\>([^.]*)\<\/span\>/g,		css: 'worm' }
 		];
 
 	this.forHtmlScript(SyntaxHighlighter.regexLib.aspScriptTags);
