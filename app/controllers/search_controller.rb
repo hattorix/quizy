@@ -9,11 +9,11 @@ class SearchController < ApplicationController
     end
   end
 
+  #カテゴリ検索
   def category
     @id = params[:id]
     @results = Question.find(:all, :conditions => ['category_id = ? and is_public = 1', params[:id]])
     category = Category.find(params[:id])
-#    render :partial => 'results', :collection => results
     @flg = 0
     @type = "カテゴリ"
     @result_text = "『#{category.name}』カテゴリの問題"
@@ -39,6 +39,7 @@ class SearchController < ApplicationController
     render :action => :index
   end
 
+  #タグ検索
   def tag
     @id = params[:id]
     @results = Question.find_tagged_with(params[:id])
@@ -68,6 +69,7 @@ class SearchController < ApplicationController
     render :action => :index
   end
 
+  #検索フォームからの検索
   def text
     @conditions = params[:conditions]
     @searchtype = params[:searchtype]
@@ -323,6 +325,7 @@ class SearchController < ApplicationController
 
 
 
+  #付箋on
   def on_bookmark
     # 問題単の場合
     if params[:type] == "single"
@@ -426,6 +429,7 @@ class SearchController < ApplicationController
     end
   end
 
+  #付箋off
   def off_bookmark
     # 問題単の場合
     if params[:type] == "single"
@@ -487,6 +491,7 @@ class SearchController < ApplicationController
     end
   end
 
+  #ブックに追加
   def add_book
     if params[:add_book_to] != "" and params[:add_book_to] != "new"
       if params[:to_add_book]
@@ -535,6 +540,7 @@ class SearchController < ApplicationController
     end
   end
 
+  #ブック作成
   def new_book
     @book = Book.new
   end
@@ -582,6 +588,7 @@ class SearchController < ApplicationController
     end
   end
 
+  #ブックをマイブックに追加
   def add_mybook
     if MyBook.find(:all,:conditions=>["book_id = ? and user_id = ?",params[:id],current_user.id]).size == 0
       mybook = MyBook.new
@@ -610,6 +617,7 @@ class SearchController < ApplicationController
     end
   end
 
+  #テストをマイテストに追加
   def add_myexam
     if MyExam.find(:all,:conditions=>["exam_id = ? and user_id = ?",params[:id],current_user.id]).size == 0
       myexam = MyExam.new

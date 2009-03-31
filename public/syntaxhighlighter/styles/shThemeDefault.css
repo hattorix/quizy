@@ -200,4 +200,5 @@ background: none !important;
   padding: 5px 10px 5px 10px !important;
   border: 2px solid black !important;
   line-height: 35px !important;
+  text-indent: -9999px !important;
 }

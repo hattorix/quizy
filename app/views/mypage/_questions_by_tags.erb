@@ -1,0 +1,19 @@
+<div id="subsubtitle">『<%= @tag %>』タグの問題</div>
+<ul id="histories_by_tags">
+  <% @questions_by_tags.each do |q| %>
+    <li>
+      <%= image_tag "quiz.png" %>
+      <%= link_to(truncate(erase_br(qa_erase(q[0].question_text)), 30),
+                             "/quiz/#{q[0].id}", :title => qa_erase(q[0].question_text)) %>
+      <span class="count">正解数：<font color="#ff0033"><%= q[2] %></font>
+                          回答数：<font color="#0066CC"><%= q[1] %></font>
+                          正解率：<font color="orange"><%= q[3] %>％</font></span>
+    </li>
+  <% end %>
+</ul>
+<div id="navi">
+  <%= link_to_function('戻る') do |page|
+       page["question_list"].hide
+       page["tag_list"].show
+     end %>
+</div>

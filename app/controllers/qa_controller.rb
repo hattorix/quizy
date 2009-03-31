@@ -358,7 +358,7 @@ class QaController < ApplicationController
       a.user_id = current_user.id
       quiz[:answer] = a
     else
-      # TODO: レコード数を調べて、0件だったら追加する処理
+      raise("must not happend")
     end
 
     old_desctiprion = Description.find(:first, :conditions => ["question_id = ?", params[:question_id]]).description_text

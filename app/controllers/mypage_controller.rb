@@ -55,7 +55,7 @@ class MypageController < ApplicationController
     @histories_by_tags = Array.new
     @histories_tags.each do |tag|
       questions = Question.find_tagged_with(tag)
-      count = [tag,0,0,0]
+      count = [tag,0,0,0] #1.タグ名 2.回答数 3.正解数 4.正解率
       questions.each do |question|
         histories = History.find(:all,:conditions => ["question_id = ? and user_id = ?",question.id,current_user.id])
         histories.each do |h|
@@ -85,9 +85,10 @@ class MypageController < ApplicationController
 
   def questions_by_tag
     @questions_by_tags = Array.new
+    @tag = params[:id]
     questions = Question.find_tagged_with(params[:id])
     questions.each do |question|
-      count = [question,0,0,0]
+      count = [question,0,0,0] #1.問題 2.回答数 3.正解数 4.正解率
       histories = History.find(:all,:conditions => ["question_id = ? and user_id = ?",question.id,current_user.id])
       histories.each do |h|
         count[1]+=1

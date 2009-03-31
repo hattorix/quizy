@@ -43,11 +43,6 @@
     }
   }
 
-  function resizeReset(event) {
-    var t = Event.element(event);
-    t.rows = 1;
-  }
-
   function reload() {
     location.reload()
   }
@@ -185,8 +180,7 @@
                             "",
                             :style => 'width: 90%;',
                             :rows => 1,
-                            :onFocus => "new ResizingTextArea(this);",
-                            :onblur => "resizeReset(event)" %><br /></div></li>
+                            :onFocus => "new ResizingTextArea(this);" %><br /></div></li>
           <% end %>
         </ul>
       </div>
@@ -198,8 +192,7 @@
                             "",
                             :style => 'width: 90%;',
                             :rows => 1,
-                            :onFocus => "new ResizingTextArea(this);",
-                            :onblur => "resizeReset(event)" %><br /></div></li>
+                            :onFocus => "new ResizingTextArea(this);"%><br /></div></li>
           <% end %>
         </ul>
       </div>

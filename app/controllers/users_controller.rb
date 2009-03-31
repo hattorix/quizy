@@ -88,8 +88,7 @@ class UsersController < ApplicationController
     @user = current_user
     if !User.authenticate(current_user.login, params[:old_password])
       @user.valid?
-      @msgs =  @user.errors.full_messages
-      @msgs << "パスワードが違います。#{params[:old_password]}"
+      @msgs = ["パスワードが違います。"]
       render :update do |page|
         page.show("message")
         page.replace_html("message", :partial=>"message",:locals => {:flug => "error"},:object => @msgs)
@@ -140,7 +139,6 @@ class UsersController < ApplicationController
       render :update do |page|
         page.redirect_to :controller => "mypage"
       end
-      flash[:notice] = "Thanks for signing up!"
     else
       @msgs =  @user.errors.full_messages
       render :update do |page|

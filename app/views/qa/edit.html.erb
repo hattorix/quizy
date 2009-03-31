@@ -42,10 +42,6 @@
     }
   }
 
-  function resizeReset(event) {
-    var t = Event.element(event);
-    t.rows = 1;
-  }
   function startSuggest() {
   var tag_list = [
     <% @tags.each do |tag| -%>
@@ -143,8 +139,7 @@
                             h(selection.selection_text),
                             :style => 'width: 90%;',
                             :rows => 1,
-                            :onFocus => "new ResizingTextArea(this);",
-                            :onblur => "resizeReset(event)" %><br />
+                            :onFocus => "new ResizingTextArea(this);"%><br />
           </li>
           <% i+=1 %>
         <% end %>
@@ -159,8 +154,7 @@
                             h(selection.selection_text),
                             :style => 'width: 90%;',
                             :rows => 1,
-                            :onFocus => "new ResizingTextArea(this);",
-                            :onblur => "resizeReset(event)" %><br />
+                            :onFocus => "new ResizingTextArea(this);" %><br />
           </li>
           <% i+=1 %>
         <% end %>

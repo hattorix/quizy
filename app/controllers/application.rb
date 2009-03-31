@@ -35,12 +35,15 @@ class ApplicationController < ActionController::Base
   def show_errors(exception)
   end
 =end
+
+#全画面エラー処理
 =begin
   def rescue_action( excptn )
     redirect_to :action => 'error', :controller => 'error'
   end
 =end
 
+  #メールエラー処理
   rescue_from EOFError do |exception|
     render :update do |page|
       page.redirect_to :action => 'mail_error', :controller => 'error'
